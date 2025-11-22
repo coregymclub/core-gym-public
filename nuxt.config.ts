@@ -3,7 +3,8 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
 
-  // Production domain configuration
+  // Site configuration
+  // NOTE: Update og:url when deploying to production (coregymclub.se)
   app: {
     head: {
       title: 'Core Gym Club - Ditt Lokala Träningscenter',
@@ -14,11 +15,11 @@ export default defineNuxtConfig({
         { property: 'og:title', content: 'Core Gym Club - Ditt Lokala Träningscenter' },
         { property: 'og:description', content: 'Core Gym Club - Träningsanläggningar i Vegastaden, Tungelsta och Västerhaninge.' },
         { property: 'og:type', content: 'website' },
-        { property: 'og:url', content: 'https://coregymclub.se' },
+        // Using staging domain for now - update to https://coregymclub.se for production
+        { name: 'robots', content: 'noindex, nofollow' }, // Prevent indexing on staging
       ],
       link: [
         { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
-        { rel: 'canonical', href: 'https://coregymclub.se' }
       ]
     }
   },

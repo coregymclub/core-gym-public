@@ -1,4 +1,4 @@
-# ☁️ Cloudflare Setup Guide - coregymclub.se
+# ☁️ Cloudflare Setup Guide - Core Gym Public
 
 Detta dokument beskriver hur du konfigurerar Cloudflare för Core Gym Club's publika webbplats.
 
@@ -6,14 +6,71 @@ Detta dokument beskriver hur du konfigurerar Cloudflare för Core Gym Club's pub
 
 ## 📋 Översikt
 
-- **Domän:** coregymclub.se
+- **Staging URL:** `core-gym-public.pages.dev` (tillfällig utvecklingsdomän)
+- **Production URL:** `coregymclub.se` (när vi är klara att gå live)
 - **Hosting:** Cloudflare Pages
 - **Framework:** Nuxt 3
 - **Deploy:** Automatisk via Git integration
 
 ---
 
-## 🚀 Steg 1: Lägg till domänen i Cloudflare
+## 🎯 Deployment Strategy
+
+### Fas 1: Staging/Development (NU)
+Vi börjar med Cloudflare Pages standarddomän för att testa och utveckla utan att påverka nuvarande Zoezi-sida.
+
+**URL:** `https://core-gym-public.pages.dev`
+
+### Fas 2: Production Migration (SENARE)
+När allt är testat och klart flyttar vi till coregymclub.se och migrerar bort från Zoezi.
+
+**URL:** `https://coregymclub.se`
+
+---
+
+## 🚀 QUICK START - Staging Deploy (GÖR DETTA FÖRST!)
+
+För att snabbt komma igång med staging-miljön:
+
+### 1. Skapa Cloudflare Pages Project
+
+1. Logga in på [Cloudflare Dashboard](https://dash.cloudflare.com)
+2. Gå till **Workers & Pages**
+3. Klicka **"Create application"** → **"Pages"** → **"Connect to Git"**
+4. Välj din Git-provider (GitHub/GitLab)
+5. Välj repository: `core-gym-public`
+6. Välj branch: `main` (eller din default branch)
+
+### 2. Build Settings
+
+```
+Project name:         core-gym-public
+Framework preset:     Nuxt.js
+Build command:        npm run build
+Build output dir:     .output/public
+Root directory:       /
+Node version:         20
+```
+
+### 3. Deploy!
+
+Klicka **"Save and Deploy"** - första deploya startar automatiskt!
+
+Din staging-sida kommer vara live på: `https://core-gym-public.pages.dev`
+
+**🎉 Klart! Nu kan du testa sidan utan att påverka coregymclub.se**
+
+---
+
+## 📦 LATER: Production Migration till coregymclub.se
+
+När du är redo att flytta från Zoezi till nya sidan följer du stegen nedan.
+
+---
+
+## 🚀 Steg 1: Lägg till domänen i Cloudflare (PRODUCTION ONLY)
+
+**⚠️ GÖR INTE DETTA NU - Detta är för production migration senare!**
 
 ### 1.1 Lägg till webbplatsen
 
