@@ -1,0 +1,22 @@
+# Cloudflare Pages Configuration for Core Gym Club
+# Domain: coregymclub.se
+
+name = "core-gym-public"
+compatibility_date = "2025-11-22"
+
+# Cloudflare Pages settings
+[build]
+command = "npm run build"
+cwd = "."
+watch_dir = "."
+
+[build.upload]
+format = "directory"
+dir = ".output/public"
+
+# Environment variables (add in Cloudflare dashboard)
+[env.production]
+NODE_VERSION = "20"
+
+[env.preview]
+NODE_VERSION = "20"
