@@ -17,15 +17,6 @@ const filteredSchedule = computed(() => {
   })).filter(day => day.classes.length > 0).slice(0, 3)
 })
 
-const features = [
-  { title: 'Centralt', desc: 'Mitt i centrum' },
-  { title: 'Nyrenoverat', desc: 'Modern utrustning' },
-  { title: 'Funktionellt', desc: 'Stor friviktsyta' },
-  { title: 'Gruppträning', desc: 'Schemalagda pass' },
-  { title: 'Kollektivt', desc: 'Nära pendeltåg' },
-  { title: 'Generöst', desc: 'Öppet 03:55-00:05' },
-]
-
 onMounted(async () => {
   await Promise.all([fetchToday(), fetchSchedule(7), fetchGymStats()])
   startAutoRefresh(120000)
@@ -46,8 +37,8 @@ onMounted(async () => {
         <span class="inline-block px-4 py-2 rounded-full border border-white/20 bg-brand text-white mb-8 text-sm font-bold tracking-widest uppercase animate-fade">
           Klassiskt
         </span>
-        <h1 class="text-display-lg text-white mb-8 animate-slide-up">Västerhaninge</h1>
-        <p class="text-headline text-white/90 mb-12 animate-slide-up" style="animation-delay: 0.1s">
+        <h1 class="font-display font-bold text-5xl md:text-7xl lg:text-display-lg text-white mb-8 animate-slide-up uppercase tracking-tighter">Västerhaninge</h1>
+        <p class="text-xl md:text-2xl lg:text-3xl text-white/90 mb-12 animate-slide-up leading-tight font-medium" style="animation-delay: 0.1s">
           Centralt gym med modern utrustning. <br class="hidden md:inline" />
           Mitt i vardagen, nära till allt.
         </p>
@@ -92,6 +83,9 @@ onMounted(async () => {
       </div>
     </section>
 
+    <!-- Staffed hours -->
+    <StaffedHoursSection :site-id="SITE_ID" />
+
     <!-- Popular Times -->
     <PopularTimes />
 
@@ -107,8 +101,8 @@ onMounted(async () => {
           <span class="inline-block px-4 py-2 rounded-full bg-white/10 border border-white/20 text-orange-100 mb-8 text-sm font-bold tracking-widest uppercase">
             I samma byggnad
           </span>
-          <h2 class="text-display mb-8 tracking-[0.05em]">EGYM</h2>
-          <p class="text-headline text-white/90 mb-12">
+          <h2 class="font-display font-bold text-4xl md:text-5xl lg:text-6xl mb-8 tracking-[0.05em] uppercase">EGYM</h2>
+          <p class="text-xl md:text-2xl text-white/90 mb-12 leading-relaxed font-medium">
             Intelligent styrketräning med egen ingång. Maskinerna ställer in sig automatiskt efter dig.
           </p>
 
@@ -128,22 +122,6 @@ onMounted(async () => {
         </div>
       </div>
     </section>
-
-    <!-- Features -->
-    <section class="py-32 bg-surface-dim">
-      <div class="container">
-        <h2 class="text-display mb-16 text-center">Här finns</h2>
-        <div class="grid grid-cols-2 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-          <div v-for="f in features" :key="f.title" class="bg-surface p-8 rounded-2xl shadow-elevated text-center hover:-translate-y-2 transition-all duration-300 hover:shadow-elevated-lg group cursor-default">
-            <h3 class="text-title mb-3 group-hover:text-brand transition-colors">{{ f.title }}</h3>
-            <p class="text-body text-on-surface-dim">{{ f.desc }}</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Staffed hours -->
-    <StaffedHoursSection :site-id="SITE_ID" />
 
     <!-- Schedule -->
     <UpcomingClasses :site-id="SITE_ID" site-name="Västerhaninge" />
@@ -188,8 +166,8 @@ onMounted(async () => {
          <div class="absolute bottom-0 left-0 w-[600px] h-[600px] bg-white/10 rounded-full -translate-x-1/2 translate-y-1/2 blur-3xl" />
       </div>
       <div class="container text-center text-white relative z-10 max-w-4xl mx-auto">
-        <h2 class="text-display-lg mb-8">Börja träna</h2>
-        <p class="text-headline text-white/90 mb-12">
+        <h2 class="font-display font-bold text-5xl md:text-6xl lg:text-7xl mb-8 uppercase tracking-tighter">Börja träna</h2>
+        <p class="text-xl md:text-2xl text-white/90 mb-12 leading-relaxed font-medium">
           Bli medlem på Västerhaninge idag.
         </p>
         <NuxtLink to="/priser" class="btn bg-white text-brand hover:bg-surface-dim border-none px-12 py-6 h-auto text-xl shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all">

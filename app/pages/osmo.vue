@@ -64,8 +64,8 @@ async function handleSubmit() {
         <span class="inline-block px-4 py-2 rounded-full border border-white/20 bg-white/10 backdrop-blur mb-8 text-sm font-bold tracking-widest uppercase animate-fade">
           Kommer hösten 2026
         </span>
-        <h1 class="text-display-lg text-white mb-8 animate-slide-up">Ösmo</h1>
-        <p class="text-headline text-white/90 mb-12 animate-slide-up" style="animation-delay: 0.1s">
+        <h1 class="font-display font-bold text-5xl md:text-7xl lg:text-display-lg text-white mb-8 animate-slide-up uppercase tracking-tighter">Ösmo</h1>
+        <p class="text-xl md:text-2xl lg:text-3xl text-white/90 mb-12 animate-slide-up leading-tight font-medium" style="animation-delay: 0.1s">
           Vårt fjärde gym. 700 kvm träningsglädje. <br class="hidden md:inline" />
           Anmäl intresse så håller vi dig uppdaterad.
         </p>
@@ -156,7 +156,7 @@ async function handleSubmit() {
     <!-- Info -->
     <section class="section bg-surface">
       <div class="container">
-        <h2 class="text-display text-center mb-16">Vad vi vet</h2>
+        <h2 class="font-display font-bold text-4xl md:text-5xl text-center mb-16 uppercase tracking-tight">Vad vi vet</h2>
         <div class="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto">
           <div class="bg-surface-bright p-8 rounded-3xl border border-outline text-center">
             <h3 class="text-title mb-2 text-brand">Läge</h3>
@@ -205,7 +205,7 @@ async function handleSubmit() {
     <!-- Other gyms -->
     <section class="section bg-surface-dim border-t border-outline">
       <div class="container">
-        <h2 class="text-display text-center mb-4">Träna redan idag</h2>
+        <h2 class="font-display font-bold text-4xl md:text-5xl text-center mb-4 uppercase tracking-tight">Träna redan idag</h2>
         <p class="text-lead text-center mb-16">Vi finns på tre platser redan nu</p>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">

@@ -242,7 +242,7 @@ const faqs = [
             innan vikterna ökar. Kontakta oss gärna om du har frågor.
           </p>
           <div class="flex flex-col sm:flex-row justify-center gap-4">
-            <NuxtLink to="/kontakt" class="btn-secondary bg-white hover:bg-blue-50">
+            <NuxtLink to="/kontakt" class="btn btn-secondary bg-white hover:bg-blue-50">
               Kontakta oss
             </NuxtLink>
             <a href="tel:08-7452220" class="btn bg-transparent text-on-surface border border-outline hover:bg-white hover:border-blue-200">

@@ -91,7 +91,7 @@ const info = [
             :class="index === 0 ? 'border-t-4 border-t-pink-400' : 'border-t-4 border-t-purple-400'"
           >
             <span
-              class="text-display block mb-2"
+              class="font-display font-bold text-4xl md:text-5xl block mb-2"
               :class="index === 0 ? 'text-pink-400' : 'text-purple-400'"
             >
               {{ group.age }}
@@ -120,8 +120,8 @@ const info = [
     <section class="section bg-purple-600 text-white relative grain">
       <div class="container text-center max-w-2xl mx-auto">
         <span class="text-label text-purple-200 mb-4 block uppercase tracking-widest">Instruktör</span>
-        <h2 class="text-display mb-6 text-white">Ylva Magnusson</h2>
-        <p class="text-headline text-white/80 text-2xl">
+        <h2 class="font-display font-bold text-4xl md:text-5xl mb-6 text-white uppercase tracking-tight">Ylva Magnusson</h2>
+        <p class="text-xl md:text-2xl text-white/80">
           Erfaren danspedagog som leder barndansen på Core Gym Tungelsta.
         </p>
       </div>
@@ -156,7 +156,7 @@ const info = [
                <p class="text-body-lg text-on-surface-dim mb-8 font-medium">
                 Anmäl ditt intresse så hör vi av oss när det är dags att boka plats.
               </p>
-              <NuxtLink to="/kontakt" class="btn-primary w-full justify-center text-lg py-4">
+              <NuxtLink to="/kontakt" class="btn btn-primary w-full justify-center">
                 Kontakta oss
               </NuxtLink>
             </div>

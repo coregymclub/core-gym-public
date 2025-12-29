@@ -37,8 +37,8 @@ onMounted(async () => {
         <span class="inline-block px-4 py-2 rounded-full border border-white/20 bg-brand text-white mb-8 text-sm font-bold tracking-widest uppercase animate-fade">
           Originalet
         </span>
-        <h1 class="text-display-lg text-white mb-8 animate-slide-up">Tungelsta</h1>
-        <p class="text-headline text-white/90 mb-12 animate-slide-up" style="animation-delay: 0.1s">
+        <h1 class="font-display font-bold text-5xl md:text-7xl lg:text-display-lg text-white mb-8 animate-slide-up uppercase tracking-tighter">Tungelsta</h1>
+        <p class="text-xl md:text-2xl lg:text-3xl text-white/90 mb-12 animate-slide-up leading-tight font-medium" style="animation-delay: 0.1s">
           Där allt började 2012. <br class="hidden md:inline" />
           Varmt, personligt och familjärt.
         </p>
@@ -83,6 +83,9 @@ onMounted(async () => {
       </div>
     </section>
 
+    <!-- Staffed hours -->
+    <StaffedHoursSection :site-id="SITE_ID" />
+
     <!-- Popular Times -->
     <PopularTimes />
 
@@ -92,8 +95,8 @@ onMounted(async () => {
         <span class="inline-block px-4 py-2 rounded-full bg-blue-500/50 border border-blue-400/30 text-white mb-8 text-sm font-bold tracking-widest uppercase">
           13-18 år
         </span>
-        <h2 class="text-display mb-8 text-white">Ungdomsträning</h2>
-        <p class="text-headline text-white/90 mb-12">
+        <h2 class="font-display font-bold text-4xl md:text-5xl lg:text-6xl mb-8 text-white uppercase tracking-tight">Ungdomsträning</h2>
+        <p class="text-xl md:text-2xl text-white/90 mb-12 leading-relaxed font-medium">
           Vi lär dig grunderna i en trygg miljö. Starta din träningsresa på rätt sätt tillsammans med oss.
         </p>
         <NuxtLink to="/ungdomstraning" class="btn bg-white text-blue-600 hover:bg-blue-50 border-none px-12 py-5 text-lg">
@@ -101,9 +104,6 @@ onMounted(async () => {
         </NuxtLink>
       </div>
     </section>
-
-    <!-- Staffed hours -->
-    <StaffedHoursSection :site-id="SITE_ID" />
 
     <!-- Schedule -->
     <UpcomingClasses :site-id="SITE_ID" site-name="Tungelsta" />
@@ -148,8 +148,8 @@ onMounted(async () => {
          <div class="absolute bottom-0 left-0 w-[600px] h-[600px] bg-white/10 rounded-full -translate-x-1/2 translate-y-1/2 blur-3xl" />
       </div>
       <div class="container text-center text-white relative z-10 max-w-4xl mx-auto">
-        <h2 class="text-display-lg mb-8">Välkommen hem</h2>
-        <p class="text-headline text-white/90 mb-12">
+        <h2 class="font-display font-bold text-5xl md:text-6xl lg:text-7xl mb-8 uppercase tracking-tighter">Välkommen hem</h2>
+        <p class="text-xl md:text-2xl text-white/90 mb-12 leading-relaxed font-medium">
           Upplev den familjära stämningen i Tungelsta.
         </p>
         <NuxtLink to="/priser" class="btn bg-white text-brand hover:bg-surface-dim border-none px-12 py-6 h-auto text-xl shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all">

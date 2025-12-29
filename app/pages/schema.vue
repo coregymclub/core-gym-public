@@ -191,10 +191,10 @@ onUnmounted(() => {
         <span class="inline-block px-6 py-2 rounded-full bg-[#D93636] text-white mb-8 text-sm font-bold tracking-widest uppercase shadow-lg">
           Gruppträning
         </span>
-        <h1 class="font-display font-bold text-6xl md:text-8xl lg:text-[7rem] leading-[0.9] text-white mb-8 uppercase tracking-tighter">
+        <h1 class="font-display font-bold text-5xl md:text-7xl lg:text-[7rem] leading-[0.9] text-white mb-8 uppercase tracking-tighter">
           Hitta din grej
         </h1>
-        <p class="text-headline text-white/90 mb-12 max-w-2xl mx-auto leading-tight font-medium">
+        <p class="text-xl md:text-2xl lg:text-3xl text-white/90 mb-12 max-w-2xl mx-auto leading-tight font-medium">
           Från lugn yoga till svettiga HIIT-pass. <br class="hidden md:inline" />
           Välj det som får dig att må bra.
         </p>
@@ -269,7 +269,7 @@ onUnmounted(() => {
           <div v-for="day in filteredSchedule" :key="day.date">
             <!-- Day Header -->
             <div class="flex items-baseline gap-4 mb-8 border-b border-outline/30 pb-4">
-              <h3 class="font-display font-bold text-5xl md:text-6xl capitalize text-on-surface">{{ day.dayName }}</h3>
+              <h3 class="font-display font-bold text-3xl sm:text-4xl md:text-5xl capitalize text-on-surface">{{ day.dayName }}</h3>
               <span class="text-2xl md:text-3xl text-on-surface-dim/40 font-medium">{{ formatDateShort(day.date) }}</span>
             </div>
 
@@ -342,8 +342,8 @@ onUnmounted(() => {
       <div class="container max-w-5xl">
         <div class="grid md:grid-cols-2 gap-12 items-center">
           <div>
-            <h2 class="text-display mb-6">Alltid inkluderat</h2>
-            <p class="text-headline text-on-surface-dim mb-8">
+            <h2 class="font-display font-bold text-4xl md:text-5xl uppercase tracking-tight mb-6">Alltid inkluderat</h2>
+            <p class="text-xl md:text-2xl text-on-surface-dim mb-8 leading-relaxed">
               Alla våra gruppträningspass ingår i medlemskapet. Inga dolda avgifter, inga krångliga tillägg.
             </p>
             <ul class="space-y-6">

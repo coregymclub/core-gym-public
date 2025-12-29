@@ -9,15 +9,6 @@ const { stats: gymStats, fetchStats: fetchGymStats, startAutoRefresh } = useGymS
 
 const SITE_ID = 1
 
-const features = [
-  { title: 'Takterrass', desc: 'Utegym & löparbana' },
-  { title: 'Padel', desc: 'Två utomhusbanor' },
-  { title: 'Relax', desc: 'Bastu för alla' },
-  { title: 'Virtual', desc: 'Les Mills dygnet runt' },
-  { title: 'Cykelstudio', desc: 'RPM & The Trip' },
-  { title: 'Parkering', desc: '2h gratis' },
-]
-
 onMounted(async () => {
   await Promise.all([fetchToday(), fetchGymStats()])
   startAutoRefresh(120000)
@@ -38,8 +29,8 @@ onMounted(async () => {
         <span class="inline-block px-4 py-2 rounded-full border border-white/20 bg-brand text-white mb-8 text-sm font-bold tracking-widest uppercase animate-fade">
           Flaggskeppet
         </span>
-        <h1 class="text-display-lg text-white mb-8 animate-slide-up">Vegastaden</h1>
-        <p class="text-headline text-white/90 mb-12 animate-slide-up" style="animation-delay: 0.1s">
+        <h1 class="font-display font-bold text-5xl md:text-7xl lg:text-display-lg text-white mb-8 animate-slide-up uppercase tracking-tighter">Vegastaden</h1>
+        <p class="text-xl md:text-2xl lg:text-3xl text-white/90 mb-12 animate-slide-up leading-tight font-medium" style="animation-delay: 0.1s">
           2 900 kvadratmeter möjligheter. <br class="hidden md:inline" />
           Takterrass, yoga, padel — allt finns här.
         </p>
@@ -84,24 +75,11 @@ onMounted(async () => {
       </div>
     </section>
 
-    <!-- Popular Times -->
-    <PopularTimes />
-
-    <!-- Features -->
-    <section class="py-32 bg-surface-dim">
-      <div class="container">
-        <h2 class="text-display mb-16 text-center">Det här får du</h2>
-        <div class="grid grid-cols-2 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-          <div v-for="f in features" :key="f.title" class="bg-surface p-8 rounded-2xl shadow-elevated text-center hover:-translate-y-2 transition-all duration-300 hover:shadow-elevated-lg group cursor-default">
-            <h3 class="text-title mb-3 group-hover:text-brand transition-colors">{{ f.title }}</h3>
-            <p class="text-body text-on-surface-dim">{{ f.desc }}</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
     <!-- Staffed hours -->
     <StaffedHoursSection :site-id="SITE_ID" />
+
+    <!-- Popular Times -->
+    <PopularTimes />
 
     <!-- Schedule -->
     <UpcomingClasses :site-id="SITE_ID" site-name="Vegastaden" />
@@ -119,8 +97,8 @@ onMounted(async () => {
         <span class="inline-block px-4 py-2 rounded-full border border-white/20 bg-white/10 backdrop-blur mb-8 text-sm font-bold tracking-widest uppercase">
           Exklusivt för Vegastaden
         </span>
-        <h2 class="text-display mb-8">Träna när du vill</h2>
-        <p class="text-headline text-white/80 mb-12 max-w-3xl mx-auto leading-relaxed">
+        <h2 class="font-display font-bold text-4xl md:text-5xl lg:text-6xl mb-8 uppercase tracking-tight">Träna när du vill</h2>
+        <p class="text-xl md:text-2xl text-white/80 mb-12 max-w-3xl mx-auto leading-relaxed font-medium">
           Missa aldrig ett pass. Med Virtual kan du köra dina favoriter från Les Mills precis när det passar ditt schema.
           Bara att kliva in och köra igång.
         </p>
@@ -174,8 +152,8 @@ onMounted(async () => {
          <div class="absolute bottom-0 left-0 w-[600px] h-[600px] bg-white/10 rounded-full -translate-x-1/2 translate-y-1/2 blur-3xl" />
       </div>
       <div class="container text-center text-white relative z-10 max-w-4xl mx-auto">
-        <h2 class="text-display-lg mb-8">Upplev Vegastaden</h2>
-        <p class="text-headline text-white/90 mb-12">
+        <h2 class="font-display font-bold text-5xl md:text-6xl lg:text-7xl mb-8 uppercase tracking-tighter">Upplev Vegastaden</h2>
+        <p class="text-xl md:text-2xl text-white/90 mb-12 leading-relaxed font-medium">
           Störst, modernast och öppet nästan dygnet runt.
         </p>
         <NuxtLink to="/priser" class="btn bg-white text-brand hover:bg-surface-dim border-none px-12 py-6 h-auto text-xl shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all">

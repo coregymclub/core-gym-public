@@ -453,7 +453,7 @@ function toggleFaq(index: number) {
     <!-- FAQ -->
     <section class="section bg-surface">
       <div class="container max-w-4xl">
-        <h2 class="font-display font-bold text-5xl mb-16 text-center uppercase tracking-tight">Vanliga frågor</h2>
+        <h2 class="font-display font-bold text-3xl sm:text-4xl md:text-5xl mb-16 text-center uppercase tracking-tight">Vanliga frågor</h2>
         
         <div class="space-y-6">
           <div

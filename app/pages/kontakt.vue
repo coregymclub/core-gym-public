@@ -107,7 +107,7 @@ const gyms = [
               <button
                 type="submit"
                 :disabled="isSubmitting"
-                class="btn-primary w-full"
+                class="btn btn-primary w-full justify-center"
               >
                 {{ isSubmitting ? 'Skickar...' : 'Skicka' }}
               </button>

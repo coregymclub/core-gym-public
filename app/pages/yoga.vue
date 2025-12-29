@@ -2,7 +2,9 @@
 useHead({
   title: 'Yoga - Core Gym Club',
   meta: [
-    { name: 'description', content: 'Yoga på Core Gym Club. YinYoga, Vinyasa och BODYBALANCE. Hitta lugnet och stärk kroppen. Alla nivåer välkomna.' }
+    { name: 'description', content: 'Yoga på Core Gym Club. YinYoga, Vinyasa och BODYBALANCE. Hitta lugnet och stärk kroppen. Alla nivåer välkomna.' },
+    { key: 'theme-color-light', name: 'theme-color', content: '#134e4a', media: '(prefers-color-scheme: light)' },
+    { key: 'theme-color-dark', name: 'theme-color', content: '#134e4a', media: '(prefers-color-scheme: dark)' }
   ]
 })
 
@@ -66,10 +68,10 @@ onMounted(async () => {
         <span class="inline-block px-6 py-2 rounded-full bg-teal-500/20 text-teal-300 mb-8 text-sm font-bold tracking-widest uppercase">
           Mind & Body
         </span>
-        <h1 class="font-display font-bold text-6xl md:text-8xl lg:text-[7rem] leading-[0.9] text-white mb-8 uppercase tracking-tighter">
+        <h1 class="font-display font-bold text-5xl md:text-7xl lg:text-[7rem] leading-[0.9] text-white mb-8 uppercase tracking-tighter">
           Yoga
         </h1>
-        <p class="text-headline text-white/80 mb-12 max-w-2xl mx-auto leading-tight font-medium">
+        <p class="text-xl md:text-2xl lg:text-3xl text-white/80 mb-12 max-w-2xl mx-auto leading-tight font-medium">
           Hitta balans mellan kropp och sinne. <br class="hidden md:inline" />
           Våra yogapass passar alla nivåer.
         </p>
@@ -83,7 +85,7 @@ onMounted(async () => {
     <section class="section bg-surface relative z-10 -mt-16 rounded-t-[3rem] pt-24">
       <div class="container">
         <div class="text-center mb-20 max-w-3xl mx-auto">
-          <h2 class="font-display font-bold text-5xl md:text-6xl mb-6 text-on-surface uppercase tracking-tight">
+          <h2 class="font-display font-bold text-4xl md:text-5xl mb-6 text-on-surface uppercase tracking-tight">
             Våra yogaformer
           </h2>
           <p class="text-2xl text-on-surface-dim font-medium">
@@ -126,7 +128,7 @@ onMounted(async () => {
       <div class="container">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center max-w-6xl mx-auto">
           <div>
-            <h2 class="font-display font-bold text-5xl md:text-6xl mb-8 text-on-surface uppercase tracking-tight">
+            <h2 class="font-display font-bold text-4xl md:text-5xl mb-8 text-on-surface uppercase tracking-tight">
               Varför yoga?
             </h2>
             <p class="text-xl text-on-surface-dim mb-12 leading-relaxed">
@@ -193,7 +195,7 @@ onMounted(async () => {
     <section id="schema" class="section bg-surface">
       <div class="container">
         <div class="text-center mb-16 max-w-3xl mx-auto">
-          <h2 class="font-display font-bold text-5xl md:text-6xl mb-6 text-on-surface uppercase tracking-tight">
+          <h2 class="font-display font-bold text-4xl md:text-5xl mb-6 text-on-surface uppercase tracking-tight">
             Yogaschema
           </h2>
           <p class="text-2xl text-on-surface-dim font-medium">
@@ -257,7 +259,7 @@ onMounted(async () => {
       <div class="absolute bottom-0 right-0 w-[600px] h-[600px] bg-black/10 rounded-full translate-x-1/3 translate-y-1/3 blur-3xl" />
 
       <div class="container text-center relative z-10 max-w-4xl mx-auto">
-        <h2 class="font-display font-bold text-5xl md:text-7xl mb-10 uppercase tracking-tighter">
+        <h2 class="font-display font-bold text-4xl md:text-5xl lg:text-6xl mb-10 uppercase tracking-tighter">
           Börja din resa
         </h2>
         <p class="text-2xl text-white/80 mb-16 max-w-2xl mx-auto leading-relaxed font-medium">

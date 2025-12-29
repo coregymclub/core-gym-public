@@ -70,7 +70,7 @@ const faqs = [
           Ibland behöver man en knuff i rätt riktning. <br class="hidden md:inline" />
           Våra PT:s hjälper dig hitta din väg.
         </p>
-        <button class="btn-primary text-lg px-10 py-5 h-auto animate-slide-up" style="animation-delay: 0.2s" @click="openPTSheet()">
+        <button class="btn btn-primary text-lg animate-slide-up" style="animation-delay: 0.2s" @click="openPTSheet()">
           Boka kostnadsfri konsultation
         </button>
       </div>
@@ -80,7 +80,7 @@ const faqs = [
     <section class="section bg-surface">
       <div class="container">
         <div class="text-center mb-16 max-w-3xl mx-auto">
-          <h2 class="text-display mb-6">Inte bara träning</h2>
+          <h2 class="font-display font-bold text-4xl md:text-5xl mb-6 uppercase tracking-tight">Inte bara träning</h2>
           <p class="text-body-lg text-on-surface-dim">
             Att anlita en PT handlar inte bara om att lyfta tungt. Det handlar om att lära känna sin kropp, 
             undvika skador och hitta glädjen i rörelse som håller hela livet.
@@ -129,7 +129,7 @@ const faqs = [
             <div v-if="index < 2" class="hidden md:block absolute top-8 left-1/2 w-full h-0.5 bg-outline -z-10" />
             
             <div class="text-center bg-surface p-8 rounded-3xl shadow-sm h-full">
-              <span class="text-display text-on-surface/10 block mb-4 text-6xl font-bold">{{ step.step }}</span>
+              <span class="font-display font-bold text-5xl md:text-6xl text-on-surface/10 block mb-4">{{ step.step }}</span>
               <h3 class="text-title mb-4">{{ step.title }}</h3>
               <p class="text-body text-on-surface-dim">{{ step.description }}</p>
             </div>
@@ -223,8 +223,8 @@ const faqs = [
       <div class="absolute bottom-0 right-0 w-[600px] h-[600px] bg-black/10 rounded-full translate-x-1/3 translate-y-1/3 blur-3xl" />
 
       <div class="container text-center relative z-10 max-w-4xl mx-auto">
-        <h2 class="text-display-lg mb-8">Osäker på vem som passar dig?</h2>
-        <p class="text-headline text-white/90 mb-12">
+        <h2 class="font-display font-bold text-5xl md:text-6xl lg:text-7xl mb-8 uppercase tracking-tighter">Osäker på vem som passar dig?</h2>
+        <p class="text-xl md:text-2xl text-white/90 mb-12 leading-relaxed font-medium">
           Ingen fara. Skicka en förfrågan så matchar vi dig med rätt PT utifrån dina mål.
         </p>
         <button

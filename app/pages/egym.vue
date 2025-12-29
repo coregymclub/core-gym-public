@@ -52,7 +52,7 @@ const steps = [
           Smart Strength
         </span>
 
-        <h1 class="font-display font-bold text-6xl md:text-8xl lg:text-[8rem] leading-[0.9] text-white mb-8 uppercase tracking-tighter">
+        <h1 class="font-display font-bold text-5xl md:text-7xl lg:text-[8rem] leading-[0.9] text-white mb-8 uppercase tracking-tighter">
           EGYM
         </h1>
 
@@ -97,7 +97,7 @@ const steps = [
     <section id="hur-funkar-det" class="section bg-surface">
       <div class="container">
         <div class="text-center mb-20 max-w-3xl mx-auto">
-          <h2 class="font-display font-bold text-5xl md:text-6xl mb-6 text-on-surface uppercase tracking-tight">
+          <h2 class="font-display font-bold text-4xl md:text-5xl mb-6 text-on-surface uppercase tracking-tight">
             Så funkar det
           </h2>
           <p class="text-2xl text-on-surface-dim font-medium">
@@ -131,7 +131,7 @@ const steps = [
       </div>
 
       <div class="container text-center relative z-10 max-w-4xl mx-auto">
-        <h2 class="font-display font-bold text-5xl md:text-7xl mb-10 uppercase tracking-tighter">
+        <h2 class="font-display font-bold text-4xl md:text-5xl lg:text-6xl mb-10 uppercase tracking-tighter">
           Redo att testa?
         </h2>
         <p class="text-xl md:text-2xl text-white/60 mb-16 max-w-2xl mx-auto leading-relaxed font-medium">

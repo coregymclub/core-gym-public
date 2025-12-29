@@ -153,7 +153,7 @@ const features = [
               </div>
               <!-- Oversized name overlay -->
               <div class="absolute inset-0 flex items-end p-4">
-                <h3 class="font-display font-bold text-6xl md:text-7xl lg:text-8xl text-white uppercase tracking-tighter leading-[0.85] drop-shadow-lg" style="margin-bottom: -0.15em;">
+                <h3 class="font-display font-bold text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-white uppercase tracking-tighter leading-[0.85] drop-shadow-lg" style="margin-bottom: -0.15em;">
                   {{ gym.name }}
                 </h3>
               </div>
@@ -237,6 +237,107 @@ const features = [
       </div>
     </section>
 
+    <!-- Yoga Section -->
+    <section class="py-24 md:py-40 bg-[#0c0c0c] text-white relative overflow-hidden">
+      <!-- Subtle pattern background -->
+      <div class="absolute inset-0 z-0">
+        <div class="absolute inset-0 opacity-[0.04]"
+             style="background-image: radial-gradient(#fff 1px, transparent 1px); background-size: 32px 32px;">
+        </div>
+      </div>
+
+      <div class="container relative z-10">
+        <!-- Centered header -->
+        <div class="text-center max-w-3xl mx-auto mb-12">
+          <span class="inline-block px-4 py-2 rounded-full bg-teal-500/20 border border-teal-500/30 text-teal-300 mb-10 text-sm font-bold tracking-widest uppercase">
+            Ingår i medlemskapet
+          </span>
+          <h2 class="font-display font-bold text-5xl md:text-6xl mb-4 uppercase tracking-tight">Yoga</h2>
+          <p class="text-lg md:text-xl text-teal-400/80 mb-6 font-medium">Yoga i Haninge — på två av våra gym</p>
+          <p class="text-xl md:text-2xl text-white/70 leading-relaxed font-medium">
+            Hitta balans och bygg styrka inifrån. I Vegastaden har vi en dedikerad yoga shala — ett eget rum bara för yoga och mindfulness. I Tungelsta bygger vi ut med ännu fler klasser.
+          </p>
+        </div>
+
+        <!-- Image -->
+        <div class="max-w-2xl mx-auto mb-12 relative">
+          <div class="aspect-video rounded-3xl overflow-hidden shadow-2xl">
+            <img src="/images/denise-hero.webp" alt="Yoga i Haninge" class="w-full h-full object-cover" />
+          </div>
+          <!-- Decorative glow -->
+          <div class="absolute -bottom-12 -right-12 w-64 h-64 bg-teal-500 rounded-full mix-blend-screen opacity-20 blur-3xl" />
+        </div>
+
+        <!-- Tags and CTA centered -->
+        <div class="text-center">
+          <div class="flex flex-wrap justify-center gap-3 mb-8">
+            <span class="px-4 py-2 bg-white/5 border border-white/10 rounded-full text-sm font-medium text-white/80">Hatha</span>
+            <span class="px-4 py-2 bg-white/5 border border-white/10 rounded-full text-sm font-medium text-white/80">Vinyasa</span>
+            <span class="px-4 py-2 bg-white/5 border border-white/10 rounded-full text-sm font-medium text-white/80">Yin</span>
+            <span class="px-4 py-2 bg-white/5 border border-white/10 rounded-full text-sm font-medium text-white/80">Power Yoga</span>
+          </div>
+
+          <div class="flex flex-wrap justify-center gap-6 text-sm text-white/50 mb-10">
+            <span class="flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-teal-500"></span>
+              Vegastaden
+            </span>
+            <span class="flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-teal-500"></span>
+              Tungelsta
+            </span>
+          </div>
+
+          <NuxtLink to="/yoga" class="btn bg-teal-500 hover:bg-teal-400 text-white border-none px-10 py-5 text-lg rounded-full">
+            Läs mer om yoga
+          </NuxtLink>
+        </div>
+      </div>
+    </section>
+
+    <!-- Mammaträning Section -->
+    <section class="py-24 md:py-40 bg-surface overflow-hidden">
+      <div class="container">
+        <!-- Centered header -->
+        <div class="text-center max-w-3xl mx-auto mb-12">
+          <span class="inline-block px-4 py-2 rounded-full bg-rose-500/10 border border-rose-500/20 text-rose-600 mb-10 text-sm font-bold tracking-widest uppercase">
+            För nyblivna mammor
+          </span>
+          <h2 class="font-display font-bold text-5xl md:text-6xl mb-4 text-on-surface uppercase tracking-tight">Mammaträning</h2>
+          <p class="text-lg md:text-xl text-rose-600/80 mb-6 font-medium">Träning med bebis i Haninge</p>
+          <p class="text-xl md:text-2xl text-on-surface-dim leading-relaxed font-medium">
+            Ta med bebis och träna tryggt tillsammans med andra mammor. Anpassade övningar som stärker kroppen efter graviditet — och lite välbehövlig gemenskap.
+          </p>
+        </div>
+
+        <!-- Image -->
+        <div class="max-w-2xl mx-auto mb-12 relative">
+          <div class="aspect-video rounded-3xl overflow-hidden shadow-2xl">
+            <img src="/images/hero-red.webp" alt="Mammaträning i Haninge" class="w-full h-full object-cover" />
+          </div>
+          <div class="absolute -bottom-12 -left-12 w-64 h-64 bg-rose-500 rounded-full mix-blend-multiply opacity-10 blur-3xl" />
+        </div>
+
+        <!-- Info and CTA centered -->
+        <div class="text-center">
+          <div class="inline-flex flex-wrap justify-center gap-6 text-sm text-on-surface-dim mb-10">
+            <span class="flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-rose-500"></span>
+              Vegastaden: 2 dagar/vecka
+            </span>
+            <span class="flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-rose-500"></span>
+              Tungelsta: 2 dagar/vecka
+            </span>
+          </div>
+
+          <NuxtLink to="/mammatraning" class="btn btn-primary px-10 py-5 text-lg rounded-full">
+            Läs mer om mammaträning
+          </NuxtLink>
+        </div>
+      </div>
+    </section>
+
     <!-- Founder Bio -->
     <section class="py-12 md:py-32 bg-surface-container">
       <div class="container px-4 md:px-8">
@@ -273,7 +374,7 @@ const features = [
       <div class="absolute bottom-0 right-0 w-[800px] h-[800px] bg-black/20 rounded-full translate-x-1/3 translate-y-1/3 blur-3xl" />
       
       <div class="container text-center text-white relative z-10 max-w-5xl mx-auto">
-        <h2 class="font-display font-bold text-6xl md:text-8xl mb-12 uppercase tracking-tighter">Redo att komma igång?</h2>
+        <h2 class="font-display font-bold text-4xl sm:text-5xl md:text-6xl lg:text-7xl mb-12 uppercase tracking-tighter">Redo att komma igång?</h2>
         <p class="text-2xl md:text-3xl text-white/90 mb-20 leading-relaxed font-medium max-w-3xl mx-auto">
           Inga bindningstider. Provträning ingår inte — men vi lovar att ta hand om dig när du väl är här.
         </p>

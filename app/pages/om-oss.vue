@@ -48,7 +48,7 @@ const values = [
             />
           </div>
           <div>
-            <h2 class="text-headline mb-4">Från skola till gym</h2>
+            <h2 class="font-display font-bold text-2xl md:text-3xl mb-4 uppercase tracking-tight">Från skola till gym</h2>
             <p class="text-body-lg text-on-surface-dim mb-4">
               Per Karlsson, grundare. Idrottslärare i 25 år — tröttnade på att kämpa i motvind och startade Core 2012.
             </p>
@@ -70,7 +70,7 @@ const values = [
           
           <div v-for="t in timeline" :key="t.year" class="relative bg-surface-dim pt-4 text-center">
             <div class="w-4 h-4 bg-brand rounded-full mx-auto mb-4 border-4 border-white shadow-sm" />
-            <span class="text-display text-brand/20 block text-5xl mb-2">{{ t.year }}</span>
+            <span class="font-display font-bold text-4xl md:text-5xl text-brand/20 block mb-2">{{ t.year }}</span>
             <h3 class="text-title mb-2">{{ t.title }}</h3>
             <p class="text-body text-on-surface-dim text-sm max-w-[200px] mx-auto">{{ t.desc }}</p>
           </div>
