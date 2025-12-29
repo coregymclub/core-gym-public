@@ -7,7 +7,7 @@ const gyms = [
 ]
 
 const links = [
-  { name: 'Priser', href: '/priser' },
+  { name: 'Bli medlem', href: '/bli-medlem' },
   { name: 'Schema', href: '/schema' },
   { name: 'Personlig Träning', href: '/pt' },
   { name: 'EGYM', href: '/egym' },
@@ -21,7 +21,7 @@ const legal = [
 </script>
 
 <template>
-  <footer class="bg-on-surface text-white pt-20 pb-10 rounded-t-[3rem] mt-4 relative overflow-hidden">
+  <footer class="bg-on-surface text-white pt-20 pb-safe-offset rounded-t-[3rem] mt-4 relative overflow-hidden">
     <!-- Decorative grain -->
     <div class="absolute inset-0 opacity-5 pointer-events-none mix-blend-overlay"
          style="background-image: url(&quot;data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E&quot;);">
@@ -73,7 +73,7 @@ const legal = [
         <div class="flex flex-col gap-6">
           <h3 class="text-xs font-bold uppercase tracking-widest text-white/40">Medlem</h3>
           <div class="flex flex-col gap-4">
-            <NuxtLink to="/priser" class="text-lg font-bold text-white hover:text-brand transition-colors flex items-center gap-2 group">
+            <NuxtLink to="/bli-medlem" class="text-lg font-bold text-white hover:text-brand transition-colors flex items-center gap-2 group">
               Bli medlem
               <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
@@ -115,3 +115,9 @@ const legal = [
     </div>
   </footer>
 </template>
+
+<style scoped>
+.pb-safe-offset {
+  padding-bottom: calc(2.5rem + env(safe-area-inset-bottom));
+}
+</style>

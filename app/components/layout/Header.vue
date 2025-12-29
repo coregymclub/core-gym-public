@@ -3,12 +3,12 @@
 const scrolledPastHero = useState('scrolledPastHero', () => false)
 const route = useRoute()
 
-// Hide nav on pricing page - only show logo
-const showNav = computed(() => !route.path.startsWith('/priser'))
+// Hide nav on membership page - only show logo
+const showNav = computed(() => !route.path.startsWith('/bli-medlem'))
 
 const navigation = [
   { name: 'Våra gym', href: '/anlaggningar' },
-  { name: 'Priser', href: '/priser' },
+  { name: 'Bli medlem', href: '/bli-medlem' },
   { name: 'Om oss', href: '/om-oss' },
 ]
 
@@ -61,7 +61,7 @@ onMounted(() => {
           {{ item.name }}
         </NuxtLink>
         <NuxtLink
-          to="/priser"
+          to="/bli-medlem"
           class="btn bg-white text-brand hover:bg-white/90 shadow-lg border-none px-6 py-2.5 min-h-0 h-auto text-base"
         >
           Bli medlem

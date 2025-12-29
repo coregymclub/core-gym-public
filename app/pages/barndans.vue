@@ -4,6 +4,8 @@ useHead({
   meta: [{ name: 'description', content: 'Core Barndans - Rörelseglädje för barn 3-8 år! Dansa in i en magisk värld.' }]
 })
 
+useThemeColor('#ec4899')
+
 const ageGroups = [
   { age: '3-5 år', time: 'Söndagar 16:00-16:45', desc: 'Lek och rörelse med musik' },
   { age: '6-8 år', time: 'Söndagar 17:00-17:45', desc: 'Lite tuffare dans och steg' },

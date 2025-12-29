@@ -102,7 +102,7 @@ const values = [
         <p class="text-lead text-white/80 mb-10">
           Ett medlemskap. Fyra gym. Inga bindningstider.
         </p>
-        <NuxtLink to="/priser" class="btn bg-white text-brand hover:bg-surface-dim border-none shadow-lg">
+        <NuxtLink to="/bli-medlem" class="btn bg-white text-brand hover:bg-surface-dim border-none shadow-lg">
           Bli medlem
         </NuxtLink>
       </div>

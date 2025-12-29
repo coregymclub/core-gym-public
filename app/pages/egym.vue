@@ -6,6 +6,8 @@ useHead({
   ]
 })
 
+useThemeColor('#0c0c0e')
+
 const features = [
   {
     title: 'Automatisk',

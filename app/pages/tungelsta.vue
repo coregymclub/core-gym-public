@@ -152,7 +152,7 @@ onMounted(async () => {
         <p class="text-xl md:text-2xl text-white/90 mb-12 leading-relaxed font-medium">
           Upplev den familjära stämningen i Tungelsta.
         </p>
-        <NuxtLink to="/priser" class="btn bg-white text-brand hover:bg-surface-dim border-none px-12 py-6 h-auto text-xl shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all">
+        <NuxtLink to="/bli-medlem" class="btn bg-white text-brand hover:bg-surface-dim border-none px-12 py-6 h-auto text-xl shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all">
           Se medlemskap
         </NuxtLink>
       </div>

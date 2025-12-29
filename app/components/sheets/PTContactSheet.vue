@@ -219,10 +219,10 @@ const handleNewMessage = () => {
     <!-- Trainer card if preselected -->
     <div
       v-if="ptSheet.trainer && !isSuccess"
-      class="flex items-center gap-4 p-4 bg-surface-dim rounded-xl mb-6"
+      class="flex items-center gap-4 p-5 bg-surface-dim rounded-2xl mb-6"
     >
       <div
-        class="w-14 h-14 rounded-full bg-surface-container flex-shrink-0 overflow-hidden"
+        class="w-16 h-16 rounded-full flex-shrink-0 overflow-hidden shadow-lg"
       >
         <img
           v-if="ptSheet.trainer.imageUrl"
@@ -230,40 +230,38 @@ const handleNewMessage = () => {
           :alt="ptSheet.trainer.name"
           class="w-full h-full object-cover"
         />
-        <div v-else class="w-full h-full flex items-center justify-center text-on-surface-dim">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-          </svg>
+        <div v-else class="w-full h-full flex items-center justify-center text-on-surface-dim bg-surface-container">
+          <span class="text-xl font-bold">{{ ptSheet.trainer.name.charAt(0) }}</span>
         </div>
       </div>
       <div class="min-w-0">
-        <p class="font-medium text-on-surface">{{ ptSheet.trainer.name }}</p>
-        <p class="text-label text-on-surface-dim">{{ ptSheet.trainer.shortName }}</p>
+        <p class="text-xs font-bold uppercase tracking-widest text-brand mb-1">Personlig tränare</p>
+        <p class="font-display font-bold text-lg text-on-surface uppercase tracking-tight">{{ ptSheet.trainer.name.split(' ')[0] }}</p>
       </div>
     </div>
 
     <!-- Success state -->
     <div v-if="isSuccess" class="text-center py-8">
-      <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-        <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <div class="w-20 h-20 bg-brand/10 rounded-full flex items-center justify-center mx-auto mb-6">
+        <svg class="w-10 h-10 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
         </svg>
       </div>
-      <h3 class="text-title mb-2">Tack för din förfrågan!</h3>
-      <p class="text-body text-on-surface-dim mb-6">
-        {{ ptSheet.trainer ? `${ptSheet.trainer.name} återkommer` : 'Vi återkommer' }} till dig inom 24 timmar.
+      <h3 class="font-display font-bold text-2xl text-on-surface uppercase tracking-tight mb-3">Tack!</h3>
+      <p class="text-body text-on-surface-dim mb-8 max-w-sm mx-auto">
+        {{ ptSheet.trainer ? `${ptSheet.trainer.name.split(' ')[0]} återkommer` : 'Vi återkommer' }} till dig inom 24 timmar.
       </p>
       <div class="flex flex-col sm:flex-row gap-3 justify-center">
         <button
           type="button"
-          class="btn-secondary px-6 py-3"
+          class="px-6 py-3 rounded-full bg-surface-dim text-on-surface font-bold hover:bg-surface-container transition-colors"
           @click="handleNewMessage"
         >
           Skicka ny förfrågan
         </button>
         <button
           type="button"
-          class="btn-primary px-6 py-3"
+          class="px-8 py-3 rounded-full bg-brand text-white font-bold hover:bg-brand/90 transition-colors"
           @click="handleClose"
         >
           Stäng
@@ -318,7 +316,7 @@ const handleNewMessage = () => {
       <button
         type="submit"
         :disabled="isSubmitting"
-        class="w-full btn-primary py-4 disabled:opacity-50 disabled:cursor-not-allowed"
+        class="w-full py-4 rounded-full bg-brand text-white font-bold text-lg hover:bg-brand/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
       >
         <span v-if="isSubmitting" class="flex items-center justify-center gap-2">
           <svg class="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
@@ -330,7 +328,7 @@ const handleNewMessage = () => {
         <span v-else>Skicka förfrågan</span>
       </button>
 
-      <p class="text-label text-on-surface-dim text-center">
+      <p class="text-sm text-on-surface-dim text-center">
         Genom att skicka godkänner du att vi kontaktar dig.
       </p>
     </form>

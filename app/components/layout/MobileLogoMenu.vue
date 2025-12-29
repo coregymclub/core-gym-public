@@ -61,7 +61,7 @@ function closeMenu() {
 const mainLinks = [
   { name: 'Våra gym', href: '/anlaggningar' },
   { name: 'Schema', href: '/schema' },
-  { name: 'Priser', href: '/priser' },
+  { name: 'Bli medlem', href: '/bli-medlem' },
   { name: 'PT', href: '/pt' },
 ]
 

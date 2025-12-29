@@ -6,6 +6,8 @@ useHead({
   ]
 })
 
+useThemeColor('#1e3a8a')
+
 const benefits = [
   {
     title: 'Säker träning',

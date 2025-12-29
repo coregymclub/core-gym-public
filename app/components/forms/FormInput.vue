@@ -54,17 +54,17 @@ const inputId = computed(() => `input-${Math.random().toString(36).slice(2, 9)}`
 
 <style scoped>
 .form-input {
-  @apply w-full px-4 py-3 bg-surface border border-outline rounded-xl
+  @apply w-full px-5 py-4 bg-surface-dim border-0 rounded-2xl
          text-on-surface placeholder:text-on-surface-dim
-         focus:outline-none focus:ring-2 focus:ring-brand/20 focus:border-brand
+         focus:outline-none focus:ring-2 focus:ring-brand/30 focus:bg-surface
          transition-all duration-200;
 }
 
 .form-input--error {
-  @apply border-brand focus:ring-brand/30;
+  @apply ring-2 ring-brand/30;
 }
 
 .form-input--disabled {
-  @apply bg-surface-dim text-on-surface-dim cursor-not-allowed;
+  @apply bg-surface-container text-on-surface-dim cursor-not-allowed opacity-60;
 }
 </style>

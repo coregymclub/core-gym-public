@@ -148,7 +148,7 @@ const gyms = [
           Inga bindningstider. Inga startavgifter. <br class="hidden md:inline" />
           Bara ren träningsglädje.
         </p>
-        <NuxtLink to="/priser" class="btn btn-primary px-12 py-6 h-auto text-xl rounded-full shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all">
+        <NuxtLink to="/bli-medlem" class="btn btn-primary px-12 py-6 h-auto text-xl rounded-full shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all">
           Se medlemskap
         </NuxtLink>
       </div>

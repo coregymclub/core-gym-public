@@ -4,8 +4,8 @@
 /anlaggningar/vegastaden /vegastaden 301
 /anlaggningar/osmo /osmo 301
 
-# Alias for membership page
-/bli-medlem /priser 301
+# Redirect old pricing URL to new membership page
+/priser /bli-medlem 301
 
 # Gruppträning -> Schema
 /grupptraning /schema 301

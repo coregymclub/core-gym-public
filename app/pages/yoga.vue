@@ -3,10 +3,11 @@ useHead({
   title: 'Yoga - Core Gym Club',
   meta: [
     { name: 'description', content: 'Yoga på Core Gym Club. YinYoga, Vinyasa och BODYBALANCE. Hitta lugnet och stärk kroppen. Alla nivåer välkomna.' },
-    { key: 'theme-color-light', name: 'theme-color', content: '#134e4a', media: '(prefers-color-scheme: light)' },
-    { key: 'theme-color-dark', name: 'theme-color', content: '#134e4a', media: '(prefers-color-scheme: dark)' }
   ]
 })
+
+// Theme color for iOS Safari and body background
+useThemeColor('#134e4a')
 
 const { schedule, loading, fetchSchedule } = useGroupTraining()
 
@@ -265,7 +266,7 @@ onMounted(async () => {
         <p class="text-2xl text-white/80 mb-16 max-w-2xl mx-auto leading-relaxed font-medium">
           Oavsett om du aldrig provat yoga eller tränat i åratal – du är välkommen hos oss.
         </p>
-        <NuxtLink to="/priser" class="btn bg-white text-teal-700 hover:bg-teal-50 border-none px-14 py-7 h-auto text-2xl shadow-2xl rounded-full">
+        <NuxtLink to="/bli-medlem" class="btn bg-white text-teal-700 hover:bg-teal-50 border-none px-14 py-7 h-auto text-2xl shadow-2xl rounded-full">
           Bli medlem
         </NuxtLink>
       </div>

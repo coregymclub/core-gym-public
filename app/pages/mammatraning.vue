@@ -3,10 +3,11 @@ useHead({
   title: 'Mammaträning - Core Gym Club',
   meta: [
     { name: 'description', content: 'Mammaträning i Haninge. Träna med bebis på Core Gym Club. Anpassade övningar efter graviditet. 4 pass i veckan på Vegastaden och Tungelsta.' },
-    { key: 'theme-color-light', name: 'theme-color', content: '#881337', media: '(prefers-color-scheme: light)' },
-    { key: 'theme-color-dark', name: 'theme-color', content: '#881337', media: '(prefers-color-scheme: dark)' }
   ]
 })
+
+// Theme color for iOS Safari and body background
+useThemeColor('#881337')
 
 const { schedule, loading, fetchSchedule } = useGroupTraining()
 
@@ -229,7 +230,7 @@ onMounted(async () => {
         <p class="text-2xl text-white/80 mb-16 max-w-2xl mx-auto leading-relaxed font-medium">
           Ta första steget mot att hitta tillbaka till träningen — tillsammans med ditt barn och andra mammor.
         </p>
-        <NuxtLink to="/priser" class="btn bg-white text-rose-700 hover:bg-rose-50 border-none px-14 py-7 h-auto text-2xl shadow-2xl rounded-full">
+        <NuxtLink to="/bli-medlem" class="btn bg-white text-rose-700 hover:bg-rose-50 border-none px-14 py-7 h-auto text-2xl shadow-2xl rounded-full">
           Bli medlem
         </NuxtLink>
       </div>

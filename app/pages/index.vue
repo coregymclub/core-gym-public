@@ -53,6 +53,8 @@ const features = [
   '3 gym (snart 4!)',
   'Ingen startavgift',
 ]
+
+useThemeColor('#1a1a1a')
 </script>
 
 <template>
@@ -78,7 +80,7 @@ const features = [
           Bara träning som passar dig.
         </p>
         <div class="animate-slide-up" style="animation-delay: 0.3s">
-          <NuxtLink to="/priser" class="btn btn-primary text-lg md:text-xl px-12 md:px-16 py-4 md:py-5 h-auto rounded-full shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all">
+          <NuxtLink to="/bli-medlem" class="btn btn-primary text-lg md:text-xl px-12 md:px-16 py-4 md:py-5 h-auto rounded-full shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all">
             Bli medlem
           </NuxtLink>
         </div>
@@ -176,6 +178,19 @@ const features = [
     <!-- Services / Group Training -->
     <section class="py-16 md:py-32 bg-surface overflow-hidden">
       <div class="container">
+        <!-- Centered Header for Group Training -->
+        <div class="text-center max-w-4xl mx-auto mb-16 md:mb-24">
+          <span class="inline-block px-4 py-2 rounded-full border border-on-surface/10 bg-surface-container text-on-surface-dim mb-6 text-sm font-bold tracking-widest uppercase">
+            Tillsammans är vi starkare
+          </span>
+          <h2 class="font-display font-bold text-5xl md:text-6xl mb-6 text-on-surface uppercase tracking-tight">
+            Träna tillsammans
+          </h2>
+          <p class="text-xl md:text-2xl text-on-surface-dim leading-relaxed font-medium">
+            Från lugn yoga till svettiga HIIT-pass. Välj det som får dig att må bra.
+          </p>
+        </div>
+
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 items-center">
           <!-- Image - hidden on mobile, shown on desktop -->
           <div class="hidden lg:block order-2 lg:order-1 relative">
@@ -186,11 +201,6 @@ const features = [
           </div>
 
           <div class="order-1 lg:order-2">
-            <h2 class="font-display font-bold text-4xl md:text-6xl mb-6 md:mb-10 text-on-surface uppercase tracking-tight">Träna tillsammans</h2>
-            <p class="text-xl md:text-2xl text-on-surface-dim mb-8 md:mb-16 leading-relaxed font-medium">
-              Från lugn yoga till svettiga HIIT-pass. Välj det som får dig att må bra.
-            </p>
-
             <!-- Compact list on mobile -->
             <div class="flex flex-wrap gap-3 mb-8 md:hidden">
               <span class="px-4 py-2 bg-surface-container rounded-full text-sm font-medium text-on-surface">50+ klasser/vecka</span>
@@ -229,9 +239,47 @@ const features = [
                 </div>
               </li>
             </ul>
-            <NuxtLink to="/schema" class="btn btn-primary px-8 py-4 md:px-12 md:py-6 h-auto text-lg md:text-xl rounded-full shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all">
+            <NuxtLink to="/schema" class="btn btn-primary px-12 md:px-16 py-4 md:py-6 h-auto text-lg md:text-xl rounded-full shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all">
               Se schemat
             </NuxtLink>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Personal Training -->
+    <section class="py-24 md:py-40 bg-surface-dim overflow-hidden">
+      <div class="container">
+        <!-- Centered Layout -->
+        <div class="text-center max-w-5xl mx-auto mb-16 md:mb-20">
+          <span class="inline-block px-4 py-2 rounded-full border border-on-surface/10 bg-surface text-on-surface-dim mb-8 text-sm font-bold tracking-widest uppercase">
+            Din investering i dig själv
+          </span>
+          <h2 class="font-display font-bold text-5xl md:text-6xl mb-6 md:mb-10 text-on-surface uppercase tracking-tight">
+            Personlig Träning
+          </h2>
+          <p class="text-2xl md:text-3xl text-on-surface-dim mb-12 md:mb-16 leading-relaxed font-medium max-w-4xl mx-auto">
+            Ibland behöver man en knuff i rätt riktning. Våra PT:s hjälper dig att hitta din väg, oavsett om du är nybörjare eller elitidrottare.
+          </p>
+          
+          <NuxtLink to="/pt" class="btn btn-primary px-14 py-5 text-xl rounded-full shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all">
+            Läs mer om PT
+          </NuxtLink>
+        </div>
+
+        <!-- Full width visual element -->
+        <div class="relative w-full max-w-6xl mx-auto aspect-[16/9] md:aspect-[21/9] rounded-[3rem] overflow-hidden shadow-2xl group">
+          <img 
+            src="/images/lifting-eleiko-nike-dark.webp" 
+            alt="Personlig Träning" 
+            class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 scale-105 group-hover:scale-100" 
+          />
+          <!-- Gradient overlay for depth -->
+          <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-60"></div>
+          
+          <!-- Optional floating badge on image -->
+          <div class="absolute bottom-8 left-8 md:bottom-12 md:left-12 bg-white/10 backdrop-blur-md border border-white/20 px-6 py-3 rounded-full hidden md:block">
+            <span class="text-white font-bold tracking-wide uppercase text-sm">Individuellt upplägg</span>
           </div>
         </div>
       </div>
@@ -379,7 +427,7 @@ const features = [
           Inga bindningstider. Provträning ingår inte — men vi lovar att ta hand om dig när du väl är här.
         </p>
         <div class="flex flex-col sm:flex-row justify-center gap-8">
-          <NuxtLink to="/priser" class="btn bg-white text-brand hover:bg-surface-dim border-none px-14 py-7 h-auto text-2xl shadow-2xl hover:shadow-[0_20px_50px_rgba(0,0,0,0.3)] hover:-translate-y-1 transition-all rounded-full">
+          <NuxtLink to="/bli-medlem" class="btn bg-white text-brand hover:bg-surface-dim border-none px-14 py-7 h-auto text-2xl shadow-2xl hover:shadow-[0_20px_50px_rgba(0,0,0,0.3)] hover:-translate-y-1 transition-all rounded-full">
             Se våra medlemskap
           </NuxtLink>
           <NuxtLink to="/kontakt" class="btn border-2 border-white/30 hover:bg-white/10 text-white bg-transparent px-14 py-7 h-auto text-2xl backdrop-blur-sm rounded-full">

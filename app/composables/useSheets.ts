@@ -11,6 +11,7 @@ export interface Trainer {
   email: string
   phone: string
   quote: string
+  shortQuote: string
   bio: string
   imageKey: string
   imageUrl: string

@@ -65,17 +65,17 @@ const charCount = computed(() => props.modelValue?.length || 0)
 
 <style scoped>
 .form-textarea {
-  @apply w-full px-4 py-3 bg-surface border border-outline rounded-xl
+  @apply w-full px-5 py-4 bg-surface-dim border-0 rounded-2xl
          text-on-surface placeholder:text-on-surface-dim resize-none
-         focus:outline-none focus:ring-2 focus:ring-brand/20 focus:border-brand
+         focus:outline-none focus:ring-2 focus:ring-brand/30 focus:bg-surface
          transition-all duration-200;
 }
 
 .form-textarea--error {
-  @apply border-brand focus:ring-brand/30;
+  @apply ring-2 ring-brand/30;
 }
 
 .form-textarea--disabled {
-  @apply bg-surface-dim text-on-surface-dim cursor-not-allowed;
+  @apply bg-surface-container text-on-surface-dim cursor-not-allowed opacity-60;
 }
 </style>

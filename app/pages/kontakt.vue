@@ -152,7 +152,7 @@ const gyms = [
       <div class="container text-center text-white">
         <h2 class="text-section text-white mb-4">Välkommen</h2>
         <p class="text-lead text-white/80 mb-10">Vi ses på gymmet</p>
-        <NuxtLink to="/priser" class="btn bg-white text-brand hover:bg-surface-dim">
+        <NuxtLink to="/bli-medlem" class="btn bg-white text-brand hover:bg-surface-dim">
           Se medlemskap
         </NuxtLink>
       </div>
