@@ -1,0 +1,8 @@
+// Set iOS Safari theme-color based on page background
+export function useThemeColor(color: string = '#1a1a1a') {
+  useHead({
+    meta: [
+      { name: 'theme-color', content: color }
+    ]
+  })
+}

@@ -1,6 +1,6 @@
 # Cloudflare Pages Configuration for Core Gym Club
-# Domain: coregymclub.se
+# Domain: coregym.club
 
 name = "core-gym-public"
 compatibility_date = "2025-11-22"
-pages_build_output_dir = "dist"
+pages_build_output_dir = ".output/public"

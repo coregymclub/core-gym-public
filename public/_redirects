@@ -1,0 +1,11 @@
+# Redirect old /anlaggningar/* URLs to new structure
+/anlaggningar/tungelsta /tungelsta 301
+/anlaggningar/vasterhaninge /vasterhaninge 301
+/anlaggningar/vegastaden /vegastaden 301
+/anlaggningar/osmo /osmo 301
+
+# Alias for membership page
+/bli-medlem /priser 301
+
+# Gruppträning -> Schema
+/grupptraning /schema 301

@@ -1,0 +1,531 @@
+/* ===========================================
+   CORE GYM - M3 EXPRESSIVE DESIGN SYSTEM
+
+   A complete, reusable design system built on
+   Material Design 3 Expressive principles.
+
+   Contents:
+   1. Fonts
+   2. Base Styles
+   3. Layout Components
+   4. Buttons
+   5. Cards
+   6. Forms
+   7. Typography
+   8. Badges & Tags
+   9. Navigation
+   10. Utilities
+   =========================================== */
+
+/* ===========================================
+   1. FONTS
+   =========================================== */
+
+@font-face {
+  font-family: 'Suisse BP Intl';
+  src: url('/fonts/SuisseBPIntl-Antique.woff2') format('woff2');
+  font-weight: 700;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Neue Montreal';
+  src: url('/fonts/NeueMontreal-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-display: swap;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ===========================================
+   2. BASE STYLES
+   =========================================== */
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    @apply font-body text-on-surface antialiased;
+    @apply bg-surface-bright;
+    @apply selection:bg-brand/20 selection:text-brand-dark;
+  }
+
+  /* Headings: display font, uppercase, tight tracking */
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display font-bold uppercase tracking-tight;
+    text-wrap: balance;
+  }
+
+  /* Smooth focus states */
+  :focus-visible {
+    @apply outline-none ring-2 ring-brand/30 ring-offset-2;
+  }
+
+  /* Links */
+  a {
+    @apply transition-colors duration-300;
+  }
+
+  /* Remove default list styles */
+  ul, ol {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+}
+
+/* ===========================================
+   3. LAYOUT COMPONENTS
+   =========================================== */
+
+@layer components {
+  /* Container - Wide, breathable */
+  .container {
+    @apply max-w-container mx-auto px-6 lg:px-12;
+  }
+
+  .container-narrow {
+    @apply max-w-content mx-auto px-6 lg:px-12;
+  }
+
+  /* Section spacing */
+  .section {
+    @apply py-24 lg:py-40;
+  }
+
+  .section-sm {
+    @apply py-16 lg:py-24;
+  }
+
+  .section-lg {
+    @apply py-32 lg:py-48;
+  }
+
+  /* ===========================================
+     4. BUTTONS - Large, friendly, clear
+     =========================================== */
+
+  .btn {
+    @apply inline-flex items-center justify-center gap-3;
+    @apply relative overflow-hidden;
+    @apply rounded-full font-display font-bold;
+    @apply transition-all duration-500 ease-smooth;
+    @apply active:scale-98 active:duration-150;
+    @apply disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none;
+  }
+
+  /* State Layer Effect (M3) */
+  .btn::after {
+    content: '';
+    @apply absolute inset-0 bg-white opacity-0;
+    @apply transition-opacity duration-300 pointer-events-none;
+  }
+  .btn:hover:not(:disabled)::after {
+    @apply opacity-20;
+  }
+
+  /* Primary Button */
+  .btn-primary {
+    @apply bg-brand text-white;
+    @apply shadow-lg shadow-brand/20;
+    @apply hover:shadow-xl hover:shadow-brand/30;
+    @apply hover:-translate-y-0.5;
+  }
+
+  /* Secondary Button */
+  .btn-secondary {
+    @apply bg-white text-on-surface;
+    @apply border border-outline shadow-sm;
+    @apply hover:border-outline-focus hover:shadow-md;
+    @apply hover:-translate-y-0.5;
+  }
+
+  /* Ghost Button */
+  .btn-ghost {
+    @apply bg-transparent text-on-surface;
+    @apply hover:bg-surface-container;
+  }
+  .btn-ghost::after {
+    @apply bg-on-surface;
+  }
+  .btn-ghost:hover::after {
+    @apply opacity-5;
+  }
+
+  /* Outline Button */
+  .btn-outline {
+    @apply bg-transparent text-on-surface;
+    @apply border-2 border-on-surface;
+    @apply hover:bg-on-surface hover:text-white;
+  }
+
+  /* Dark Button (inverted) */
+  .btn-dark {
+    @apply bg-on-surface text-white;
+    @apply shadow-lg;
+    @apply hover:bg-black hover:shadow-xl;
+    @apply hover:-translate-y-0.5;
+  }
+
+  /* Button Sizes */
+  .btn-sm {
+    @apply px-5 py-2.5 text-sm;
+  }
+
+  .btn-md {
+    @apply px-6 py-3 text-base;
+  }
+
+  .btn-lg {
+    @apply px-10 py-5 text-lg;
+  }
+
+  .btn-xl {
+    @apply px-12 py-6 text-xl;
+  }
+
+  /* Icon Button */
+  .btn-icon {
+    @apply w-12 h-12 p-0 rounded-full;
+    @apply flex items-center justify-center;
+  }
+
+  .btn-icon-sm {
+    @apply w-10 h-10;
+  }
+
+  .btn-icon-lg {
+    @apply w-14 h-14;
+  }
+
+  /* ===========================================
+     5. CARDS - Generous, elevated
+     =========================================== */
+
+  .card {
+    @apply bg-surface rounded-3xl p-10;
+    @apply shadow-elevated border border-white/50;
+    @apply transition-all duration-500 ease-smooth;
+  }
+
+  .card-hover {
+    @apply hover:shadow-elevated-lg hover:-translate-y-1;
+    @apply hover:bg-white;
+  }
+
+  .card-sm {
+    @apply p-6 rounded-2xl;
+  }
+
+  .card-lg {
+    @apply p-12 md:p-16 rounded-3xl;
+  }
+
+  /* Interactive Card (link/button) */
+  .card-interactive {
+    @apply card card-hover cursor-pointer;
+    @apply active:scale-98 active:duration-150;
+  }
+
+  /* Glass Card */
+  .card-glass {
+    @apply bg-white/80 backdrop-blur-xl;
+    @apply border border-white/60;
+    @apply shadow-float;
+  }
+
+  /* Dark Card */
+  .card-dark {
+    @apply bg-on-surface text-white;
+    @apply border-white/10;
+  }
+
+  /* ===========================================
+     6. FORMS
+     =========================================== */
+
+  .form-input {
+    @apply w-full px-5 py-4;
+    @apply bg-surface border border-outline rounded-xl;
+    @apply text-on-surface placeholder:text-on-surface-dim;
+    @apply transition-all duration-300;
+    @apply focus:border-on-surface focus:ring-2 focus:ring-on-surface/10;
+    @apply disabled:bg-surface-dim disabled:text-on-surface-dim disabled:cursor-not-allowed;
+  }
+
+  .form-input-error {
+    @apply border-error focus:border-error focus:ring-error/20;
+  }
+
+  .form-label {
+    @apply block text-label font-bold text-on-surface mb-2;
+    @apply uppercase tracking-wide;
+  }
+
+  .form-hint {
+    @apply text-label-sm text-on-surface-dim mt-2;
+  }
+
+  .form-error {
+    @apply text-label-sm text-error mt-2;
+  }
+
+  /* Select */
+  .form-select {
+    @apply form-input appearance-none cursor-pointer;
+    @apply bg-no-repeat bg-right;
+    padding-right: 3rem;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%23666666' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-position: right 1rem center;
+  }
+
+  /* Textarea */
+  .form-textarea {
+    @apply form-input resize-none;
+    min-height: 120px;
+  }
+
+  /* Checkbox */
+  .form-checkbox {
+    @apply w-5 h-5 rounded-md border-2 border-outline;
+    @apply text-on-surface bg-surface;
+    @apply transition-all duration-200;
+    @apply checked:bg-on-surface checked:border-on-surface;
+    @apply focus:ring-2 focus:ring-on-surface/20;
+  }
+
+  /* ===========================================
+     7. TYPOGRAPHY COMPONENTS
+     =========================================== */
+
+  /* Hero text - Massive, impactful */
+  .text-hero {
+    @apply font-display font-bold uppercase;
+    @apply text-display md:text-display-lg lg:text-display-2xl;
+    @apply leading-[0.9] tracking-tighter;
+    @apply text-center;
+  }
+
+  /* Section heading */
+  .text-section {
+    @apply font-display font-bold uppercase;
+    @apply text-headline md:text-display-sm lg:text-display;
+    @apply leading-tight tracking-tight;
+    @apply text-center;
+  }
+
+  /* Lead paragraph */
+  .text-lead {
+    @apply text-body-lg md:text-headline text-on-surface-dim;
+    @apply text-center max-w-2xl mx-auto;
+    @apply leading-relaxed tracking-tight font-medium;
+  }
+
+  /* Overline text */
+  .text-overline {
+    @apply text-label-sm font-bold uppercase tracking-widest;
+    @apply text-on-surface-dim;
+  }
+
+  /* ===========================================
+     8. BADGES & TAGS
+     =========================================== */
+
+  .badge {
+    @apply inline-flex items-center justify-center;
+    @apply px-4 py-1.5 rounded-full;
+    @apply text-label-sm font-bold uppercase tracking-widest;
+  }
+
+  .badge-primary {
+    @apply bg-brand text-white;
+  }
+
+  .badge-secondary {
+    @apply bg-surface-container text-on-surface;
+  }
+
+  .badge-dark {
+    @apply bg-on-surface text-white;
+  }
+
+  .badge-outline {
+    @apply bg-transparent border border-outline text-on-surface-dim;
+  }
+
+  .badge-glass {
+    @apply bg-white/90 backdrop-blur-md text-on-surface;
+    @apply shadow-md;
+  }
+
+  /* Tag (smaller, for categories) */
+  .tag {
+    @apply inline-flex items-center;
+    @apply px-3 py-1 rounded-lg;
+    @apply text-label-sm font-bold uppercase tracking-wide;
+    @apply bg-surface-container text-on-surface-dim;
+  }
+
+  /* ===========================================
+     9. NAVIGATION
+     =========================================== */
+
+  .nav-link {
+    @apply px-4 py-2 rounded-full;
+    @apply text-label font-medium;
+    @apply text-on-surface-dim;
+    @apply transition-all duration-300;
+    @apply hover:text-on-surface hover:bg-surface-dim;
+  }
+
+  .nav-link-active {
+    @apply text-on-surface font-bold bg-surface-dim;
+  }
+
+  /* Floating Island Navigation */
+  .floating-island {
+    @apply fixed top-6 left-1/2 -translate-x-1/2;
+    @apply flex items-center gap-2;
+    @apply px-3 py-2 rounded-full;
+    @apply bg-white/90 backdrop-blur-2xl;
+    @apply border border-white/60;
+    @apply shadow-float;
+    @apply z-sticky;
+  }
+
+  .floating-island .nav-cta {
+    @apply btn btn-primary btn-sm;
+  }
+}
+
+/* ===========================================
+   10. UTILITIES
+   =========================================== */
+
+@layer utilities {
+  /* Spring hover effect */
+  .spring-hover {
+    @apply transition-transform duration-600 ease-spring;
+  }
+  .spring-hover:hover {
+    @apply scale-102;
+  }
+
+  /* Lift on hover */
+  .hover-lift {
+    @apply transition-all duration-500 ease-smooth;
+  }
+  .hover-lift:hover {
+    @apply -translate-y-1 shadow-elevated-lg;
+  }
+
+  /* Text gradient */
+  .text-gradient {
+    @apply bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-brand to-brand-dark;
+  }
+
+  /* Glass effect */
+  .glass {
+    @apply bg-white/80 backdrop-blur-xl;
+    @apply border border-white/50;
+  }
+
+  .glass-dark {
+    @apply bg-on-surface/80 backdrop-blur-xl;
+    @apply border border-white/10;
+  }
+
+  /* Divider */
+  .divider {
+    @apply w-full h-px bg-outline;
+  }
+
+  .divider-vertical {
+    @apply w-px h-6 bg-outline;
+  }
+
+  /* Icon container */
+  .icon-container {
+    @apply w-12 h-12 rounded-full;
+    @apply bg-surface-container;
+    @apply flex items-center justify-center;
+    @apply transition-transform duration-300;
+  }
+
+  .icon-container:hover {
+    @apply scale-110;
+  }
+
+  .icon-container-lg {
+    @apply w-16 h-16 md:w-20 md:h-20;
+    @apply rounded-2xl md:rounded-3xl;
+  }
+
+  /* Aspect ratios */
+  .aspect-card {
+    aspect-ratio: 4 / 5;
+  }
+
+  /* Text balance */
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  /* Hide scrollbar but keep functionality */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Safe area padding for mobile */
+  .safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom, 0);
+  }
+
+  .safe-area-top {
+    padding-top: env(safe-area-inset-top, 0);
+  }
+}
+
+/* ===========================================
+   SPECIAL EFFECTS (outside layers)
+   =========================================== */
+
+/* Subtle grain overlay - Premium Feel */
+.grain::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity: 0.03;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+  z-index: 0;
+}
+
+/* Animation delay utilities (for staggered animations) */
+.delay-100 { animation-delay: 100ms; }
+.delay-150 { animation-delay: 150ms; }
+.delay-200 { animation-delay: 200ms; }
+.delay-300 { animation-delay: 300ms; }
+.delay-400 { animation-delay: 400ms; }
+.delay-500 { animation-delay: 500ms; }
+
+/* Fill mode for animations */
+.animate-fill-forwards {
+  animation-fill-mode: forwards;
+}
+
+.animate-fill-both {
+  animation-fill-mode: both;
+}

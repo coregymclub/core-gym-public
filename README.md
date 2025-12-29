@@ -3,7 +3,7 @@
 **Version:** 1.0.0
 **Framework:** Nuxt 3 + TypeScript + Tailwind CSS
 **Purpose:** Marknadsföringssida för Core Gym Club
-**URL:** coregymclub.se
+**URL:** coregym.club
 
 ---
 
@@ -90,28 +90,51 @@ core-gym-public/
 
 ---
 
-## 🎨 DESIGN VISION
+## 🎨 DESIGN SYSTEM
 
-**Google Expressive Design** (moderna, luftiga, stora typo)
-\+ **Apple Coolness** (minimalism, white space, premium känsla)
-\= **Core Gym 2026** (clean, inspirerande, actionable)
+### **📖 STYLE GUIDE**
+→ **[STYLE_GUIDE.md](./STYLE_GUIDE.md)** - CSS Component Library
 
-### **Color Palette:**
+**VIKTIGT:** Läs style guiden innan du skapar nya komponenter! Den innehåller:
+- Alla återanvändbara CSS-klasser (buttons, cards, grids, etc.)
+- Kod-exempel för vanliga mönster
+- Regler för konsekvent styling
+
+### **Color Palette (Tailwind tokens):**
 ```css
---core-red: #f11313        /* Primary CTA */
---core-dark: #1a1a1a       /* Text, headers */
---core-gray: #666666       /* Body text */
---core-light-gray: #f5f5f5 /* Backgrounds */
---core-white: #ffffff      /* Sections, cards */
+core-red / core-red-dark   /* Primary CTA */
+core-dark                  /* Text, dark backgrounds (#0c0c0c) */
+core-gray-50 → core-gray-600  /* Gray scale */
 ```
 
 ### **Typography:**
 ```css
-font-family: 'Inter', -apple-system, sans-serif
---h1: 64px / 72px (bold)
---h2: 48px / 56px (bold)
---h3: 36px / 44px (semibold)
---body: 16px / 28px (regular)
+font-display: 'Space Grotesk'  /* Headings */
+font-sans: 'Plus Jakarta Sans' /* Body text */
+```
+
+### **Component Classes:**
+```html
+<!-- Layout -->
+<section class="section-padding bg-white">
+  <div class="container-wide">
+
+<!-- Buttons -->
+<button class="btn-primary">
+<button class="btn-secondary">
+
+<!-- Cards -->
+<div class="card card-hover">
+<div class="card-compact">
+
+<!-- Grids -->
+<div class="grid-cards">
+<div class="scroll-container scrollbar-hide">
+
+<!-- Text -->
+<h2 class="section-title">
+<p class="text-body">
+<span class="text-meta">
 ```
 
 ---
@@ -205,7 +228,7 @@ GET https://coregymclub.zoezi.se/api/public/site/all
 ### **3. Deploy Target:**
 - **Vercel** (recommended for Nuxt 3)
 - **Cloudflare Pages** (alternative)
-- **Domain:** coregymclub.se
+- **Domain:** coregym.club
 
 ---
 
@@ -255,5 +278,5 @@ GET https://coregymclub.zoezi.se/api/public/site/all
 
 **🚀 LET'S BUILD THE FUTURE OF CORE GYM! 💪**
 
-**Last updated:** 2025-11-22
-**Status:** ✅ Ready for development
+**Last updated:** 2025-12-20
+**Status:** ✅ Live at https://coregym.club
