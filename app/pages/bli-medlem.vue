@@ -603,11 +603,11 @@ function toggleFaq(index: number) {
               </div>
             </div>
 
-            <!-- Student & Senior options (side by side, only when viewing ordinarie) -->
-            <div v-if="!showSeniorPrices" class="max-w-2xl mx-auto mt-6 grid grid-cols-2 gap-3">
+            <!-- Student & Senior options (stacked, only when viewing ordinarie) -->
+            <div v-if="!showSeniorPrices" class="max-w-2xl mx-auto mt-6 space-y-3">
               <!-- Student toggle -->
               <label
-                class="flex items-center gap-3 p-4 rounded-xl cursor-pointer transition-all border-2"
+                class="flex items-center gap-4 p-4 rounded-xl cursor-pointer transition-all border-2"
                 :class="isStudent
                   ? 'bg-emerald-50 border-emerald-500'
                   : 'bg-surface-container border-transparent hover:border-outline'"
@@ -623,26 +623,29 @@ function toggleFaq(index: number) {
                     </svg>
                   </div>
                 </div>
-                <div>
-                  <div class="font-bold text-on-surface">Student</div>
-                  <div class="text-xs text-on-surface-dim">Spara upp till 116 kr/mån</div>
+                <div class="flex-1">
+                  <div class="font-bold text-on-surface">Jag är student</div>
+                  <div class="text-sm text-on-surface-dim">Spara upp till 116 kr/mån med giltigt studieintyg</div>
                 </div>
               </label>
 
               <!-- Senior button -->
               <button
                 @click="showSeniorPrices = true; isStudent = false"
-                class="flex items-center gap-3 p-4 rounded-xl border-2 border-transparent bg-surface-container hover:border-outline transition-all text-left"
+                class="w-full flex items-center gap-4 p-4 rounded-xl border-2 border-transparent bg-surface-container hover:border-outline transition-all text-left"
               >
                 <div class="w-6 h-6 rounded-md border-2 border-outline bg-white flex items-center justify-center flex-shrink-0">
                   <svg class="w-4 h-4 text-on-surface-dim" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                   </svg>
                 </div>
-                <div>
-                  <div class="font-bold text-on-surface">Senior 65+</div>
-                  <div class="text-xs text-on-surface-dim">Se seniorpriser</div>
+                <div class="flex-1">
+                  <div class="font-bold text-on-surface">Jag är 65+</div>
+                  <div class="text-sm text-on-surface-dim">Se seniorpriser med rabatt</div>
                 </div>
+                <svg class="w-5 h-5 text-on-surface-dim flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                </svg>
               </button>
             </div>
 
