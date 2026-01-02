@@ -9,17 +9,20 @@ useHead({
 const CHECKOUT_URL = 'https://coregymclub.zoezi.se/homepage/56'
 
 const clubs = [
-  { id: 'vegastaden', name: 'Vegastaden' },
-  { id: 'tungelsta', name: 'Tungelsta' },
-  { id: 'vasterhaninge', name: 'Västerhaninge' },
+  { id: 'vegastaden', name: 'Vegastaden', siteId: 3 },
+  { id: 'tungelsta', name: 'Tungelsta', siteId: 1 },
+  { id: 'vasterhaninge', name: 'Västerhaninge', siteId: 2 },
   { id: 'osmo', name: 'Ösmo' },
 ]
 
-const categories = [
-  { id: 'ordinarie', name: 'Ordinarie', desc: 'Alla åldrar' },
-  { id: 'student', name: 'Student', desc: 'Med giltigt CSN' },
-  { id: 'senior', name: 'Senior 65+', desc: 'Pensionärsrabatt' },
-]
+const selectedClubData = computed(() => clubs.find(c => c.id === selectedClub.value))
+
+// Student discount prices per product ID
+const studentPrices: Record<number, number> = {
+  291: 479,  // Alla gym: 595 -> 479
+  297: 360,  // Tungelsta & VH: 450 -> 360
+  298: 360,  // VH & Tungelsta: 450 -> 360
+}
 
 const products = {
   vegastaden: {
@@ -252,17 +255,103 @@ const faqs = [
 const openFaq = ref<number | null>(null)
 
 const selectedClub = ref<string | null>(null)
-const selectedCategory = ref('ordinarie')
+const isStudent = ref(false)
+const showSeniorPrices = ref(false)
+const paymentType = ref<'autogiro' | 'yearly'>('autogiro')
+
+// Verification modal state
+const showVerificationModal = ref(false)
+const verificationProduct = ref<{
+  name: string
+  price: number
+  checkoutUrl: string
+  type: 'student' | 'senior'
+} | null>(null)
+
+// Sambo modal state
+const showSamboModal = ref(false)
+const samboProduct = ref<{
+  id: number
+  name: string
+  price: number
+} | null>(null)
 
 const currentProducts = computed(() => {
   if (!selectedClub.value) return []
-  return products[selectedClub.value]?.[selectedCategory.value] || []
+  const category = showSeniorPrices.value ? 'senior' : 'ordinarie'
+  return products[selectedClub.value]?.[category] || []
 })
 
-function getCheckoutUrl(product: any) {
+// Membership type for Tungelsta/VH (local vs all gyms)
+const membershipType = ref<'local' | 'all'>('local')
+
+// Get the current product based on toggles
+const currentProduct = computed(() => {
+  const prods = currentProducts.value
+  if (!prods.length) return null
+
+  // Vegastaden - toggle between autogiro and yearly
+  if (selectedClub.value === 'vegastaden') {
+    if (paymentType.value === 'yearly') {
+      return prods.find(p => p.id === 21) || prods[0]
+    }
+    return prods.find(p => p.id !== 21) || prods[0]
+  }
+
+  // Tungelsta/VH - toggle between local and all gyms
+  if (membershipType.value === 'all') {
+    return prods.find(p => p.id === 291) || prods[0]  // Alla gym product
+  }
+  return prods.find(p => p.id !== 291) || prods[0]  // Local product
+})
+
+// Check if yearly option is available (Vegastaden)
+const hasYearlyOption = computed(() => {
+  return selectedClub.value === 'vegastaden' && currentProducts.value.some(p => p.id === 21)
+})
+
+// Check if gym upgrade option is available (Tungelsta/VH)
+const hasGymUpgrade = computed(() => {
+  return (selectedClub.value === 'tungelsta' || selectedClub.value === 'vasterhaninge') &&
+    currentProducts.value.length > 1
+})
+
+// Get student price for a product (if available)
+function getStudentPrice(productId: number): number | null {
+  return studentPrices[productId] || null
+}
+
+function getCheckoutUrl(product: any, useStudentDiscount = false) {
   let url = `${CHECKOUT_URL}?product=${product.id}`
-  if (product.discount) url += `&discount=${product.discount}`
+  if (useStudentDiscount && studentPrices[product.id]) {
+    url += `&discount=STUDENT`
+  } else if (product.discount) {
+    url += `&discount=${product.discount}`
+  }
   return url
+}
+
+// Handle product click
+function handleProductClick(product: any) {
+  if (isStudent.value && studentPrices[product.id]) {
+    // Student checkbox is checked and product has student price - show verification
+    const studentPrice = studentPrices[product.id]
+    verificationProduct.value = {
+      name: product.name,
+      price: studentPrice,
+      checkoutUrl: getCheckoutUrl(product, true),
+      type: 'student'
+    }
+    showVerificationModal.value = true
+  } else {
+    // Direct redirect (ordinarie or senior)
+    window.location.href = getCheckoutUrl(product)
+  }
+}
+
+function openSamboModal() {
+  samboProduct.value = { id: 291, name: 'Sambokort', price: 500 }
+  showSamboModal.value = true
 }
 
 function toggleFaq(index: number) {
@@ -321,11 +410,17 @@ function toggleFaq(index: number) {
       <div class="container max-w-5xl px-4">
         <div class="bg-surface rounded-3xl p-6 md:p-16 shadow-elevated-lg border border-outline/30 animate-fade">
           <!-- Header -->
-          <div class="flex flex-col items-center gap-6 mb-12 border-b border-outline/30 pb-8">
-             <button @click="selectedClub = null" class="btn bg-surface-container text-on-surface hover:bg-surface-dim px-6 py-3 text-sm h-auto rounded-full font-bold">
-              ← Byt gym
+          <div class="flex items-center gap-4 mb-10">
+            <button
+              @click="selectedClub = null"
+              class="w-12 h-12 rounded-full bg-surface-container hover:bg-surface-dim flex items-center justify-center transition-colors flex-shrink-0"
+              aria-label="Tillbaka"
+            >
+              <svg class="w-5 h-5 text-on-surface" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+              </svg>
             </button>
-            <h2 class="font-display font-bold text-4xl md:text-5xl text-center uppercase tracking-tight leading-none">{{ clubs.find(c => c.id === selectedClub)?.name }}</h2>
+            <h2 class="font-display font-bold text-3xl md:text-5xl uppercase tracking-tight leading-none flex-1">{{ clubs.find(c => c.id === selectedClub)?.name }}</h2>
           </div>
 
           <!-- If no products (e.g. Ösmo) -->
@@ -344,56 +439,232 @@ function toggleFaq(index: number) {
 
           <!-- Product Selection -->
           <div v-else>
-            <!-- Tabs -->
-            <div class="flex flex-wrap justify-center gap-3 mb-12">
+            <!-- Back to ordinarie (when viewing senior) -->
+            <div v-if="showSeniorPrices" class="max-w-3xl mx-auto mb-8">
               <button
-                v-for="cat in categories"
-                :key="cat.id"
-                @click="selectedCategory = cat.id"
-                class="px-6 py-3 rounded-full text-base font-bold transition-all duration-300 border"
-                :class="selectedCategory === cat.id 
-                  ? 'bg-on-surface text-white border-on-surface shadow-md' 
-                  : 'bg-transparent text-on-surface-dim border-outline/50 hover:border-on-surface hover:text-on-surface'"
+                @click="showSeniorPrices = false"
+                class="flex items-center gap-2 text-on-surface-dim hover:text-on-surface transition-colors font-medium"
               >
-                {{ cat.name }}
+                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+                </svg>
+                Tillbaka till ordinarie priser
+              </button>
+              <h3 class="font-display font-bold text-2xl mt-4 uppercase tracking-tight text-on-surface">Seniorpriser 65+</h3>
+            </div>
+
+            <!-- 18+ Age notice for Vegastaden (only for non-senior) -->
+            <div v-if="selectedClub === 'vegastaden' && !showSeniorPrices" class="max-w-2xl mx-auto mb-6">
+              <div class="flex items-center gap-3 bg-amber-50 border border-amber-200 rounded-xl px-4 py-3">
+                <span class="text-lg font-bold text-amber-600">18+</span>
+                <p class="text-sm text-on-surface-dim">Åldersgräns 18 år gäller på Vegastaden</p>
+              </div>
+            </div>
+
+            <!-- Senior info text (when viewing senior prices) -->
+            <div v-if="showSeniorPrices" class="max-w-2xl mx-auto mb-8 text-center">
+              <p class="text-on-surface-dim">
+                Seniorpris gäller dig som fyllt 65 år. Åldersverifiering sker vid köp.
+              </p>
+            </div>
+
+            <!-- Payment/Membership Toggle -->
+            <div v-if="(hasYearlyOption || hasGymUpgrade) && !showSeniorPrices" class="max-w-2xl mx-auto mb-8">
+              <!-- Vegastaden: Payment type -->
+              <div v-if="hasYearlyOption" class="text-center">
+                <p class="text-sm font-medium text-on-surface-dim uppercase tracking-wide mb-3">Betalning</p>
+                <div class="inline-flex bg-surface-container rounded-full p-1">
+                  <button
+                    @click="paymentType = 'autogiro'"
+                    class="px-6 py-3 rounded-full font-bold transition-all"
+                    :class="paymentType === 'autogiro'
+                      ? 'bg-on-surface text-white'
+                      : 'text-on-surface-dim hover:text-on-surface'"
+                  >
+                    Autogiro
+                  </button>
+                  <button
+                    @click="paymentType = 'yearly'"
+                    class="px-6 py-3 rounded-full font-bold transition-all"
+                    :class="paymentType === 'yearly'
+                      ? 'bg-on-surface text-white'
+                      : 'text-on-surface-dim hover:text-on-surface'"
+                  >
+                    Direktbetalning
+                  </button>
+                </div>
+              </div>
+
+              <!-- Tungelsta/VH: Membership type -->
+              <div v-if="hasGymUpgrade" class="text-center">
+                <p class="text-sm font-medium text-on-surface-dim uppercase tracking-wide mb-3">Var vill du träna?</p>
+                <div class="grid grid-cols-2 gap-3">
+                  <button
+                    @click="membershipType = 'local'"
+                    class="p-4 rounded-xl border-2 transition-all text-center"
+                    :class="membershipType === 'local'
+                      ? 'border-on-surface bg-on-surface text-white'
+                      : 'border-outline bg-white hover:border-on-surface-dim'"
+                  >
+                    <div class="font-bold text-lg">{{ selectedClub === 'tungelsta' ? 'Tungelsta + VH' : 'VH + Tungelsta' }}</div>
+                    <div class="text-sm" :class="membershipType === 'local' ? 'text-white/70' : 'text-on-surface-dim'">2 gym</div>
+                  </button>
+                  <button
+                    @click="membershipType = 'all'"
+                    class="p-4 rounded-xl border-2 transition-all text-center"
+                    :class="membershipType === 'all'
+                      ? 'border-on-surface bg-on-surface text-white'
+                      : 'border-outline bg-white hover:border-on-surface-dim'"
+                  >
+                    <div class="font-bold text-lg">Alla gym</div>
+                    <div class="text-sm" :class="membershipType === 'all' ? 'text-white/70' : 'text-on-surface-dim'">Inkl. Vegastaden</div>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Membership Card -->
+            <div v-if="currentProduct" class="max-w-2xl mx-auto">
+              <div
+                class="bg-white border-2 rounded-3xl p-8 md:p-10 transition-all"
+                :class="isStudent && getStudentPrice(currentProduct.id)
+                  ? 'border-emerald-500'
+                  : 'border-outline'"
+              >
+                <!-- Price -->
+                <div class="text-center mb-6">
+                  <!-- Student price -->
+                  <div v-if="isStudent && getStudentPrice(currentProduct.id)">
+                    <div class="flex items-baseline justify-center gap-2">
+                      <span class="text-6xl md:text-7xl font-display font-bold text-emerald-600 tracking-tight">{{ getStudentPrice(currentProduct.id) }}</span>
+                      <span class="text-2xl font-bold text-on-surface-dim">{{ currentProduct.unit }}</span>
+                    </div>
+                    <p class="text-on-surface-dim mt-1">
+                      <span class="line-through">{{ currentProduct.price }} kr</span>
+                      <span class="text-emerald-600 font-medium ml-2">Studentrabatt</span>
+                    </p>
+                  </div>
+                  <!-- Regular price -->
+                  <div v-else>
+                    <div class="flex items-baseline justify-center gap-2">
+                      <span class="text-6xl md:text-7xl font-display font-bold text-on-surface tracking-tight">{{ currentProduct.price }}</span>
+                      <span class="text-2xl font-bold text-on-surface-dim">{{ currentProduct.unit }}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Features list -->
+                <div class="border-t border-outline/30 pt-6 mb-6">
+                  <ul class="space-y-3 text-on-surface-dim">
+                    <li class="flex items-center gap-3">
+                      <svg class="w-5 h-5 text-emerald-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                      </svg>
+                      <span v-if="membershipType === 'all' || selectedClub === 'vegastaden'">Tillgång till alla gym inkl. EGYM</span>
+                      <span v-else>Tillgång till {{ selectedClub === 'tungelsta' ? 'Tungelsta & Västerhaninge' : 'Västerhaninge & Tungelsta' }}</span>
+                    </li>
+                    <li class="flex items-center gap-3">
+                      <svg class="w-5 h-5 text-emerald-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                      </svg>
+                      <span>Fria gruppträningspass</span>
+                    </li>
+                    <li class="flex items-center gap-3">
+                      <svg class="w-5 h-5 text-emerald-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                      </svg>
+                      <span>Öppet 04:00–00:00 alla dagar</span>
+                    </li>
+                    <li v-if="paymentType === 'autogiro' || !hasYearlyOption" class="flex items-center gap-3">
+                      <svg class="w-5 h-5 text-emerald-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                      </svg>
+                      <span>Ingen bindningstid</span>
+                    </li>
+                    <li v-if="selectedClub === 'vegastaden'" class="flex items-center gap-3">
+                      <svg class="w-5 h-5 text-emerald-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                      </svg>
+                      <span>Bastu ingår</span>
+                    </li>
+                  </ul>
+                </div>
+
+                <!-- CTA -->
+                <button
+                  @click="handleProductClick(currentProduct)"
+                  class="w-full bg-on-surface hover:bg-black text-white py-4 px-8 rounded-full font-bold text-lg transition-all flex items-center justify-center gap-2"
+                >
+                  Fortsätt till betalning
+                  <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <!-- Student & Senior options (side by side, only when viewing ordinarie) -->
+            <div v-if="!showSeniorPrices" class="max-w-2xl mx-auto mt-6 grid grid-cols-2 gap-3">
+              <!-- Student toggle -->
+              <label
+                class="flex items-center gap-3 p-4 rounded-xl cursor-pointer transition-all border-2"
+                :class="isStudent
+                  ? 'bg-emerald-50 border-emerald-500'
+                  : 'bg-surface-container border-transparent hover:border-outline'"
+              >
+                <div class="relative flex-shrink-0">
+                  <input type="checkbox" v-model="isStudent" class="sr-only" />
+                  <div
+                    class="w-6 h-6 rounded-md border-2 flex items-center justify-center transition-all"
+                    :class="isStudent ? 'bg-emerald-500 border-emerald-500' : 'border-outline bg-white'"
+                  >
+                    <svg v-if="isStudent" class="w-4 h-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                </div>
+                <div>
+                  <div class="font-bold text-on-surface">Student</div>
+                  <div class="text-xs text-on-surface-dim">Spara upp till 116 kr/mån</div>
+                </div>
+              </label>
+
+              <!-- Senior button -->
+              <button
+                @click="showSeniorPrices = true; isStudent = false"
+                class="flex items-center gap-3 p-4 rounded-xl border-2 border-transparent bg-surface-container hover:border-outline transition-all text-left"
+              >
+                <div class="w-6 h-6 rounded-md border-2 border-outline bg-white flex items-center justify-center flex-shrink-0">
+                  <svg class="w-4 h-4 text-on-surface-dim" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                  </svg>
+                </div>
+                <div>
+                  <div class="font-bold text-on-surface">Senior 65+</div>
+                  <div class="text-xs text-on-surface-dim">Se seniorpriser</div>
+                </div>
               </button>
             </div>
 
-            <!-- Products List -->
-            <div class="flex flex-col gap-6 max-w-3xl mx-auto">
-              <a
-                v-for="product in currentProducts"
-                :key="product.id"
-                :href="getCheckoutUrl(product)"
-                class="group relative bg-white border border-outline hover:border-on-surface rounded-2xl p-6 md:p-10 transition-all duration-300 hover:shadow-elevated hover:-translate-y-1 flex flex-col md:flex-row items-center gap-6 md:gap-10"
-                :class="{ 'ring-2 ring-on-surface/10': product.popular }"
+            <!-- Sambo option (below student/senior) -->
+            <div v-if="!showSeniorPrices" class="max-w-2xl mx-auto mt-3">
+              <button
+                @click="openSamboModal"
+                class="w-full flex items-center gap-4 bg-pink-50 hover:bg-pink-100 border-2 border-pink-200 hover:border-pink-300 rounded-xl p-4 transition-all text-left"
               >
-                <div v-if="product.popular" class="absolute -top-3 left-1/2 -translate-x-1/2 bg-on-surface text-white text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full shadow-md">
-                  Rekommenderas
+                <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center flex-shrink-0">
+                  <svg class="w-5 h-5 text-pink-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                  </svg>
                 </div>
-
-                <div class="flex-1 text-center md:text-left w-full">
-                  <h3 class="font-display font-bold text-3xl text-on-surface mb-3 uppercase tracking-tight leading-none">{{ product.name }}</h3>
-                  <div class="flex flex-wrap gap-2 justify-center md:justify-start">
-                    <span v-for="feat in product.features" :key="feat" class="text-xs font-bold text-on-surface-dim bg-surface-container px-3 py-1.5 rounded-lg uppercase tracking-wide">
-                      {{ feat }}
-                    </span>
-                  </div>
+                <div class="flex-1">
+                  <span class="font-bold text-on-surface">Samborabatt</span>
+                  <span class="text-on-surface-dim"> · 500 kr/mån per person</span>
                 </div>
-
-                <div class="text-center md:text-right flex-shrink-0 w-full md:w-auto border-t md:border-t-0 border-outline/30 pt-4 md:pt-0 mt-2 md:mt-0">
-                  <div class="flex items-baseline justify-center md:justify-end gap-1 mb-2">
-                    <span class="text-4xl md:text-5xl font-display font-bold text-on-surface tracking-tight">{{ product.price }}</span>
-                    <span class="text-base font-bold text-on-surface-dim">{{ product.unit.replace('kr/', '') }}</span>
-                  </div>
-                  <span class="text-xs font-bold uppercase tracking-widest text-on-surface flex items-center justify-center md:justify-end gap-2 group-hover:gap-3 transition-all">
-                    Välj plan
-                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                    </svg>
-                  </span>
-                </div>
-              </a>
+                <svg class="w-5 h-5 text-on-surface-dim" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
             </div>
           </div>
         </div>
@@ -450,6 +721,58 @@ function toggleFaq(index: number) {
       </div>
     </section>
 
+    <!-- Staffed Hours (uses proper component with live data) -->
+    <StaffedHoursSection
+      v-if="selectedClubData?.siteId"
+      :site-id="selectedClubData.siteId"
+      title="Bemannade tider"
+    />
+
+    <!-- Friskvårdsbidrag -->
+    <section v-if="selectedClub && selectedClub !== 'osmo'" class="section bg-surface-container">
+      <div class="container max-w-4xl">
+        <div class="text-center mb-10">
+          <h2 class="font-display font-bold text-3xl md:text-4xl mb-4 uppercase tracking-tight">Friskvårdsbidrag</h2>
+          <p class="text-on-surface-dim text-lg max-w-2xl mx-auto">
+            Betala ditt medlemskap med friskvårdsbidrag. Vi är godkända för friskvård och anslutna till de största portalerna.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-2xl mx-auto mb-10">
+          <div class="bg-white rounded-xl p-4 text-center shadow-sm">
+            <span class="font-bold text-on-surface">Epassi</span>
+          </div>
+          <div class="bg-white rounded-xl p-4 text-center shadow-sm">
+            <span class="font-bold text-on-surface">Benify</span>
+          </div>
+          <div class="bg-white rounded-xl p-4 text-center shadow-sm">
+            <span class="font-bold text-on-surface">Edenred</span>
+          </div>
+          <div class="bg-white rounded-xl p-4 text-center shadow-sm">
+            <span class="font-bold text-on-surface">Wellnet</span>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-2xl p-6 md:p-8 max-w-2xl mx-auto">
+          <h3 class="font-bold text-lg text-on-surface mb-3">Så här gör du</h3>
+          <ol class="space-y-3 text-on-surface-dim">
+            <li class="flex gap-3">
+              <span class="w-6 h-6 rounded-full bg-on-surface text-white text-sm font-bold flex items-center justify-center flex-shrink-0">1</span>
+              <span>Bli medlem och betala som vanligt</span>
+            </li>
+            <li class="flex gap-3">
+              <span class="w-6 h-6 rounded-full bg-on-surface text-white text-sm font-bold flex items-center justify-center flex-shrink-0">2</span>
+              <span>Logga in på <a href="https://member.coregym.club" target="_blank" class="text-on-surface underline">Mina sidor</a> och ladda ner ditt friskvårdsintyg</span>
+            </li>
+            <li class="flex gap-3">
+              <span class="w-6 h-6 rounded-full bg-on-surface text-white text-sm font-bold flex items-center justify-center flex-shrink-0">3</span>
+              <span>Skicka in intyget till din arbetsgivare eller via din friskvårdsportal</span>
+            </li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
     <!-- FAQ -->
     <section class="section bg-surface">
       <div class="container max-w-4xl">
@@ -489,5 +812,25 @@ function toggleFaq(index: number) {
         </div>
       </div>
     </section>
+
+    <!-- Student Verification Modal -->
+    <ModalsStudentVerificationModal
+      v-if="showVerificationModal && verificationProduct"
+      :product-name="verificationProduct.name"
+      :product-price="verificationProduct.price"
+      :checkout-url="verificationProduct.checkoutUrl"
+      :verification-type="verificationProduct.type"
+      @close="showVerificationModal = false"
+    />
+
+    <!-- Sambo Verification Modal -->
+    <ModalsSamboVerificationModal
+      v-if="showSamboModal && samboProduct"
+      :product-id="samboProduct.id"
+      :product-name="samboProduct.name"
+      :product-price="samboProduct.price"
+      :checkout-base-url="CHECKOUT_URL"
+      @close="showSamboModal = false"
+    />
   </div>
 </template>
