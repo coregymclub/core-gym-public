@@ -362,13 +362,13 @@ function toggleFaq(index: number) {
 <template>
   <div class="grain relative min-h-screen flex flex-col">
     <!-- Hero -->
-    <section class="min-h-[70vh] flex flex-col justify-end items-center px-6 pb-32 md:pb-40 relative overflow-hidden bg-surface-bright">
+    <section class="aspect-[9/16] md:aspect-video md:max-h-none flex flex-col justify-end items-center px-6 pb-32 md:pb-40 relative overflow-hidden bg-surface-bright">
       <!-- Background Image -->
       <div class="absolute inset-0 z-0">
         <img
-          src="/images/lifting-eleiko-nike-dark.webp"
+          src="/images/pt/denise-hero-sign-up.avif"
           alt="Medlemskap"
-          class="w-full h-full object-cover opacity-90 scale-105"
+          class="w-full h-full object-cover"
         />
         <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
       </div>
@@ -382,35 +382,105 @@ function toggleFaq(index: number) {
     </section>
 
     <!-- Steg 1: Välj gym -->
-    <section v-if="!selectedClub" class="section bg-surface pt-0 relative z-20 -mt-24">
-      <div class="container max-w-5xl px-4">
-        <div class="bg-surface rounded-3xl p-8 md:p-16 shadow-elevated-lg border border-outline/30">
-          <div class="text-center mb-12">
-            <span class="inline-flex items-center justify-center w-14 h-14 rounded-full bg-on-surface text-white text-2xl font-bold font-display mb-8">1</span>
-            <h2 class="font-display font-bold text-4xl md:text-5xl mb-4 uppercase tracking-tight">Välj anläggning</h2>
-            <p class="text-lg text-on-surface-dim font-medium">Var vill du träna mest?</p>
-          </div>
+    <section v-if="!selectedClub" class="relative z-20 -mt-16 md:mx-auto md:max-w-5xl bg-surface rounded-t-3xl md:rounded-3xl p-8 md:p-16 shadow-elevated-lg md:border border-outline/30">
+      <div class="text-center mb-12">
+        <h2 class="font-display font-bold text-4xl md:text-5xl mb-4 uppercase tracking-tight">Välj anläggning</h2>
+        <p class="text-lg text-on-surface-dim font-medium">Var vill du träna mest?</p>
+      </div>
 
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <button
-              v-for="club in clubs"
-              :key="club.id"
-              @click="selectedClub = club.id"
-              class="group relative overflow-hidden rounded-2xl p-8 text-center bg-surface-container hover:bg-on-surface border border-transparent transition-all duration-300 hover:-translate-y-1 active:scale-98"
-            >
-              <h3 class="font-display font-bold text-2xl md:text-3xl text-on-surface group-hover:text-white transition-colors uppercase tracking-tight">{{ club.name }}</h3>
-            </button>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-12">
+        <button
+          v-for="club in clubs"
+          :key="club.id"
+          @click="selectedClub = club.id"
+          class="group relative overflow-hidden rounded-2xl p-8 text-center bg-surface-container hover:bg-on-surface border border-transparent transition-all duration-300 hover:-translate-y-1 active:scale-98"
+        >
+          <h3 class="font-display font-bold text-2xl md:text-3xl text-on-surface group-hover:text-white transition-colors uppercase tracking-tight">{{ club.name }}</h3>
+        </button>
+      </div>
+
+      <!-- Alltid på Core -->
+      <div class="border-t border-outline/20 pt-10">
+        <p class="text-center text-sm font-bold text-on-surface-dim uppercase tracking-widest mb-8">Alltid på Core</p>
+        <div class="grid grid-cols-3 gap-4 md:gap-8 max-w-lg mx-auto">
+          <div class="text-center">
+            <div class="w-10 h-10 md:w-12 md:h-12 mx-auto mb-3">
+              <img src="/png-icons/open-hours.png" alt="" class="w-full h-full object-contain" />
+            </div>
+            <p class="font-bold text-sm text-on-surface">Öppet alla dagar</p>
+            <p class="text-xs text-on-surface-dim">03:55–00:05</p>
+          </div>
+          <div class="text-center">
+            <div class="w-10 h-10 md:w-12 md:h-12 mx-auto mb-3">
+              <img src="/png-icons/ingen-bindningstid.png" alt="" class="w-full h-full object-contain" />
+            </div>
+            <p class="font-bold text-sm text-on-surface">Ingen bindning</p>
+            <p class="text-xs text-on-surface-dim">2 mån uppsägning</p>
+          </div>
+          <div class="text-center">
+            <div class="w-10 h-10 md:w-12 md:h-12 mx-auto mb-3">
+              <img src="/png-icons/no-starting-fee.png" alt="" class="w-full h-full object-contain" />
+            </div>
+            <p class="font-bold text-sm text-on-surface">Ingen startavgift</p>
+            <p class="text-xs text-on-surface-dim">Börja direkt</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Friskvårdsbidrag -->
+      <div class="mt-10 p-8 md:p-10 bg-sky-50 rounded-3xl border border-sky-200">
+        <div class="flex items-start gap-4 mb-6">
+          <div class="w-12 h-12 md:w-14 md:h-14 flex-shrink-0">
+            <img src="/png-icons/friskvardsbidrag.png" alt="" class="w-full h-full object-contain" />
+          </div>
+          <div>
+            <h3 class="font-display font-bold text-xl md:text-2xl text-on-surface mb-1 uppercase tracking-tight">Använd ditt friskvårdsbidrag</h3>
+            <p class="text-on-surface-dim">Enklare än du tror</p>
+          </div>
+        </div>
+
+        <div class="space-y-4 mb-6">
+          <div class="flex items-start gap-3">
+            <div class="w-6 h-6 rounded-full bg-sky-500 flex items-center justify-center flex-shrink-0 mt-0.5">
+              <span class="text-white text-xs font-bold">1</span>
+            </div>
+            <p class="text-on-surface"><span class="font-bold">Teckna medlemskap</span> — betala med autogiro som vanligt</p>
+          </div>
+          <div class="flex items-start gap-3">
+            <div class="w-6 h-6 rounded-full bg-sky-500 flex items-center justify-center flex-shrink-0 mt-0.5">
+              <span class="text-white text-xs font-bold">2</span>
+            </div>
+            <p class="text-on-surface"><span class="font-bold">Samla tillgodo</span> — dina betalningar byggs upp på kontot</p>
+          </div>
+          <div class="flex items-start gap-3">
+            <div class="w-6 h-6 rounded-full bg-sky-500 flex items-center justify-center flex-shrink-0 mt-0.5">
+              <span class="text-white text-xs font-bold">3</span>
+            </div>
+            <p class="text-on-surface"><span class="font-bold">Hämta ut kvitto</span> — när du nått din summa skickar du in till arbetsgivaren</p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 pt-4 border-t border-sky-200">
+          <div class="bg-white rounded-xl p-3 border border-sky-200 flex items-center justify-center h-12">
+            <img src="/images/epassi.svg" alt="Epassi" class="h-6 max-w-full object-contain" />
+          </div>
+          <div class="bg-white rounded-xl p-3 border border-sky-200 flex items-center justify-center h-12">
+            <img src="/images/benifex.webp" alt="Benifex" class="h-6 max-w-full object-contain" />
+          </div>
+          <div class="bg-white rounded-xl p-3 border border-sky-200 flex items-center justify-center h-12">
+            <img src="/images/edenred.svg" alt="Edenred" class="h-6 max-w-full object-contain" />
+          </div>
+          <div class="bg-white rounded-xl p-3 border border-sky-200 flex items-center justify-center h-12">
+            <img src="/images/wellnet.webp" alt="Wellnet" class="h-6 max-w-full object-contain" />
           </div>
         </div>
       </div>
     </section>
 
     <!-- Steg 2: Välj medlemskap -->
-    <section v-else class="section bg-surface pt-0 relative z-20 -mt-24">
-      <div class="container max-w-5xl px-4">
-        <div class="bg-surface rounded-3xl p-6 md:p-16 shadow-elevated-lg border border-outline/30 animate-fade">
-          <!-- Header -->
-          <div class="flex items-center gap-4 mb-10">
+    <section v-else class="relative z-20 -mt-16 md:mx-auto md:max-w-5xl bg-surface rounded-t-3xl md:rounded-3xl p-6 md:p-16 shadow-elevated-lg md:border border-outline/30 animate-fade">
+      <!-- Header -->
+      <div class="flex items-center gap-4 mb-10">
             <button
               @click="selectedClub = null"
               class="w-12 h-12 rounded-full bg-surface-container hover:bg-surface-dim flex items-center justify-center transition-colors flex-shrink-0"
@@ -432,7 +502,7 @@ function toggleFaq(index: number) {
             </div>
             <h3 class="font-display font-bold text-3xl mb-4 uppercase tracking-tight">Snart öppnar vi!</h3>
             <p class="text-lg text-on-surface-dim mb-8 max-w-md mx-auto leading-relaxed">Vi har inte släppt medlemskapen för detta gym ännu. Håll ut!</p>
-            <NuxtLink to="/osmo" class="btn bg-on-surface text-white hover:bg-black px-8 py-4 text-lg rounded-full shadow-lg border-none">
+            <NuxtLink to="/osmo" class="btn btn-dark btn-lg">
               Anmäl intresse
             </NuxtLink>
           </div>
@@ -670,108 +740,33 @@ function toggleFaq(index: number) {
               </button>
             </div>
           </div>
-        </div>
-      </div>
     </section>
-
-    <!-- Club Info Section -->
-    <section v-if="selectedClub && currentClubInfo" class="section bg-surface-container">
-      <div class="container text-center max-w-5xl px-4">
-        <h2 class="font-display font-bold text-3xl md:text-5xl mb-12 text-on-surface uppercase tracking-tight leading-tight">{{ currentClubInfo.headline }}</h2>
-
-        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 md:gap-10">
-          <div v-for="amenity in currentClubInfo.amenities" :key="amenity.text" class="flex flex-col items-center gap-4 group">
-            <div class="w-16 h-16 md:w-20 md:h-20 rounded-2xl md:rounded-[2rem] bg-white shadow-sm flex items-center justify-center text-on-surface group-hover:scale-105 transition-transform duration-300">
-               <!-- Clock icon -->
-              <svg v-if="amenity.icon === 'clock'" class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <circle cx="12" cy="12" r="10" stroke-width="2"/>
-                <path stroke-linecap="round" stroke-width="2" d="M12 6v6l4 2"/>
-              </svg>
-              <!-- Dumbbell icon -->
-              <svg v-else-if="amenity.icon === 'dumbbell'" class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6.5 6.5h-2a1 1 0 0 0-1 1v9a1 1 0 0 0 1 1h2m0-11v11m0-11h2v11h-2m11-11h2a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1h-2m0-11v11m0-11h-2v11h2m-6-11v11"/>
-              </svg>
-              <!-- Users icon -->
-              <svg v-else-if="amenity.icon === 'users'" class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm14 10v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
-              </svg>
-              <!-- Flame/sauna icon -->
-              <svg v-else-if="amenity.icon === 'flame'" class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 22c-4.97 0-9-2.582-9-7v-.088C3 12.794 4.338 11.1 6.375 10c1.949-1.052 3.101-2.99 2.813-5l-.563-3 2.086.795c3.757 1.43 6.625 4.526 7.29 8.379.137.794-.09 1.597-.59 2.151-.37.41-.404 1.018-.106 1.47.71 1.078.695 2.49-.039 3.548A4.48 4.48 0 0 1 14 21.522"/>
-              </svg>
-              <!-- Sparkles/EGYM/New icon -->
-              <svg v-else-if="amenity.icon === 'sparkles'" class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3l1.912 5.813a2 2 0 0 0 1.275 1.275L21 12l-5.813 1.912a2 2 0 0 0-1.275 1.275L12 21l-1.912-5.813a2 2 0 0 0-1.275-1.275L3 12l5.813-1.912a2 2 0 0 0 1.275-1.275L12 3z"/>
-              </svg>
-              <!-- Key icon -->
-              <svg v-else-if="amenity.icon === 'key'" class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/>
-              </svg>
-              <!-- Heart icon -->
-              <svg v-else-if="amenity.icon === 'heart'" class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-              </svg>
-              <!-- Zap icon -->
-              <svg v-else-if="amenity.icon === 'zap'" class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
-              </svg>
-            </div>
-            <span class="text-base font-bold text-on-surface-dim uppercase tracking-wide leading-snug">{{ amenity.text }}</span>
-          </div>
-        </div>
-
-        <p v-if="currentClubInfo.extra" class="text-2xl text-on-surface-dim mt-16 italic font-medium max-w-3xl mx-auto leading-relaxed">{{ currentClubInfo.extra }}</p>
-      </div>
-    </section>
-
-    <!-- Staffed Hours (uses proper component with live data) -->
-    <StaffedHoursSection
-      v-if="selectedClubData?.siteId"
-      :site-id="selectedClubData.siteId"
-      title="Bemannade tider"
-    />
 
     <!-- Friskvårdsbidrag -->
-    <section v-if="selectedClub && selectedClub !== 'osmo'" class="section bg-surface-container">
-      <div class="container max-w-4xl">
-        <div class="text-center mb-10">
-          <h2 class="font-display font-bold text-3xl md:text-4xl mb-4 uppercase tracking-tight">Friskvårdsbidrag</h2>
-          <p class="text-on-surface-dim text-lg max-w-2xl mx-auto">
-            Betala ditt medlemskap med friskvårdsbidrag. Vi är godkända för friskvård och anslutna till de största portalerna.
+    <section v-if="selectedClub && selectedClub !== 'osmo'" class="py-16 bg-surface">
+      <div class="container max-w-2xl px-4">
+        <div class="bg-sky-50 border border-sky-200 rounded-3xl p-8 md:p-12 text-center">
+          <div class="w-16 h-16 mx-auto mb-6">
+            <img src="/png-icons/friskvardsbidrag.png" alt="" class="w-full h-full object-contain" />
+          </div>
+          <h3 class="font-display font-bold text-2xl md:text-3xl text-on-surface mb-3 uppercase tracking-tight">Använd ditt friskvårdsbidrag</h3>
+          <p class="text-on-surface-dim text-lg mb-8 max-w-md mx-auto">
+            Självklart funkar det hos oss. Vi är anslutna till alla stora portaler.
           </p>
-        </div>
-
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-2xl mx-auto mb-10">
-          <div class="bg-white rounded-xl p-4 text-center shadow-sm">
-            <span class="font-bold text-on-surface">Epassi</span>
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-3 max-w-md mx-auto">
+            <div class="bg-white rounded-xl p-3 border border-sky-200 flex items-center justify-center h-12 shadow-sm">
+              <img src="/images/epassi.svg" alt="Epassi" class="h-6 max-w-full object-contain" />
+            </div>
+            <div class="bg-white rounded-xl p-3 border border-sky-200 flex items-center justify-center h-12 shadow-sm">
+              <img src="/images/benifex.webp" alt="Benifex" class="h-6 max-w-full object-contain" />
+            </div>
+            <div class="bg-white rounded-xl p-3 border border-sky-200 flex items-center justify-center h-12 shadow-sm">
+              <img src="/images/edenred.svg" alt="Edenred" class="h-6 max-w-full object-contain" />
+            </div>
+            <div class="bg-white rounded-xl p-3 border border-sky-200 flex items-center justify-center h-12 shadow-sm">
+              <img src="/images/wellnet.webp" alt="Wellnet" class="h-6 max-w-full object-contain" />
+            </div>
           </div>
-          <div class="bg-white rounded-xl p-4 text-center shadow-sm">
-            <span class="font-bold text-on-surface">Benify</span>
-          </div>
-          <div class="bg-white rounded-xl p-4 text-center shadow-sm">
-            <span class="font-bold text-on-surface">Edenred</span>
-          </div>
-          <div class="bg-white rounded-xl p-4 text-center shadow-sm">
-            <span class="font-bold text-on-surface">Wellnet</span>
-          </div>
-        </div>
-
-        <div class="bg-white rounded-2xl p-6 md:p-8 max-w-2xl mx-auto">
-          <h3 class="font-bold text-lg text-on-surface mb-3">Så här gör du</h3>
-          <ol class="space-y-3 text-on-surface-dim">
-            <li class="flex gap-3">
-              <span class="w-6 h-6 rounded-full bg-on-surface text-white text-sm font-bold flex items-center justify-center flex-shrink-0">1</span>
-              <span>Bli medlem och betala som vanligt</span>
-            </li>
-            <li class="flex gap-3">
-              <span class="w-6 h-6 rounded-full bg-on-surface text-white text-sm font-bold flex items-center justify-center flex-shrink-0">2</span>
-              <span>Logga in på <a href="https://member.coregym.club" target="_blank" class="text-on-surface underline">Mina sidor</a> och ladda ner ditt friskvårdsintyg</span>
-            </li>
-            <li class="flex gap-3">
-              <span class="w-6 h-6 rounded-full bg-on-surface text-white text-sm font-bold flex items-center justify-center flex-shrink-0">3</span>
-              <span>Skicka in intyget till din arbetsgivare eller via din friskvårdsportal</span>
-            </li>
-          </ol>
         </div>
       </div>
     </section>
@@ -812,6 +807,30 @@ function toggleFaq(index: number) {
               </div>
             </div>
           </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Kontakt -->
+    <section class="py-16 bg-surface-container">
+      <div class="container max-w-2xl px-4 text-center">
+        <h2 class="font-display font-bold text-2xl md:text-3xl mb-4 uppercase tracking-tight">Har du frågor?</h2>
+        <p class="text-on-surface-dim text-lg mb-8">
+          Tveka inte att höra av dig. Vi hjälper dig gärna.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a href="mailto:info@coregym.club" class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-white rounded-full font-bold text-on-surface border border-outline hover:border-on-surface transition-colors">
+            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
+            info@coregym.club
+          </a>
+          <a href="tel:+46859090909" class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-white rounded-full font-bold text-on-surface border border-outline hover:border-on-surface transition-colors">
+            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+            </svg>
+            08-590 909 09
+          </a>
         </div>
       </div>
     </section>
