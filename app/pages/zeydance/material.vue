@@ -56,6 +56,12 @@ const materials = [
       { name: 'Core Gym Club (mörk)', file: '/images/logo-dark.svg', desc: 'Mörk logotyp för ljusa bakgrunder' },
       { name: 'Zey Dance Club (SVG)', file: '/images/zey-dance-club.svg', desc: 'Vektorformat, skalbar' },
     ]
+  },
+  {
+    category: 'Bilder',
+    items: [
+      { name: 'Pingstkyrkan Yoga', file: '/zeydance-material/pingstkyrkan-yoga.jpg', desc: 'Yogaklass i pingstkyrkan, Tungelsta' },
+    ]
   }
 ]
 </script>
@@ -166,8 +172,17 @@ const materials = [
         <div class="mt-12 p-6 bg-white/5 border border-white/5 rounded-2xl">
           <h3 class="font-medium text-white mb-2">Behöver du något mer?</h3>
           <p class="text-white/50 text-sm mb-4">
-            Om du behöver fler bilder, logotyper eller annat material - hör av dig till Gustav så lägger vi upp det här.
+            Om du behöver fler bilder, logotyper eller annat material - hör av dig så lägger vi upp det här.
           </p>
+          <a
+            href="mailto:gustav@coregymclub.se"
+            class="inline-flex items-center gap-2 text-fuchsia-300 hover:text-fuchsia-200 transition-colors text-sm font-medium mb-4"
+          >
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
+            gustav@coregymclub.se
+          </a>
           <p class="text-white/30 text-sm">
             Alla QR-koder pekar till: <span class="text-fuchsia-300">zeydance.coregym.club</span>
           </p>
