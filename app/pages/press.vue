@@ -3,28 +3,32 @@ definePageMeta({
   layout: false
 })
 
+const route = useRoute()
+const isYoga = computed(() => route.query.v === 'yoga')
+
 useHead({
-  title: 'Press & Material - Core Gym Club',
+  title: computed(() => isYoga.value ? 'Material - Kundalini Yoga Tungelsta' : 'Press & Material - Core Gym Club'),
   meta: [{ name: 'robots', content: 'noindex, nofollow' }]
 })
 
-const PASSWORD = 'coregym2026'
+const PASSWORD = computed(() => isYoga.value ? 'yoga2026' : 'coregym2026')
+const STORAGE_KEY = computed(() => isYoga.value ? 'yoga_press_unlocked' : 'coregym_press_unlocked')
 
 const enteredPassword = ref('')
 const isUnlocked = ref(false)
 const error = ref('')
 
 onMounted(() => {
-  const saved = localStorage.getItem('coregym_press_unlocked')
+  const saved = localStorage.getItem(STORAGE_KEY.value)
   if (saved === 'true') {
     isUnlocked.value = true
   }
 })
 
 function checkPassword() {
-  if (enteredPassword.value === PASSWORD) {
+  if (enteredPassword.value === PASSWORD.value) {
     isUnlocked.value = true
-    localStorage.setItem('coregym_press_unlocked', 'true')
+    localStorage.setItem(STORAGE_KEY.value, 'true')
     error.value = ''
   } else {
     error.value = 'Fel lösenord'
@@ -33,19 +37,31 @@ function checkPassword() {
 
 function logout() {
   isUnlocked.value = false
-  localStorage.removeItem('coregym_press_unlocked')
+  localStorage.removeItem(STORAGE_KEY.value)
   enteredPassword.value = ''
 }
 
-const materials = [
+const coregymMaterials = [
   {
     category: 'Logotyper',
     items: [
-      { name: 'Core Gym Club (vit)', file: '/images/logo.svg', desc: 'För mörka bakgrunder' },
-      { name: 'Core Gym Club (mörk)', file: '/images/logo-dark.svg', desc: 'För ljusa bakgrunder' },
+      { name: 'Core Gym Club (vit)', file: '/images/logo.svg', desc: 'För mörka bakgrunder', invert: true },
+      { name: 'Core Gym Club (mörk)', file: '/images/logo-dark.svg', desc: 'För ljusa bakgrunder', invert: false },
     ]
   }
 ]
+
+const yogaMaterials = [
+  {
+    category: 'Bilder',
+    items: [
+      { name: 'Annexet (lokalen)', file: '/zeydance-material/annexet-lokal.jpg', desc: 'Yogalokalen i Tungelsta', invert: false },
+    ]
+  }
+]
+
+const materials = computed(() => isYoga.value ? yogaMaterials : coregymMaterials)
+const contactEmail = computed(() => isYoga.value ? 'gustav@coregymclub.se' : 'info@coregymclub.se')
 </script>
 
 <template>
@@ -53,9 +69,15 @@ const materials = [
     <!-- Login Screen -->
     <div v-if="!isUnlocked" class="min-h-screen flex items-center justify-center p-6">
       <div class="w-full max-w-sm">
-        <div class="text-center mb-10">
-          <h1 class="text-2xl font-semibold text-black mb-2">Core Gym Club</h1>
-          <p class="text-neutral-500 text-sm">Press & Material</p>
+        <div class="flex flex-col items-center mb-10">
+          <img
+            v-if="!isYoga"
+            src="/images/logo-dark.svg"
+            alt="Core Gym Club"
+            class="h-8 mb-4"
+          />
+          <h1 v-else class="text-xl font-semibold text-black mb-2">Kundalini Yoga Tungelsta</h1>
+          <p class="text-neutral-500 text-sm">{{ isYoga ? 'Material' : 'Press & Material' }}</p>
         </div>
 
         <form @submit.prevent="checkPassword" class="space-y-4">
@@ -89,9 +111,16 @@ const materials = [
     <div v-else class="min-h-screen">
       <header class="sticky top-0 z-10 backdrop-blur-xl bg-[#fafafa]/80 border-b border-neutral-200">
         <div class="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
-          <div>
-            <h1 class="font-semibold text-black">Core Gym Club</h1>
-            <p class="text-sm text-neutral-500">Press & Material</p>
+          <div class="flex items-center gap-3">
+            <img
+              v-if="!isYoga"
+              src="/images/logo-dark.svg"
+              alt="Core Gym Club"
+              class="h-5"
+            />
+            <span v-else class="font-semibold text-black">Kundalini Yoga Tungelsta</span>
+            <span class="text-neutral-300">|</span>
+            <span class="text-sm text-neutral-500">{{ isYoga ? 'Material' : 'Press & Material' }}</span>
           </div>
           <button
             @click="logout"
@@ -119,7 +148,7 @@ const materials = [
                   :src="item.file"
                   :alt="item.name"
                   class="w-3/4 h-3/4 object-contain"
-                  :class="item.file.includes('logo.svg') ? 'invert' : ''"
+                  :class="item.invert ? 'invert' : ''"
                 />
               </div>
 
@@ -146,13 +175,13 @@ const materials = [
             Kontakta oss om du behöver fler bilder, andra format eller har frågor.
           </p>
           <a
-            href="mailto:info@coregymclub.se"
+            :href="`mailto:${contactEmail}`"
             class="inline-flex items-center gap-2 text-black hover:text-neutral-600 transition-colors text-sm font-medium"
           >
             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
               <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
             </svg>
-            info@coregymclub.se
+            {{ contactEmail }}
           </a>
         </div>
       </main>
