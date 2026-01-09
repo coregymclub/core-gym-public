@@ -2,11 +2,36 @@
 export default {
   darkMode: 'class',
   content: [
+    './app/**/*.{js,vue,ts}',
     './components/**/*.{js,vue,ts}',
     './layouts/**/*.vue',
     './pages/**/*.vue',
     './plugins/**/*.{js,ts}',
     './app.vue',
+  ],
+  safelist: [
+    'bg-brand',
+    'bg-brand-dark',
+    'bg-brand-vibrant',
+    'bg-brand-warm',
+    'bg-rose-500',
+    'bg-teal-500',
+    'bg-blue-500',
+    'bg-purple-500',
+    'bg-amber-500',
+    'bg-pink-500',
+    'bg-on-surface-dim',
+    'bg-orange-100', 'text-orange-900',
+    'bg-blue-100', 'text-blue-900',
+    'bg-purple-100', 'text-purple-900',
+    'bg-green-100', 'text-green-900',
+    'animate-slide-up',
+    'animate-fade',
+    'col-span-1',
+    'col-span-2',
+    'row-span-1',
+    'aspect-square',
+    'aspect-[2/1]',
   ],
   theme: {
     extend: {
@@ -18,6 +43,8 @@ export default {
         'brand': '#D93636',
         'brand-dark': '#B02020',
         'brand-deep': '#C42121',    // For hero sections/gradients
+        'brand-vibrant': '#E30613', // Nike-style powerful red
+        'brand-warm': '#FA2D48',    // Apple Music warm red
         'brand-light': '#FFEDEF',   // For subtle backgrounds
 
         // Surface system (light theme)

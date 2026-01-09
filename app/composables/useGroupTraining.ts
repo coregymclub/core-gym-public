@@ -119,6 +119,9 @@ export function useGroupTraining() {
 
   function getClassCategory(name: string): string {
     const lower = name.toLowerCase()
+    // Special events
+    if (lower.includes('nyårssmällare') || lower.includes('nyarssmallare') || lower.includes('julspecial') || lower.includes('sommarspecial')) return 'special'
+    // Regular categories
     if (lower.includes('pump') || lower.includes('strength')) return 'strength'
     if (lower.includes('combat') || lower.includes('attack')) return 'cardio'
     if (lower.includes('balance') || lower.includes('yoga') || lower.includes('yinyoga')) return 'mindbody'

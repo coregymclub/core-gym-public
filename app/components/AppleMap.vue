@@ -26,9 +26,9 @@ const selectedGym = ref<Gym | null>(null)
 
 // Default gyms if not provided
 const defaultGyms: Gym[] = [
-  { name: 'Tungelsta', address: 'Lillgårdsvägen 16, Tungelsta', lat: 59.1456, lng: 18.0889, href: '/tungelsta' },
-  { name: 'Västerhaninge', address: 'Ringvägen 26, Västerhaninge', lat: 59.1258, lng: 18.0731, href: '/vasterhaninge' },
-  { name: 'Vegastaden', address: 'Vega Allé 2, Vega', lat: 59.1847, lng: 18.1089, href: '/vegastaden' },
+  { name: 'Tungelsta', address: 'Tungelstavägen 200, Tungelsta', lat: 59.105746, lng: 18.038984, href: '/tungelsta' },
+  { name: 'Västerhaninge', address: 'Centrumvägen 4, Västerhaninge', lat: 59.122003, lng: 18.105657, href: '/vasterhaninge' },
+  { name: 'Vegastaden', address: 'Vega Allé 2, Vega', lat: 59.1868, lng: 18.1446, href: '/vegastaden' },
   { name: 'Ösmo', address: 'Öppnar hösten 2026', lat: 59.0347, lng: 17.9542, href: '/osmo', comingSoon: true },
 ]
 
@@ -40,7 +40,7 @@ const gymsToShow = computed(() => {
 const mapCenter = computed(() => {
   if (props.center) return props.center
   if (props.singleGym) return { lat: props.singleGym.lat, lng: props.singleGym.lng }
-  return { lat: 59.12, lng: 18.08 }
+  return { lat: 59.11, lng: 18.06 }
 })
 
 onMounted(async () => {
@@ -52,7 +52,8 @@ onMounted(async () => {
   if (!window.mapkit.initialized) {
     window.mapkit.init({
       authorizationCallback: (done: (token: string) => void) => {
-        done('eyJraWQiOiI3QTU3NDROOTkyIiwidHlwIjoiSldUIiwiYWxnIjoiRVMyNTYifQ.eyJpc3MiOiJLOTJXRFpLRjNCIiwiaWF0IjoxNzY2NjczNjQzLCJvcmlnaW4iOiJjb3JlZ3ltLmNsdWIifQ.0ZHFYaMz_ZSMk18GSEqy9LINKXCVm_NaU98ZJPp1VynpV8ao3Gtbl-4DOFPIUwyaj6F64z5rKCBzazekA6vZkw')
+        // Wildcard token for *.coregym.club (www, zeydance, etc.)
+        done('eyJraWQiOiI1R1ZTODY4SjdEIiwidHlwIjoiSldUIiwiYWxnIjoiRVMyNTYifQ.eyJpc3MiOiJLOTJXRFpLRjNCIiwiaWF0IjoxNzY3NzE2MzUwLCJvcmlnaW4iOiIqLmNvcmVneW0uY2x1YiJ9.T80QU-MIDp0MYtZTZ5TMk-WBSED1X15iST_3wSt96taC2FfSC1NTJw2B9qVUEC5vWtSEtlEOZ8wQl5SmcfmvlA')
       }
     })
     window.mapkit.initialized = true
@@ -60,7 +61,7 @@ onMounted(async () => {
 
   const map = new window.mapkit.Map(mapContainer.value, {
     center: new window.mapkit.Coordinate(mapCenter.value.lat, mapCenter.value.lng),
-    colorScheme: window.mapkit.Map.ColorSchemes.Dark,
+    colorScheme: window.mapkit.Map.ColorSchemes.Light,
     mapType: window.mapkit.Map.MapTypes.MutedStandard,
     showsCompass: window.mapkit.FeatureVisibility.Hidden,
     showsZoomControl: false,
@@ -83,7 +84,6 @@ onMounted(async () => {
       subtitle: gym.address,
       glyphText: gym.comingSoon ? '?' : 'C',
       glyphColor: '#ffffff',
-      selectedGlyphColor: '#ffffff',
       animates: true,
       callout: {
         calloutElementForAnnotation: () => {

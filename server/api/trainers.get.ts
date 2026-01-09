@@ -76,7 +76,7 @@ const trainers: Trainer[] = [
     shortQuote: 'Det finns inget som heter "jag kan inte".',
     bio: 'Michan är övertygad om att alla kan nå sina mål med rätt support och inställning. Hon hjälper dig att bryta igenom mentala barriärer och upptäcka din fulla potential.',
     imageKey: '3109997f-cdb8-4446-ab26-54c7933ce27a',
-    imageUrl: getStaffImageUrl('michan'),
+    imageUrl: '/images/michan-portrait-new.webp',
     instagram: '@michanfristal',
     specialties: ['Mental träning', 'Löpträning', 'Uthållighetsträning', 'Målsättning'],
     reviews: [

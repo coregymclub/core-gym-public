@@ -2,338 +2,284 @@
 
 ## CSS Component Library
 
-All reusable styles are defined in `app/assets/css/main.css`. Use these classes instead of writing inline Tailwind utilities to ensure consistency across the site.
+This project uses a custom design system based on **Material Design 3 Expressive** principles, implemented via Tailwind CSS.
+All reusable styles are defined in `app/assets/css/main.css`.
 
 ---
 
-## Layout
+## Colors (Design Tokens)
+
+The color palette is defined in `tailwind.config.js` and available as utility classes.
+
+### Brand Colors
+- `bg-brand` / `text-brand`: Primary Red (#D93636) - Main actions, highlights
+- `bg-brand-dark`: Darker Red (#B02020) - Hover states
+- `bg-brand-deep`: Deep Red (#C42121) - Gradients/Hero
+- `bg-brand-light`: Light Pink (#FFEDEF) - Background tints
+
+### Surface & Text
+- `bg-surface`: White (#ffffff) - Cards, main backgrounds
+- `bg-surface-bright`: Bright White (#fcfcfc) - Page background
+- `bg-surface-dim`: Off-white (#f5f5f5) - Secondary backgrounds
+- `bg-surface-container`: Container background (#f0f0f0)
+- `text-on-surface`: Dark Grey (#1a1a1a) - Primary text
+- `text-on-surface-dim`: Medium Grey (#666666) - Secondary text
+
+---
+
+## Typography
+
+### Fonts
+- **Headings:** `font-display` (Suisse BP Intl) - Bold, Uppercase, Tight tracking
+- **Body:** `font-body` (Neue Montreal) - Clean, readable
+
+### Text Classes
+```html
+<h1 class="text-hero">Massive Hero Text</h1>
+<h2 class="text-section">Section Title</h2>
+<p class="text-lead">Lead paragraph text...</p>
+<span class="text-overline">Small Uppercase Label</span>
+```
+
+---
+
+## Components
+
+### Buttons (M3 Expressive)
+Pill-shaped buttons with expressive hover states and springy animations.
+
+```html
+<!-- Primary (Red filled) -->
+<button class="btn btn-primary">Bli Medlem</button>
+
+<!-- Secondary (Outlined) -->
+<button class="btn btn-secondary">Logga In</button>
+
+<!-- Tonal (Soft filled) -->
+<button class="btn btn-tonal">Alternativ</button>
+
+<!-- Ghost (Transparent) -->
+<button class="btn btn-ghost">Läs mer</button>
+
+<!-- Dark (Black) -->
+<button class="btn btn-dark">Svart Knapp</button>
+
+<!-- Sizes -->
+<button class="btn btn-primary btn-xs">Extra Small</button>
+<button class="btn btn-primary btn-sm">Small</button>
+<button class="btn btn-primary btn-md">Medium</button>
+<button class="btn btn-primary btn-lg">Large</button>
+<button class="btn btn-primary btn-xl">Extra Large</button>
+```
+
+### FAB (Floating Action Button)
+```html
+<!-- Standard FAB -->
+<button class="fab">
+  <svg>...</svg>
+</button>
+
+<!-- Extended FAB with label -->
+<button class="fab fab-extended">
+  <svg>...</svg>
+  Skapa
+</button>
+```
+
+### Cards (M3 Expressive)
+Large rounded corners (28px) and soft shadows.
+
+```html
+<!-- Standard Card -->
+<div class="card">Content</div>
+
+<!-- Card Variants -->
+<div class="card card-elevated">Elevated shadow</div>
+<div class="card card-filled">Filled background</div>
+<div class="card card-outlined">Outlined border</div>
+<div class="card card-glass">Glass blur effect</div>
+<div class="card card-dark">Dark background</div>
+
+<!-- Interactive Card -->
+<div class="card card-interactive">
+  Clickable Content
+</div>
+
+<!-- Sizes -->
+<div class="card card-sm">Small padding</div>
+<div class="card card-lg">Large padding</div>
+<div class="card card-xl">Extra large</div>
+
+<!-- Media Card -->
+<div class="card-media">
+  <img class="card-media-image" src="..." />
+  <div class="card-media-content">
+    <h3>Title</h3>
+    <p>Description</p>
+  </div>
+</div>
+```
+
+### Chips (M3 Expressive)
+Pill-shaped selection elements.
+
+```html
+<!-- Assist Chip (outlined) -->
+<button class="chip-assist">
+  <svg>...</svg>
+  Hjälp
+</button>
+
+<!-- Filter Chip (toggleable) -->
+<button class="chip-filter" aria-selected="true">Aktiv</button>
+<button class="chip-filter">Inaktiv</button>
+
+<!-- Input Chip (with close) -->
+<div class="chip-input">
+  Tagg
+  <button class="chip-close">×</button>
+</div>
+
+<!-- Suggestion Chip -->
+<button class="chip-suggestion">Förslag</button>
+
+<!-- Sizes -->
+<button class="chip-filter chip-sm">Small</button>
+<button class="chip-filter chip-lg">Large</button>
+
+<!-- Chip Group (scrollable) -->
+<div class="chip-group">
+  <button class="chip-filter">Alla</button>
+  <button class="chip-filter">Gym</button>
+  <button class="chip-filter">Yoga</button>
+</div>
+```
+
+### Forms (M3 Expressive)
+
+```html
+<!-- Filled Input (default M3 style) -->
+<input type="text" class="input" placeholder="Namn" />
+
+<!-- Outlined Input -->
+<input type="email" class="input-outlined" placeholder="Email" />
+
+<!-- Floating Label Field -->
+<div class="field">
+  <input type="text" class="field-input" placeholder=" " />
+  <label class="field-label">Namn</label>
+</div>
+
+<!-- Select -->
+<select class="select">
+  <option>Välj...</option>
+</select>
+
+<!-- Textarea -->
+<textarea class="textarea" rows="4"></textarea>
+
+<!-- Checkbox -->
+<input type="checkbox" class="checkbox" />
+
+<!-- Radio -->
+<input type="radio" class="radio" />
+
+<!-- Labels & Messages -->
+<label class="label">Etikett</label>
+<p class="hint">Hjälptext</p>
+<p class="error-text">Felmeddelande</p>
+```
+
+---
+
+## Layout Utilities
 
 ### Container
 ```html
-<div class="container-wide">
-  <!-- Max-width 7xl, responsive padding -->
+<div class="container">
+  <!-- Max-width 1400px, responsive padding -->
+</div>
+<div class="container-narrow">
+  <!-- Max-width 600px -->
 </div>
 ```
 
-### Section Padding
-```html
-<section class="section-padding">      <!-- py-16 md:py-24 lg:py-32 -->
-<section class="section-padding-sm">   <!-- py-12 lg:py-16 -->
-<section class="section-padding-xs">   <!-- py-8 -->
-```
-
-### Common Section Pattern
-```html
-<section class="section-padding bg-white">
-  <div class="container-wide">
-    <!-- content -->
-  </div>
-</section>
-```
+### Spacing
+Use standard Tailwind spacing, or these specific section paddings:
+- `section`: py-24 lg:py-40
+- `section-sm`: py-16 lg:py-24
+- `section-lg`: py-32 lg:py-48
 
 ---
 
-## Buttons
+## M3 Expressive Utilities
 
+### Shapes (Border Radius)
 ```html
-<button class="btn-primary">Primary Action</button>
-<button class="btn-secondary">Secondary Action</button>
-<button class="btn-outline">Outline Style</button>
+<div class="shape-xs">8px</div>
+<div class="shape-sm">12px</div>
+<div class="shape-md">16px</div>
+<div class="shape-lg">20px</div>
+<div class="shape-xl">28px</div>
+<div class="shape-2xl">32px</div>
+<div class="shape-full">Pill</div>
 ```
 
-| Class | Use Case |
-|-------|----------|
-| `btn-primary` | Main CTAs, important actions (red background) |
-| `btn-secondary` | Secondary actions (white with border) |
-| `btn-outline` | Alternative style (transparent with red border) |
-
----
-
-## Cards
-
-### Base Card
+### Shadow Levels
 ```html
-<div class="card">
-  <!-- White background, rounded-2xl, p-6 -->
-</div>
+<div class="shadow-level-0">None</div>
+<div class="shadow-level-1">Low</div>
+<div class="shadow-level-2">Medium</div>
+<div class="shadow-level-3">High</div>
+<div class="shadow-level-4">Higher</div>
+<div class="shadow-level-5">Highest</div>
+```
 
-<div class="card card-hover">
-  <!-- Adds shadow and lift on hover -->
+### State Layer (Interactive Hover)
+```html
+<button class="state-layer">
+  Hover me for overlay effect
+</button>
+```
+
+### Interactive Surface
+```html
+<div class="surface-interactive">
+  Clickable area with hover states
 </div>
 ```
 
-### Compact Card
-```html
-<div class="card-compact">
-  <!-- Gray background, rounded-xl, p-4 -->
-</div>
-```
+### Animation Utilities
+- `.animate-spring`: Bouncy entrance
+- `.animate-slide-up`: Slide up fade in
+- `.spring-hover`: Hover scale effect
+- `.ripple`: Click ripple effect
 
-### Swipeable Card (horizontal scroll)
+### Touch Target Helper
 ```html
-<div class="scroll-container scrollbar-hide">
-  <article class="card-swipeable card-compact">
-    <!-- Fixed width (w-72 sm:w-80), snap-start -->
-  </article>
-</div>
-```
-
-### Interactive Card
-```html
-<article class="card card-interactive">
-  <!-- Adds cursor-pointer and hover shadow -->
-</article>
-```
-
-### Feature Card
-```html
-<div class="card-feature">
-  <!-- Centered text, hover shadow -->
-</div>
+<!-- Ensures minimum 48px touch target -->
+<button class="touch-target">Small button</button>
 ```
 
 ---
 
-## Section Headers
+## Usage Rules
 
-### Centered Header
-```html
-<div class="section-header">
-  <h2 class="section-title mb-4">Title Here</h2>
-  <p class="section-subtitle max-w-2xl mx-auto">Subtitle text</p>
-</div>
-```
-
-### Header with Link
-```html
-<div class="section-header-flex">
-  <div>
-    <h2 class="section-title-md">Title</h2>
-    <p class="text-body mt-1">Optional subtitle</p>
-  </div>
-  <NuxtLink to="/more" class="link-arrow">
-    See all
-    <svg><!-- arrow icon --></svg>
-  </NuxtLink>
-</div>
-```
-
-### Title Sizes
-| Class | Size |
-|-------|------|
-| `section-title` | 3xl / 4xl / 5xl (hero, main sections) |
-| `section-title-md` | 2xl / 3xl (subsections) |
-| `section-title-sm` | xl (card titles, small headers) |
-
----
-
-## Badges & Tags
-
-### Badges
-```html
-<span class="badge badge-green">Open</span>
-<span class="badge badge-blue">Info</span>
-<span class="badge badge-red">Important</span>
-<span class="badge badge-gray">Default</span>
-<span class="badge badge-dark">Dark mode</span>
-```
-
-### Tags (smaller)
-```html
-<span class="tag bg-core-gray-100 text-core-gray-400">Small tag</span>
-```
-
----
-
-## Status Indicators
-
-```html
-<span class="status-dot status-dot-live"></span>   <!-- Green, pulsing -->
-<span class="status-dot status-dot-active"></span> <!-- Red, pulsing -->
-```
-
-Common pattern with text:
-```html
-<div class="flex items-center gap-2">
-  <span class="status-dot status-dot-active"></span>
-  <span class="text-meta">Latest updates</span>
-</div>
-```
-
----
-
-## Links
-
-```html
-<NuxtLink to="/page" class="link-arrow">
-  Link text
-  <svg><!-- arrow icon --></svg>
-</NuxtLink>
-
-<NuxtLink to="/" class="link-back">
-  <svg><!-- back arrow --></svg>
-  Back
-</NuxtLink>
-```
-
----
-
-## Text Utilities
-
-```html
-<span class="text-meta">Small gray text (dates, counts)</span>
-<p class="text-body">Body text with relaxed line-height</p>
-<p class="text-body-lg">Larger body text</p>
-```
-
----
-
-## Grids
-
-### Feature Grid (4 columns)
-```html
-<div class="grid-features">
-  <!-- 1 col → 2 col → 4 col -->
-</div>
-```
-
-### Card Grid (3 columns)
-```html
-<div class="grid-cards">
-  <!-- 1 col → 2 col → 3 col, gap-6 -->
-</div>
-```
-
-### Compact Card Grid
-```html
-<div class="grid-cards-2">
-  <!-- 2 col → 3 col, gap-4/6 -->
-</div>
-```
-
----
-
-## Horizontal Scroll
-
-```html
-<div class="scroll-container scrollbar-hide">
-  <article class="card-swipeable">Item 1</article>
-  <article class="card-swipeable">Item 2</article>
-  <article class="card-swipeable">Item 3</article>
-</div>
-```
-
----
-
-## Loading States
-
-```html
-<!-- Skeleton container -->
-<div class="card skeleton">
-  <div class="skeleton-text w-3/4 mb-2"></div>
-  <div class="skeleton-text-sm w-full"></div>
-</div>
-
-<!-- Individual skeletons -->
-<div class="h-48 skeleton"></div>           <!-- Block skeleton -->
-<div class="skeleton-text w-3/4"></div>     <!-- Text line (h-4) -->
-<div class="skeleton-text-sm w-full"></div> <!-- Small text (h-3) -->
-```
-
----
-
-## Line Clamp
-
-```html
-<p class="line-clamp-2">Truncate after 2 lines...</p>
-<p class="line-clamp-3">Truncate after 3 lines...</p>
-<p class="line-clamp-4">Truncate after 4 lines...</p>
-```
-
----
-
-## Form Elements
-
-```html
-<input type="text" class="input-base" placeholder="Enter text...">
-```
-
----
-
-## Design Tokens (Tailwind Config)
-
-### Colors
-- `core-red` / `core-red-dark` - Primary brand color
-- `core-dark` - Text and dark backgrounds (#0c0c0c)
-- `core-gray-50` through `core-gray-600` - Gray scale
-
-### Fonts
-- `font-display` - Space Grotesk (headings)
-- `font-sans` - Plus Jakarta Sans (body)
-
----
-
-## Complete Component Example
-
-```vue
-<template>
-  <section class="section-padding bg-core-gray-100">
-    <div class="container-wide">
-      <!-- Header with link -->
-      <div class="section-header-flex">
-        <div>
-          <h2 class="section-title-md">Section Title</h2>
-          <p class="text-body mt-1">Optional description</p>
-        </div>
-        <NuxtLink to="/more" class="link-arrow">
-          See all
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-          </svg>
-        </NuxtLink>
-      </div>
-
-      <!-- Loading state -->
-      <div v-if="loading" class="grid-cards">
-        <div v-for="i in 3" :key="i" class="card skeleton">
-          <div class="skeleton-text w-3/4 mb-2"/>
-          <div class="skeleton-text-sm w-full"/>
-        </div>
-      </div>
-
-      <!-- Content grid -->
-      <div v-else class="grid-cards">
-        <article
-          v-for="item in items"
-          :key="item.id"
-          class="card card-hover card-interactive"
-        >
-          <div class="flex items-center gap-2 mb-3">
-            <span class="status-dot status-dot-active"/>
-            <span class="text-meta">{{ item.date }}</span>
-            <span class="badge badge-green">New</span>
-          </div>
-          <h3 class="section-title-sm mb-2">{{ item.title }}</h3>
-          <p class="text-body line-clamp-3">{{ item.description }}</p>
-        </article>
-      </div>
-
-      <!-- Empty state -->
-      <div v-if="!loading && items.length === 0" class="text-center py-12">
-        <p class="text-body">No items to display.</p>
-      </div>
-    </div>
-  </section>
-</template>
-```
-
----
-
-## Rules
-
-1. **Always use component classes** instead of inline Tailwind for common patterns
-2. **Extend main.css** if you need a new reusable pattern
-3. **Use design tokens** (core-red, core-gray-*, font-display) not raw colors
-4. **Follow the section pattern**: `section` > `container-wide` > content
-5. **Include loading and empty states** in data-driven components
-6. **Use semantic HTML**: `section`, `article`, `nav`, etc.
+1. **Use Component Classes:** Prefer `.btn-primary` over `bg-red-500 rounded-full ...`.
+2. **Follow the Voice:** "Kom som du är", "Inga pekpinnar".
+3. **M3 Expressive Principles:**
+   - Large, soft rounded corners (28px+)
+   - Generous touch targets (min 48px)
+   - Spring-based animations
+   - Clear visual hierarchy
+4. **Structure:**
+   ```html
+   <section class="section bg-surface">
+     <div class="container">
+       <h2 class="text-section mb-8">Rubrik</h2>
+       <div class="grid ...">
+         <!-- Content -->
+       </div>
+     </div>
+   </section>
+   ```

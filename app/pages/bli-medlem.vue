@@ -6,14 +6,22 @@ useHead({
   ]
 })
 
-const CHECKOUT_URL = 'https://coregymclub.zoezi.se/homepage/56'
+const route = useRoute()
+const router = useRouter()
+
+const CHECKOUT_URL = 'https://checkout.coregym.club/homepage/56'
 
 const clubs = [
   { id: 'vegastaden', name: 'Vegastaden', siteId: 3 },
   { id: 'tungelsta', name: 'Tungelsta', siteId: 1 },
   { id: 'vasterhaninge', name: 'Västerhaninge', siteId: 2 },
-  { id: 'osmo', name: 'Ösmo' },
 ]
+
+// Special clubs with different behavior
+const specialClubs = {
+  egym: { name: 'EGYM', link: '/egym', description: 'Boka intro' },
+  osmo: { name: 'Ösmo', link: '/osmo', description: 'Kommer snart' },
+}
 
 const selectedClubData = computed(() => clubs.find(c => c.id === selectedClub.value))
 
@@ -160,11 +168,6 @@ const products = {
       },
     ],
   },
-  osmo: {
-    ordinarie: [],
-    student: [],
-    senior: []
-  }
 }
 
 // Club-specific amenities/info
@@ -202,14 +205,6 @@ const clubInfo = {
     ],
     extra: 'Västerhaninge har genomgått en renovering och erbjuder moderna faciliteter. EGYM-studion finns i samma byggnad med separat ingång och medlemskap.'
   },
-  osmo: {
-    headline: 'Kommer 2026',
-    amenities: [
-      { icon: 'clock', text: 'Öppettider kommer' },
-      { icon: 'sparkles', text: 'Nybyggt gym' },
-    ],
-    extra: 'Vi bygger för fullt! Håll utkik för mer information och förköpserbjudanden.'
-  }
 }
 
 const currentClubInfo = computed(() => {
@@ -254,10 +249,35 @@ const faqs = [
 
 const openFaq = ref<number | null>(null)
 
-const selectedClub = ref<string | null>(null)
-const isStudent = ref(false)
+// Initialize selectedClub from URL query param
+const initialClub = route.query.gym as string | undefined
+const selectedClub = ref<string | null>(
+  initialClub && clubs.some(c => c.id === initialClub) ? initialClub : null
+)
+
 const showSeniorPrices = ref(false)
 const paymentType = ref<'autogiro' | 'yearly'>('autogiro')
+
+// Sync selectedClub with URL query param (only if different to avoid loops)
+watch(selectedClub, (newClub) => {
+  const currentQuery = route.query.gym as string | undefined
+  if (newClub !== (currentQuery || null)) {
+    if (newClub) {
+      router.push({ query: { gym: newClub } })
+    } else {
+      router.push({ query: {} })
+    }
+  }
+})
+
+// Watch route changes (browser back/forward)
+watch(() => route.query.gym, (gymQuery) => {
+  const gym = gymQuery as string | undefined
+  const validGym = gym && clubs.some(c => c.id === gym) ? gym : null
+  if (selectedClub.value !== validGym) {
+    selectedClub.value = validGym
+  }
+})
 
 // Verification modal state
 const showVerificationModal = ref(false)
@@ -324,7 +344,7 @@ function getStudentPrice(productId: number): number | null {
 function getCheckoutUrl(product: any, useStudentDiscount = false) {
   let url = `${CHECKOUT_URL}?product=${product.id}`
   if (useStudentDiscount && studentPrices[product.id]) {
-    url += `&discount=STUDENT`
+    url += `&discount=student`
   } else if (product.discount) {
     url += `&discount=${product.discount}`
   }
@@ -333,20 +353,23 @@ function getCheckoutUrl(product: any, useStudentDiscount = false) {
 
 // Handle product click
 function handleProductClick(product: any) {
-  if (isStudent.value && studentPrices[product.id]) {
-    // Student checkbox is checked and product has student price - show verification
-    const studentPrice = studentPrices[product.id]
-    verificationProduct.value = {
-      name: product.name,
-      price: studentPrice,
-      checkoutUrl: getCheckoutUrl(product, true),
-      type: 'student'
-    }
-    showVerificationModal.value = true
-  } else {
-    // Direct redirect (ordinarie or senior)
-    window.location.href = getCheckoutUrl(product)
+  // Direct redirect (ordinarie or senior)
+  window.location.href = getCheckoutUrl(product)
+}
+
+// Open student modal with current product
+function openStudentModal() {
+  if (!currentProduct.value) return
+  const product = currentProduct.value
+  const studentPrice = studentPrices[product.id] || product.price
+
+  verificationProduct.value = {
+    name: 'Studentkort',
+    price: studentPrice,
+    checkoutUrl: getCheckoutUrl(product, true),
+    type: 'student'
   }
+  showVerificationModal.value = true
 }
 
 function openSamboModal() {
@@ -361,21 +384,39 @@ function toggleFaq(index: number) {
 
 <template>
   <div class="grain relative min-h-screen flex flex-col">
-    <!-- Hero -->
-    <section class="aspect-[9/16] md:aspect-video md:max-h-none flex flex-col justify-end items-center px-6 pb-32 md:pb-40 relative overflow-hidden bg-surface-bright">
-      <!-- Background Image -->
+    <!-- Hero Mobile -->
+    <section class="lg:hidden aspect-[4/5] flex flex-col justify-end items-center px-6 pb-24 relative overflow-hidden bg-surface-bright">
       <div class="absolute inset-0 z-0">
         <img
           src="/images/pt/denise-hero-sign-up.avif"
           alt="Medlemskap"
           class="w-full h-full object-cover"
         />
-        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+        <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
       </div>
-
       <div class="container text-center relative z-10">
-        <h1 class="font-display font-bold text-5xl md:text-7xl lg:text-8xl text-white mb-6 animate-slide-up uppercase tracking-tighter leading-[0.9]">Bli medlem</h1>
-        <p class="text-2xl md:text-3xl text-white/90 font-medium max-w-2xl mx-auto animate-slide-up leading-relaxed" style="animation-delay: 0.1s">
+        <p class="text-2xl text-white font-medium max-w-2xl mx-auto animate-slide-up leading-relaxed">
+          Välj ditt gym. Välj din plan. Börja träna idag.
+        </p>
+      </div>
+    </section>
+
+    <!-- Hero Desktop (Video) -->
+    <section class="hidden lg:flex aspect-[21/9] flex-col justify-end items-center px-6 pb-32 relative overflow-hidden">
+      <div class="absolute inset-0 z-0">
+        <video
+          autoplay
+          muted
+          loop
+          playsinline
+          class="w-full h-full object-cover"
+        >
+          <source src="/videos/hero_video_compressed.mp4" type="video/mp4" />
+        </video>
+        <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
+      </div>
+      <div class="container text-center relative z-10">
+        <p class="text-3xl text-white font-medium max-w-2xl mx-auto animate-slide-up leading-relaxed">
           Välj ditt gym. Välj din plan. Börja träna idag.
         </p>
       </div>
@@ -383,12 +424,14 @@ function toggleFaq(index: number) {
 
     <!-- Steg 1: Välj gym -->
     <section v-if="!selectedClub" class="relative z-20 -mt-16 md:mx-auto md:max-w-5xl bg-surface rounded-t-3xl md:rounded-3xl p-8 md:p-16 shadow-elevated-lg md:border border-outline/30">
-      <div class="text-center mb-12">
-        <h2 class="font-display font-bold text-4xl md:text-5xl mb-4 uppercase tracking-tight">Välj anläggning</h2>
-        <p class="text-lg text-on-surface-dim font-medium">Var vill du träna mest?</p>
+      <div class="text-center mb-10">
+        <span class="inline-block px-3 py-1.5 bg-surface-dim text-on-surface-dim rounded-full text-sm font-bold mb-4 uppercase tracking-wide">Hemmaklubb</span>
+        <h2 class="font-display font-bold text-4xl md:text-5xl uppercase tracking-tight mb-3">Välj ditt gym</h2>
+        <p class="text-on-surface-dim">Vill du träna på fler gym? Det väljer du längre fram.</p>
       </div>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-12">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+        <!-- Regular clubs -->
         <button
           v-for="club in clubs"
           :key="club.id"
@@ -397,81 +440,49 @@ function toggleFaq(index: number) {
         >
           <h3 class="font-display font-bold text-2xl md:text-3xl text-on-surface group-hover:text-white transition-colors uppercase tracking-tight">{{ club.name }}</h3>
         </button>
-      </div>
 
-      <!-- Alltid på Core -->
-      <div class="border-t border-outline/20 pt-10">
-        <p class="text-center text-sm font-bold text-on-surface-dim uppercase tracking-widest mb-8">Alltid på Core</p>
-        <div class="grid grid-cols-3 gap-4 md:gap-8 max-w-lg mx-auto">
-          <div class="text-center">
-            <div class="w-10 h-10 md:w-12 md:h-12 mx-auto mb-3">
-              <img src="/png-icons/open-hours.png" alt="" class="w-full h-full object-contain" />
-            </div>
-            <p class="font-bold text-sm text-on-surface">Öppet alla dagar</p>
-            <p class="text-xs text-on-surface-dim">03:55–00:05</p>
+        <!-- EGYM -->
+        <NuxtLink
+          to="/egym"
+          class="group relative overflow-hidden rounded-2xl p-8 text-center bg-surface-container hover:bg-on-surface border border-transparent transition-all duration-300 hover:-translate-y-1 active:scale-98"
+        >
+          <h3 class="font-display font-bold text-2xl md:text-3xl text-on-surface group-hover:text-white transition-colors uppercase tracking-tight">EGYM</h3>
+        </NuxtLink>
+
+        <!-- Ösmo - samma storlek, streckad kant -->
+        <NuxtLink
+          to="/osmo"
+          class="group relative overflow-hidden rounded-2xl p-8 text-center bg-white border-2 border-dashed border-outline hover:border-on-surface transition-all duration-300 hover:-translate-y-1 active:scale-98"
+        >
+          <div class="flex items-center justify-center gap-2">
+            <span class="relative flex h-2 w-2">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+            </span>
+            <h3 class="font-display font-bold text-2xl md:text-3xl text-on-surface uppercase tracking-tight">Ösmo</h3>
           </div>
-          <div class="text-center">
-            <div class="w-10 h-10 md:w-12 md:h-12 mx-auto mb-3">
-              <img src="/png-icons/ingen-bindningstid.png" alt="" class="w-full h-full object-contain" />
-            </div>
-            <p class="font-bold text-sm text-on-surface">Ingen bindning</p>
-            <p class="text-xs text-on-surface-dim">2 mån uppsägning</p>
-          </div>
-          <div class="text-center">
-            <div class="w-10 h-10 md:w-12 md:h-12 mx-auto mb-3">
-              <img src="/png-icons/no-starting-fee.png" alt="" class="w-full h-full object-contain" />
-            </div>
-            <p class="font-bold text-sm text-on-surface">Ingen startavgift</p>
-            <p class="text-xs text-on-surface-dim">Börja direkt</p>
-          </div>
-        </div>
+          <p class="text-sm text-on-surface-dim mt-1">Kommer 2026</p>
+        </NuxtLink>
       </div>
 
       <!-- Friskvårdsbidrag -->
-      <div class="mt-10 p-8 md:p-10 bg-sky-50 rounded-3xl border border-sky-200">
-        <div class="flex items-start gap-4 mb-6">
-          <div class="w-12 h-12 md:w-14 md:h-14 flex-shrink-0">
-            <img src="/png-icons/friskvardsbidrag.png" alt="" class="w-full h-full object-contain" />
-          </div>
-          <div>
-            <h3 class="font-display font-bold text-xl md:text-2xl text-on-surface mb-1 uppercase tracking-tight">Använd ditt friskvårdsbidrag</h3>
-            <p class="text-on-surface-dim">Enklare än du tror</p>
-          </div>
-        </div>
+      <div class="mt-12 pt-10 border-t border-outline/20 text-center">
+        <span class="inline-block px-3 py-1.5 bg-sky-100 text-sky-700 rounded-full text-sm font-bold mb-4">Friskvård</span>
+        <h3 class="font-display font-bold text-2xl md:text-3xl text-on-surface mb-4 uppercase tracking-tight">Använd ditt friskvårdsbidrag hos oss på Core</h3>
+        <p class="text-on-surface-dim text-lg mb-8">Vi är anslutna till alla stora portaler.</p>
 
-        <div class="space-y-4 mb-6">
-          <div class="flex items-start gap-3">
-            <div class="w-6 h-6 rounded-full bg-sky-500 flex items-center justify-center flex-shrink-0 mt-0.5">
-              <span class="text-white text-xs font-bold">1</span>
-            </div>
-            <p class="text-on-surface"><span class="font-bold">Teckna medlemskap</span> — betala med autogiro som vanligt</p>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 max-w-lg mx-auto">
+          <div class="bg-white rounded-xl p-4 border border-outline/30 flex items-center justify-center h-14">
+            <img src="/images/epassi.svg" alt="Epassi" class="h-5 max-w-full object-contain opacity-70 grayscale" />
           </div>
-          <div class="flex items-start gap-3">
-            <div class="w-6 h-6 rounded-full bg-sky-500 flex items-center justify-center flex-shrink-0 mt-0.5">
-              <span class="text-white text-xs font-bold">2</span>
-            </div>
-            <p class="text-on-surface"><span class="font-bold">Samla tillgodo</span> — dina betalningar byggs upp på kontot</p>
+          <div class="bg-white rounded-xl p-4 border border-outline/30 flex items-center justify-center h-14">
+            <img src="/images/benifex.webp" alt="Benifex" class="h-5 max-w-full object-contain opacity-70 grayscale" />
           </div>
-          <div class="flex items-start gap-3">
-            <div class="w-6 h-6 rounded-full bg-sky-500 flex items-center justify-center flex-shrink-0 mt-0.5">
-              <span class="text-white text-xs font-bold">3</span>
-            </div>
-            <p class="text-on-surface"><span class="font-bold">Hämta ut kvitto</span> — när du nått din summa skickar du in till arbetsgivaren</p>
+          <div class="bg-white rounded-xl p-4 border border-outline/30 flex items-center justify-center h-14">
+            <img src="/images/edenred.avif" alt="Edenred" class="h-5 max-w-full object-contain opacity-70 grayscale" />
           </div>
-        </div>
-
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 pt-4 border-t border-sky-200">
-          <div class="bg-white rounded-xl p-3 border border-sky-200 flex items-center justify-center h-12">
-            <img src="/images/epassi.svg" alt="Epassi" class="h-6 max-w-full object-contain" />
-          </div>
-          <div class="bg-white rounded-xl p-3 border border-sky-200 flex items-center justify-center h-12">
-            <img src="/images/benifex.webp" alt="Benifex" class="h-6 max-w-full object-contain" />
-          </div>
-          <div class="bg-white rounded-xl p-3 border border-sky-200 flex items-center justify-center h-12">
-            <img src="/images/edenred.svg" alt="Edenred" class="h-6 max-w-full object-contain" />
-          </div>
-          <div class="bg-white rounded-xl p-3 border border-sky-200 flex items-center justify-center h-12">
-            <img src="/images/wellnet.webp" alt="Wellnet" class="h-6 max-w-full object-contain" />
+          <div class="bg-white rounded-xl p-4 border border-outline/30 flex items-center justify-center h-14">
+            <img src="/images/wellnet.webp" alt="Wellnet" class="h-5 max-w-full object-contain opacity-70 grayscale" />
           </div>
         </div>
       </div>
@@ -480,18 +491,18 @@ function toggleFaq(index: number) {
     <!-- Steg 2: Välj medlemskap -->
     <section v-else class="relative z-20 -mt-16 md:mx-auto md:max-w-5xl bg-surface rounded-t-3xl md:rounded-3xl p-6 md:p-16 shadow-elevated-lg md:border border-outline/30 animate-fade">
       <!-- Header -->
-      <div class="flex items-center gap-4 mb-10">
-            <button
-              @click="selectedClub = null"
-              class="w-12 h-12 rounded-full bg-surface-container hover:bg-surface-dim flex items-center justify-center transition-colors flex-shrink-0"
-              aria-label="Tillbaka"
-            >
-              <svg class="w-5 h-5 text-on-surface" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
-              </svg>
-            </button>
-            <h2 class="font-display font-bold text-3xl md:text-5xl uppercase tracking-tight leading-none flex-1">{{ clubs.find(c => c.id === selectedClub)?.name }}</h2>
-          </div>
+      <div class="relative text-center mb-12">
+        <button
+          @click="selectedClub = null"
+          class="absolute left-0 top-0 w-10 h-10 rounded-full bg-surface-container hover:bg-surface-dim flex items-center justify-center transition-colors"
+          aria-label="Tillbaka"
+        >
+          <svg class="w-5 h-5 text-on-surface" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+          </svg>
+        </button>
+        <h2 class="font-display font-bold text-4xl md:text-6xl uppercase tracking-tight leading-none pt-1">{{ clubs.find(c => c.id === selectedClub)?.name }}</h2>
+      </div>
 
           <!-- If no products (e.g. Ösmo) -->
           <div v-if="currentProducts.length === 0" class="text-center py-12">
@@ -523,14 +534,6 @@ function toggleFaq(index: number) {
               <h3 class="font-display font-bold text-2xl mt-4 uppercase tracking-tight text-on-surface">Seniorpriser 65+</h3>
             </div>
 
-            <!-- 18+ Age notice for Vegastaden (only for non-senior) -->
-            <div v-if="selectedClub === 'vegastaden' && !showSeniorPrices" class="max-w-2xl mx-auto mb-6">
-              <div class="flex items-center gap-3 bg-amber-50 border border-amber-200 rounded-xl px-4 py-3">
-                <span class="text-lg font-bold text-amber-600">18+</span>
-                <p class="text-sm text-on-surface-dim">Åldersgräns 18 år gäller på Vegastaden</p>
-              </div>
-            </div>
-
             <!-- Senior info text (when viewing senior prices) -->
             <div v-if="showSeniorPrices" class="max-w-2xl mx-auto mb-8 text-center">
               <p class="text-on-surface-dim">
@@ -539,14 +542,14 @@ function toggleFaq(index: number) {
             </div>
 
             <!-- Payment/Membership Toggle -->
-            <div v-if="(hasYearlyOption || hasGymUpgrade) && !showSeniorPrices" class="max-w-2xl mx-auto mb-8">
+            <div v-if="(hasYearlyOption || hasGymUpgrade) && !showSeniorPrices" class="max-w-2xl mx-auto mb-10">
               <!-- Vegastaden: Payment type -->
               <div v-if="hasYearlyOption" class="text-center">
-                <p class="text-sm font-medium text-on-surface-dim uppercase tracking-wide mb-3">Betalning</p>
+                <p class="text-sm font-medium text-on-surface-dim uppercase tracking-wide mb-4">Välj betalsätt</p>
                 <div class="inline-flex bg-surface-container rounded-full p-1">
                   <button
                     @click="paymentType = 'autogiro'"
-                    class="px-6 py-3 rounded-full font-bold transition-all"
+                    class="px-8 py-3 rounded-full font-bold transition-all min-w-[120px]"
                     :class="paymentType === 'autogiro'
                       ? 'bg-on-surface text-white'
                       : 'text-on-surface-dim hover:text-on-surface'"
@@ -555,12 +558,12 @@ function toggleFaq(index: number) {
                   </button>
                   <button
                     @click="paymentType = 'yearly'"
-                    class="px-6 py-3 rounded-full font-bold transition-all"
+                    class="px-8 py-3 rounded-full font-bold transition-all min-w-[120px]"
                     :class="paymentType === 'yearly'
                       ? 'bg-on-surface text-white'
                       : 'text-on-surface-dim hover:text-on-surface'"
                   >
-                    Direktbetalning
+                    Direkt
                   </button>
                 </div>
               </div>
@@ -595,31 +598,12 @@ function toggleFaq(index: number) {
 
             <!-- Membership Card -->
             <div v-if="currentProduct" class="max-w-2xl mx-auto">
-              <div
-                class="bg-white border-2 rounded-3xl p-8 md:p-10 transition-all"
-                :class="isStudent && getStudentPrice(currentProduct.id)
-                  ? 'border-emerald-500'
-                  : 'border-outline'"
-              >
+              <div class="bg-white border-2 border-outline rounded-3xl p-8 md:p-10 transition-all">
                 <!-- Price -->
                 <div class="text-center mb-6">
-                  <!-- Student price -->
-                  <div v-if="isStudent && getStudentPrice(currentProduct.id)">
-                    <div class="flex items-baseline justify-center gap-2">
-                      <span class="text-6xl md:text-7xl font-display font-bold text-emerald-600 tracking-tight">{{ getStudentPrice(currentProduct.id) }}</span>
-                      <span class="text-2xl font-bold text-on-surface-dim">{{ currentProduct.unit }}</span>
-                    </div>
-                    <p class="text-on-surface-dim mt-1">
-                      <span class="line-through">{{ currentProduct.price }} kr</span>
-                      <span class="text-emerald-600 font-medium ml-2">Studentrabatt</span>
-                    </p>
-                  </div>
-                  <!-- Regular price -->
-                  <div v-else>
-                    <div class="flex items-baseline justify-center gap-2">
-                      <span class="text-6xl md:text-7xl font-display font-bold text-on-surface tracking-tight">{{ currentProduct.price }}</span>
-                      <span class="text-2xl font-bold text-on-surface-dim">{{ currentProduct.unit }}</span>
-                    </div>
+                  <div class="flex items-baseline justify-center gap-2">
+                    <span class="text-6xl md:text-7xl font-display font-bold text-on-surface tracking-tight">{{ currentProduct.price }}</span>
+                    <span class="text-2xl font-bold text-on-surface-dim">{{ currentProduct.unit }}</span>
                   </div>
                 </div>
 
@@ -627,35 +611,29 @@ function toggleFaq(index: number) {
                 <div class="border-t border-outline/30 pt-6 mb-6">
                   <ul class="space-y-3 text-on-surface-dim">
                     <li class="flex items-center gap-3">
-                      <svg class="w-5 h-5 text-emerald-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                      <svg class="w-5 h-5 text-sky-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
                       </svg>
                       <span v-if="membershipType === 'all' || selectedClub === 'vegastaden'">Tillgång till alla gym inkl. EGYM</span>
                       <span v-else>Tillgång till {{ selectedClub === 'tungelsta' ? 'Tungelsta & Västerhaninge' : 'Västerhaninge & Tungelsta' }}</span>
                     </li>
                     <li class="flex items-center gap-3">
-                      <svg class="w-5 h-5 text-emerald-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                      <svg class="w-5 h-5 text-sky-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
                       </svg>
                       <span>Fria gruppträningspass</span>
                     </li>
                     <li class="flex items-center gap-3">
-                      <svg class="w-5 h-5 text-emerald-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                      <svg class="w-5 h-5 text-sky-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
                       </svg>
                       <span>Öppet 04:00–00:00 alla dagar</span>
                     </li>
                     <li v-if="paymentType === 'autogiro' || !hasYearlyOption" class="flex items-center gap-3">
-                      <svg class="w-5 h-5 text-emerald-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                      <svg class="w-5 h-5 text-sky-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
                       </svg>
                       <span>Ingen bindningstid</span>
-                    </li>
-                    <li v-if="selectedClub === 'vegastaden'" class="flex items-center gap-3">
-                      <svg class="w-5 h-5 text-emerald-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-                      </svg>
-                      <span>Bastu ingår</span>
                     </li>
                   </ul>
                 </div>
@@ -663,46 +641,39 @@ function toggleFaq(index: number) {
                 <!-- CTA -->
                 <button
                   @click="handleProductClick(currentProduct)"
-                  class="w-full bg-on-surface hover:bg-black text-white py-4 px-8 rounded-full font-bold text-lg transition-all flex items-center justify-center gap-2"
+                  class="w-full bg-brand hover:bg-brand-dark active:scale-[0.98] text-white py-4 px-8 rounded-full font-bold text-lg shadow-lg shadow-brand/25 hover:shadow-xl hover:shadow-brand/30 transition-all duration-200"
                 >
-                  Fortsätt till betalning
-                  <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                  </svg>
+                  Bli medlem
                 </button>
               </div>
             </div>
 
-            <!-- Student & Senior options (stacked, only when viewing ordinarie) -->
-            <div v-if="!showSeniorPrices" class="max-w-2xl mx-auto mt-6 space-y-3">
-              <!-- Student toggle -->
-              <label
-                class="flex items-center gap-4 p-4 rounded-xl cursor-pointer transition-all border-2"
-                :class="isStudent
-                  ? 'bg-emerald-50 border-emerald-500'
-                  : 'bg-surface-container border-transparent hover:border-outline'"
+            <!-- Student & Senior options -->
+            <div v-if="!showSeniorPrices" class="max-w-2xl mx-auto mt-8 space-y-3">
+              <!-- Student button -->
+              <button
+                @click="openStudentModal"
+                class="w-full flex items-center gap-4 p-4 rounded-2xl transition-all border text-left bg-surface-container border-transparent hover:border-outline"
               >
-                <div class="relative flex-shrink-0">
-                  <input type="checkbox" v-model="isStudent" class="sr-only" />
-                  <div
-                    class="w-6 h-6 rounded-md border-2 flex items-center justify-center transition-all"
-                    :class="isStudent ? 'bg-emerald-500 border-emerald-500' : 'border-outline bg-white'"
-                  >
-                    <svg v-if="isStudent" class="w-4 h-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-                    </svg>
-                  </div>
+                <div class="w-6 h-6 rounded-md border-2 border-outline bg-white flex items-center justify-center flex-shrink-0">
+                  <svg class="w-4 h-4 text-sky-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 14l9-5-9-5-9 5 9 5z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
+                  </svg>
                 </div>
                 <div class="flex-1">
                   <div class="font-bold text-on-surface">Jag är student</div>
                   <div class="text-sm text-on-surface-dim">Spara upp till 116 kr/mån med giltigt studieintyg</div>
                 </div>
-              </label>
+                <svg class="w-5 h-5 text-on-surface-dim flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
 
               <!-- Senior button -->
               <button
                 @click="showSeniorPrices = true; isStudent = false"
-                class="w-full flex items-center gap-4 p-4 rounded-xl border-2 border-transparent bg-surface-container hover:border-outline transition-all text-left"
+                class="w-full flex items-center gap-4 p-4 rounded-2xl border border-transparent bg-surface-container hover:border-outline transition-all text-left"
               >
                 <div class="w-6 h-6 rounded-md border-2 border-outline bg-white flex items-center justify-center flex-shrink-0">
                   <svg class="w-4 h-4 text-on-surface-dim" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -719,56 +690,50 @@ function toggleFaq(index: number) {
               </button>
             </div>
 
-            <!-- Sambo option (below student/senior) -->
-            <div v-if="!showSeniorPrices" class="max-w-2xl mx-auto mt-3">
-              <button
-                @click="openSamboModal"
-                class="w-full flex items-center gap-4 bg-pink-50 hover:bg-pink-100 border-2 border-pink-200 hover:border-pink-300 rounded-xl p-4 transition-all text-left"
-              >
-                <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center flex-shrink-0">
-                  <svg class="w-5 h-5 text-pink-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-                  </svg>
+            <!-- Info Cards -->
+            <div v-if="!showSeniorPrices" class="mt-10 -mx-6 md:mx-0">
+              <div class="flex gap-4 overflow-x-auto px-6 md:px-0 pb-4 snap-x snap-mandatory scrollbar-hide">
+                <!-- Friskvård -->
+                <div class="flex-shrink-0 w-[85vw] md:w-[400px] snap-start">
+                  <div class="bg-gradient-to-br from-sky-50 to-white border-2 border-sky-200 rounded-3xl p-7 h-full shadow-lg">
+                    <span class="inline-block px-4 py-2 bg-sky-500 text-white rounded-full text-sm font-bold mb-5">Friskvård</span>
+                    <h4 class="font-display font-bold text-2xl text-on-surface mb-3 uppercase tracking-tight">Använd ditt friskvårdsbidrag</h4>
+                    <p class="text-base text-on-surface-dim mb-5 leading-relaxed">Vi är anslutna till alla stora friskvårdsportaler. Betala enkelt med ditt bidrag.</p>
+                    <div class="flex flex-wrap gap-5 items-center">
+                      <img src="/images/epassi.svg" alt="Epassi" class="h-5 w-auto object-contain opacity-60 grayscale" />
+                      <img src="/images/benifex.webp" alt="Benifex" class="h-5 w-auto object-contain opacity-60 grayscale" />
+                      <img src="/images/edenred.avif" alt="Edenred" class="h-5 w-auto object-contain opacity-60 grayscale" />
+                      <img src="/images/wellnet.webp" alt="Wellnet" class="h-5 w-auto object-contain opacity-60 grayscale" />
+                    </div>
+                  </div>
                 </div>
-                <div class="flex-1">
-                  <span class="font-bold text-on-surface">Samborabatt</span>
-                  <span class="text-on-surface-dim"> · 500 kr/mån per person</span>
-                </div>
-                <svg class="w-5 h-5 text-on-surface-dim" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
-                </svg>
-              </button>
-            </div>
-          </div>
-    </section>
 
-    <!-- Friskvårdsbidrag -->
-    <section v-if="selectedClub && selectedClub !== 'osmo'" class="py-16 bg-surface">
-      <div class="container max-w-2xl px-4">
-        <div class="bg-sky-50 border border-sky-200 rounded-3xl p-8 md:p-12 text-center">
-          <div class="w-16 h-16 mx-auto mb-6">
-            <img src="/png-icons/friskvardsbidrag.png" alt="" class="w-full h-full object-contain" />
+                <!-- Åldersgräns (only Vegastaden) -->
+                <div v-if="selectedClub === 'vegastaden'" class="flex-shrink-0 w-[85vw] md:w-[400px] snap-start">
+                  <div class="bg-gradient-to-br from-amber-50 to-white border-2 border-amber-200 rounded-3xl p-7 h-full shadow-lg">
+                    <span class="inline-block px-4 py-2 bg-amber-500 text-white rounded-full text-sm font-bold mb-5">18+</span>
+                    <h4 class="font-display font-bold text-2xl text-on-surface mb-3 uppercase tracking-tight">Åldersgräns</h4>
+                    <p class="text-base text-on-surface-dim leading-relaxed">På Vegastaden gäller 18 års åldersgräns. Legitimation kan komma att begäras vid entré.</p>
+                  </div>
+                </div>
+
+                <!-- Samborabatt -->
+                <button @click="openSamboModal" class="flex-shrink-0 w-[85vw] md:w-[400px] snap-start text-left">
+                  <div class="bg-gradient-to-br from-pink-50 to-white border-2 border-pink-200 rounded-3xl p-7 h-full shadow-lg hover:shadow-xl hover:border-pink-300 transition-all">
+                    <span class="inline-block px-4 py-2 bg-pink-500 text-white rounded-full text-sm font-bold mb-5">Samborabatt</span>
+                    <h4 class="font-display font-bold text-2xl text-on-surface mb-3 uppercase tracking-tight">Träna tillsammans för 500 kr/mån</h4>
+                    <p class="text-base text-on-surface-dim mb-5 leading-relaxed">Bor du med någon? Ni sparar 95 kr/mån var. Tillgång till alla gym ingår.</p>
+                    <span class="inline-flex items-center gap-2 text-base font-bold text-pink-600">
+                      Aktivera rabatt
+                      <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                      </svg>
+                    </span>
+                  </div>
+                </button>
+              </div>
+            </div>
           </div>
-          <h3 class="font-display font-bold text-2xl md:text-3xl text-on-surface mb-3 uppercase tracking-tight">Använd ditt friskvårdsbidrag</h3>
-          <p class="text-on-surface-dim text-lg mb-8 max-w-md mx-auto">
-            Självklart funkar det hos oss. Vi är anslutna till alla stora portaler.
-          </p>
-          <div class="grid grid-cols-2 md:grid-cols-4 gap-3 max-w-md mx-auto">
-            <div class="bg-white rounded-xl p-3 border border-sky-200 flex items-center justify-center h-12 shadow-sm">
-              <img src="/images/epassi.svg" alt="Epassi" class="h-6 max-w-full object-contain" />
-            </div>
-            <div class="bg-white rounded-xl p-3 border border-sky-200 flex items-center justify-center h-12 shadow-sm">
-              <img src="/images/benifex.webp" alt="Benifex" class="h-6 max-w-full object-contain" />
-            </div>
-            <div class="bg-white rounded-xl p-3 border border-sky-200 flex items-center justify-center h-12 shadow-sm">
-              <img src="/images/edenred.svg" alt="Edenred" class="h-6 max-w-full object-contain" />
-            </div>
-            <div class="bg-white rounded-xl p-3 border border-sky-200 flex items-center justify-center h-12 shadow-sm">
-              <img src="/images/wellnet.webp" alt="Wellnet" class="h-6 max-w-full object-contain" />
-            </div>
-          </div>
-        </div>
-      </div>
     </section>
 
     <!-- FAQ -->
@@ -825,11 +790,11 @@ function toggleFaq(index: number) {
             </svg>
             info@coregym.club
           </a>
-          <a href="tel:+46859090909" class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-white rounded-full font-bold text-on-surface border border-outline hover:border-on-surface transition-colors">
+          <a href="tel:0850924549" class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-white rounded-full font-bold text-on-surface border border-outline hover:border-on-surface transition-colors">
             <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
             </svg>
-            08-590 909 09
+            08-509 245 49
           </a>
         </div>
       </div>

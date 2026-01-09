@@ -17,9 +17,9 @@ useHead({
 </script>
 
 <template>
-  <div class="min-h-screen flex flex-col items-center justify-center bg-surface text-center px-6">
-    <div class="w-12 h-12 border-4 border-brand border-t-transparent rounded-full animate-spin mb-6" />
-    <h1 class="text-title mb-2">Loggar in...</h1>
-    <p class="text-body text-on-surface-dim">Skickar dig till medlemsportalen</p>
+  <div class="min-h-screen flex flex-col items-center justify-center bg-[#1c1b1d] text-center px-6 pt-safe pb-safe">
+    <div class="w-14 h-14 border-4 border-white/20 border-t-white rounded-full animate-spin mb-8" />
+    <h1 class="font-display font-bold text-2xl md:text-3xl text-[#f7f1f6] mb-3 uppercase tracking-tight">Loggar in...</h1>
+    <p class="text-lg text-[#e5e1e3]">Skickar dig till medlemsportalen</p>
   </div>
 </template>

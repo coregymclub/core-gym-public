@@ -1,1773 +1,1481 @@
 {
-  "location": "Core Gym Vegastaden",
-  "generatedAt": "2025-12-16T13:50:24.544Z",
+  "generatedAt": "2025-12-30T15:06:27.716Z",
+  "currentWeek": 1,
+  "currentYear": 2026,
   "weeks": [
     {
-      "week": 51,
-      "year": 2025,
-      "startDate": "2025-12-14",
-      "days": {
-        "mon": {
-          "date": "2025-12-14",
-          "dayName": "Måndag",
-          "classes": [
-            {
-              "time": "06:00",
-              "name": "BODYBALANCE 106 45",
-              "duration": 45
-            },
-            {
-              "time": "07:45",
-              "name": "BODYCOMBAT 99",
-              "duration": 55
-            },
-            {
-              "time": "10:15",
-              "name": "THE TRIP 41",
-              "duration": 45
-            },
-            {
-              "time": "11:30",
-              "name": "CORE 56",
-              "duration": 45
-            },
-            {
-              "time": "13:45",
-              "name": "BODYPUMP 131 45",
-              "duration": 45
-            },
-            {
-              "time": "15:00",
-              "name": "THE TRIP 33",
-              "duration": 45
-            }
-          ]
-        },
-        "tue": {
-          "date": "2025-12-15",
-          "dayName": "Tisdag",
-          "classes": [
-            {
-              "time": "07:00",
-              "name": "CORE 53",
-              "duration": 45
-            },
-            {
-              "time": "09:00",
-              "name": "BODYPUMP 131 45",
-              "duration": 45
-            },
-            {
-              "time": "13:45",
-              "name": "THE TRIP 32",
-              "duration": 45
-            },
-            {
-              "time": "15:15",
-              "name": "GRIT STRENGTH 50",
-              "duration": 30
-            },
-            {
-              "time": "16:00",
-              "name": "BODYBALANCE 106 45",
-              "duration": 45
-            },
-            {
-              "time": "21:05",
-              "name": "THE TRIP 30",
-              "duration": 45
-            }
-          ]
-        },
-        "wed": {
-          "date": "2025-12-16",
-          "dayName": "Onsdag",
-          "classes": [
-            {
-              "time": "06:00",
-              "name": "BODYPUMP 131 45",
-              "duration": 45
-            },
-            {
-              "time": "07:50",
-              "name": "THE TRIP 41",
-              "duration": 45
-            },
-            {
-              "time": "08:45",
-              "name": "GRIT ATHLETIC 46",
-              "duration": 30
-            },
-            {
-              "time": "09:30",
-              "name": "BODYPUMP 131 45",
-              "duration": 45
-            },
-            {
-              "time": "10:30",
-              "name": "SPRINT 34",
-              "duration": 30
-            },
-            {
-              "time": "11:15",
-              "name": "CORE 52 Express",
-              "duration": 30
-            },
-            {
-              "time": "12:00",
-              "name": "GRIT CARDIO Base",
-              "duration": 30
-            },
-            {
-              "time": "12:35",
-              "name": "BODYBALANCE 103 FLEX",
-              "duration": 30
-            },
-            {
-              "time": "14:15",
-              "name": "CORE 52 Express",
-              "duration": 30
-            },
-            {
-              "time": "15:00",
-              "name": "THE TRIP 37",
-              "duration": 45
-            },
-            {
-              "time": "16:00",
-              "name": "BODYCOMBAT 99 Express",
-              "duration": 30
-            },
-            {
-              "time": "20:15",
-              "name": "BODYPUMP 131 45",
-              "duration": 45
-            }
-          ]
-        },
-        "thu": {
-          "date": "2025-12-17",
-          "dayName": "Torsdag",
-          "classes": [
-            {
-              "time": "05:45",
-              "name": "THE TRIP 32",
-              "duration": 45
-            },
-            {
-              "time": "07:00",
-              "name": "THE TRIP 36",
-              "duration": 45
-            },
-            {
-              "time": "08:00",
-              "name": "CORE 53",
-              "duration": 45
-            },
-            {
-              "time": "11:45",
-              "name": "CORE 53 Express",
-              "duration": 30
-            },
-            {
-              "time": "13:00",
-              "name": "RPM 101",
-              "duration": 45
-            },
-            {
-              "time": "14:00",
-              "name": "BODYCOMBAT 97",
-              "duration": 55
-            },
-            {
-              "time": "15:00",
-              "name": "THE TRIP 36",
-              "duration": 45
-            },
-            {
-              "time": "16:00",
-              "name": "CORE 56",
-              "duration": 45
-            },
-            {
-              "time": "16:45",
-              "name": "SPRINT 33",
-              "duration": 30
-            },
-            {
-              "time": "20:20",
-              "name": "CORE 52 Express",
-              "duration": 30
-            }
-          ]
-        },
-        "fri": {
-          "date": "2025-12-18",
-          "dayName": "Fredag",
-          "classes": [
-            {
-              "time": "06:00",
-              "name": "BODYBALANCE 106 FLEX",
-              "duration": 30
-            },
-            {
-              "time": "06:30",
-              "name": "SPRINT 33",
-              "duration": 30
-            },
-            {
-              "time": "07:05",
-              "name": "CORE 56 Express",
-              "duration": 30
-            },
-            {
-              "time": "07:45",
-              "name": "RPM 101",
-              "duration": 45
-            },
-            {
-              "time": "08:45",
-              "name": "BODYCOMBAT 97 45",
-              "duration": 45
-            },
-            {
-              "time": "13:15",
-              "name": "GRIT ATHLETIC 46",
-              "duration": 30
-            },
-            {
-              "time": "14:00",
-              "name": "THE TRIP 31",
-              "duration": 45
-            },
-            {
-              "time": "15:00",
-              "name": "BODYCOMBAT 99 45",
-              "duration": 45
-            },
-            {
-              "time": "15:50",
-              "name": "BODYCOMBAT 99 45",
-              "duration": 45
-            }
-          ]
-        },
-        "sat": {
-          "date": "2025-12-19",
-          "dayName": "Lördag",
-          "classes": [
-            {
-              "time": "07:00",
-              "name": "BODYBALANCE 106 FLEX",
-              "duration": 30
-            },
-            {
-              "time": "07:35",
-              "name": "BODYBALANCE 105 STRENGTH",
-              "duration": 30
-            },
-            {
-              "time": "08:10",
-              "name": "SPRINT 33",
-              "duration": 30
-            },
-            {
-              "time": "14:05",
-              "name": "BODYBALANCE 106 45",
-              "duration": 45
-            },
-            {
-              "time": "15:00",
-              "name": "THE TRIP 31",
-              "duration": 45
-            },
-            {
-              "time": "16:00",
-              "name": "BODYATTACK 126",
-              "duration": 55
-            },
-            {
-              "time": "17:00",
-              "name": "CORE 56",
-              "duration": 45
-            },
-            {
-              "time": "18:00",
-              "name": "BODYPUMP 131",
-              "duration": 55
-            }
-          ]
-        },
-        "sun": {
-          "date": "2025-12-20",
-          "dayName": "Söndag",
-          "classes": [
-            {
-              "time": "07:30",
-              "name": "SPRINT 39",
-              "duration": 30
-            },
-            {
-              "time": "11:00",
-              "name": "BODYPUMP 131",
-              "duration": 55
-            },
-            {
-              "time": "13:00",
-              "name": "THE TRIP 33",
-              "duration": 45
-            },
-            {
-              "time": "14:00",
-              "name": "BODYBALANCE 106",
-              "duration": 55
-            },
-            {
-              "time": "15:00",
-              "name": "BODYCOMBAT 99 45",
-              "duration": 45
-            },
-            {
-              "time": "15:50",
-              "name": "BODYPUMP 133",
-              "duration": 55
-            },
-            {
-              "time": "17:00",
-              "name": "THE TRIP 40",
-              "duration": 45
-            },
-            {
-              "time": "18:00",
-              "name": "BODYPUMP 131",
-              "duration": 55
-            }
-          ]
-        }
-      }
-    },
-    {
-      "week": 52,
-      "year": 2025,
-      "startDate": "2025-12-21",
-      "days": {
-        "mon": {
-          "date": "2025-12-21",
-          "dayName": "Måndag",
-          "classes": [
-            {
-              "time": "06:00",
-              "name": "BODYBALANCE 106 45",
-              "duration": 45
-            },
-            {
-              "time": "07:45",
-              "name": "BODYCOMBAT 99",
-              "duration": 55
-            },
-            {
-              "time": "10:15",
-              "name": "THE TRIP 41",
-              "duration": 45
-            },
-            {
-              "time": "11:30",
-              "name": "CORE 56",
-              "duration": 45
-            },
-            {
-              "time": "13:45",
-              "name": "BODYPUMP 131 45",
-              "duration": 45
-            },
-            {
-              "time": "15:00",
-              "name": "THE TRIP 33",
-              "duration": 45
-            }
-          ]
-        },
-        "tue": {
-          "date": "2025-12-22",
-          "dayName": "Tisdag",
-          "classes": [
-            {
-              "time": "07:00",
-              "name": "CORE 53",
-              "duration": 45
-            },
-            {
-              "time": "09:00",
-              "name": "BODYPUMP 131 45",
-              "duration": 45
-            },
-            {
-              "time": "13:45",
-              "name": "THE TRIP 32",
-              "duration": 45
-            },
-            {
-              "time": "15:15",
-              "name": "GRIT STRENGTH 50",
-              "duration": 30
-            },
-            {
-              "time": "16:00",
-              "name": "BODYBALANCE 106 45",
-              "duration": 45
-            },
-            {
-              "time": "21:05",
-              "name": "THE TRIP 30",
-              "duration": 45
-            }
-          ]
-        },
-        "wed": {
-          "date": "2025-12-23",
-          "dayName": "Onsdag",
-          "classes": [
-            {
-              "time": "06:00",
-              "name": "BODYPUMP 131 45",
-              "duration": 45
-            },
-            {
-              "time": "07:50",
-              "name": "THE TRIP 41",
-              "duration": 45
-            },
-            {
-              "time": "08:45",
-              "name": "GRIT ATHLETIC 46",
-              "duration": 30
-            },
-            {
-              "time": "09:30",
-              "name": "BODYPUMP 131 45",
-              "duration": 45
-            },
-            {
-              "time": "10:30",
-              "name": "SPRINT 34",
-              "duration": 30
-            },
-            {
-              "time": "11:15",
-              "name": "CORE 52 Express",
-              "duration": 30
-            },
-            {
-              "time": "12:00",
-              "name": "GRIT CARDIO Base",
-              "duration": 30
-            },
-            {
-              "time": "12:35",
-              "name": "BODYBALANCE 103 FLEX",
-              "duration": 30
-            },
-            {
-              "time": "14:15",
-              "name": "CORE 52 Express",
-              "duration": 30
-            },
-            {
-              "time": "15:00",
-              "name": "THE TRIP 37",
-              "duration": 45
-            },
-            {
-              "time": "16:00",
-              "name": "BODYCOMBAT 99 Express",
-              "duration": 30
-            },
-            {
-              "time": "20:15",
-              "name": "BODYPUMP 131 45",
-              "duration": 45
-            }
-          ]
-        },
-        "thu": {
-          "date": "2025-12-24",
-          "dayName": "Torsdag",
-          "classes": [
-            {
-              "time": "05:45",
-              "name": "THE TRIP 32",
-              "duration": 45
-            },
-            {
-              "time": "07:00",
-              "name": "THE TRIP 36",
-              "duration": 45
-            },
-            {
-              "time": "08:00",
-              "name": "CORE 53",
-              "duration": 45
-            },
-            {
-              "time": "11:45",
-              "name": "CORE 53 Express",
-              "duration": 30
-            },
-            {
-              "time": "13:00",
-              "name": "RPM 101",
-              "duration": 45
-            },
-            {
-              "time": "14:00",
-              "name": "BODYCOMBAT 97",
-              "duration": 55
-            },
-            {
-              "time": "15:00",
-              "name": "THE TRIP 36",
-              "duration": 45
-            },
-            {
-              "time": "16:00",
-              "name": "CORE 56",
-              "duration": 45
-            },
-            {
-              "time": "16:45",
-              "name": "SPRINT 33",
-              "duration": 30
-            },
-            {
-              "time": "20:20",
-              "name": "CORE 52 Express",
-              "duration": 30
-            }
-          ]
-        },
-        "fri": {
-          "date": "2025-12-25",
-          "dayName": "Fredag",
-          "classes": [
-            {
-              "time": "06:00",
-              "name": "BODYBALANCE 106 FLEX",
-              "duration": 30
-            },
-            {
-              "time": "06:30",
-              "name": "SPRINT 33",
-              "duration": 30
-            },
-            {
-              "time": "07:05",
-              "name": "CORE 56 Express",
-              "duration": 30
-            },
-            {
-              "time": "07:45",
-              "name": "RPM 101",
-              "duration": 45
-            },
-            {
-              "time": "08:45",
-              "name": "BODYCOMBAT 97 45",
-              "duration": 45
-            },
-            {
-              "time": "13:15",
-              "name": "GRIT ATHLETIC 46",
-              "duration": 30
-            },
-            {
-              "time": "14:00",
-              "name": "THE TRIP 31",
-              "duration": 45
-            },
-            {
-              "time": "15:00",
-              "name": "BODYCOMBAT 99 45",
-              "duration": 45
-            },
-            {
-              "time": "15:50",
-              "name": "BODYCOMBAT 99 45",
-              "duration": 45
-            }
-          ]
-        },
-        "sat": {
-          "date": "2025-12-26",
-          "dayName": "Lördag",
-          "classes": [
-            {
-              "time": "07:00",
-              "name": "BODYBALANCE 106 FLEX",
-              "duration": 30
-            },
-            {
-              "time": "07:35",
-              "name": "BODYBALANCE 105 STRENGTH",
-              "duration": 30
-            },
-            {
-              "time": "08:10",
-              "name": "SPRINT 33",
-              "duration": 30
-            },
-            {
-              "time": "14:05",
-              "name": "BODYBALANCE 106 45",
-              "duration": 45
-            },
-            {
-              "time": "15:00",
-              "name": "THE TRIP 31",
-              "duration": 45
-            },
-            {
-              "time": "16:00",
-              "name": "BODYATTACK 126",
-              "duration": 55
-            },
-            {
-              "time": "17:00",
-              "name": "CORE 56",
-              "duration": 45
-            },
-            {
-              "time": "18:00",
-              "name": "BODYPUMP 131",
-              "duration": 55
-            }
-          ]
-        },
-        "sun": {
-          "date": "2025-12-27",
-          "dayName": "Söndag",
-          "classes": [
-            {
-              "time": "07:30",
-              "name": "SPRINT 39",
-              "duration": 30
-            },
-            {
-              "time": "11:00",
-              "name": "BODYPUMP 131",
-              "duration": 55
-            },
-            {
-              "time": "13:00",
-              "name": "THE TRIP 33",
-              "duration": 45
-            },
-            {
-              "time": "14:00",
-              "name": "BODYBALANCE 106",
-              "duration": 55
-            },
-            {
-              "time": "15:00",
-              "name": "BODYCOMBAT 99 45",
-              "duration": 45
-            },
-            {
-              "time": "15:50",
-              "name": "BODYPUMP 133",
-              "duration": 55
-            },
-            {
-              "time": "17:00",
-              "name": "THE TRIP 40",
-              "duration": 45
-            },
-            {
-              "time": "18:00",
-              "name": "BODYPUMP 131",
-              "duration": 55
-            }
-          ]
-        }
-      }
-    },
-    {
-      "week": 1,
+      "weekNumber": 1,
       "year": 2026,
-      "startDate": "2025-12-28",
-      "days": {
-        "mon": {
+      "days": [
+        {
+          "key": "mon",
+          "name": "Måndag",
           "date": "2025-12-28",
-          "dayName": "Måndag",
           "classes": [
             {
               "time": "06:00",
-              "name": "BODYBALANCE 106 45",
-              "duration": 45
+              "duration": 45,
+              "video": {
+                "id": "AX98m8iwSXxQza4VB4JU",
+                "name": "BODYBALANCE 106 45",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "45"
+              }
             },
             {
               "time": "07:45",
-              "name": "BODYCOMBAT 99",
-              "duration": 55
+              "duration": 55,
+              "video": {
+                "id": "MlG24xXclc201I4kZwE3",
+                "name": "BODYCOMBAT 99",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "55"
+              }
             },
             {
               "time": "10:15",
-              "name": "THE TRIP 41",
-              "duration": 45
+              "duration": 45,
+              "video": {
+                "id": "CpzgNpJgjo90JGiQPX8N",
+                "name": "THE TRIP 41",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "45"
+              }
             },
             {
               "time": "11:30",
-              "name": "CORE 56",
-              "duration": 45
+              "duration": 45,
+              "video": {
+                "id": "iLfhyQRi3SPNVNTTiOMR",
+                "name": "CORE 56",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "45"
+              }
             },
             {
               "time": "13:45",
-              "name": "BODYPUMP 131 45",
-              "duration": 45
+              "duration": 45,
+              "video": {
+                "id": "FQ2tJE2gZKx7a5TREv2t",
+                "name": "BODYPUMP 131 45",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "45"
+              }
             },
             {
               "time": "15:00",
-              "name": "THE TRIP 33",
-              "duration": 45
+              "duration": 45,
+              "video": {
+                "id": "0lAPQDtVlxD2X1ChNirL",
+                "name": "THE TRIP 33",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "45"
+              }
             }
           ]
         },
-        "tue": {
+        {
+          "key": "tue",
+          "name": "Tisdag",
           "date": "2025-12-29",
-          "dayName": "Tisdag",
           "classes": [
             {
               "time": "07:00",
-              "name": "CORE 53",
-              "duration": 45
+              "duration": 45,
+              "video": {
+                "id": "9rVjWTIt5dLLO1wYh3bF",
+                "name": "CORE 53",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "45"
+              }
             },
             {
               "time": "09:00",
-              "name": "BODYPUMP 131 45",
-              "duration": 45
+              "duration": 45,
+              "video": {
+                "id": "FQ2tJE2gZKx7a5TREv2t",
+                "name": "BODYPUMP 131 45",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "45"
+              }
             },
             {
               "time": "13:45",
-              "name": "THE TRIP 32",
-              "duration": 45
+              "duration": 45,
+              "video": {
+                "id": "9Vd6f9GVqsMYk5Kd4UOJ",
+                "name": "THE TRIP 32",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "45"
+              }
             },
             {
               "time": "15:15",
-              "name": "GRIT STRENGTH 50",
-              "duration": 30
+              "duration": 30,
+              "video": {
+                "id": "ndI3Ni8cZA5dPjwsuMA6",
+                "name": "GRIT STRENGTH 50",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "30"
+              }
             },
             {
               "time": "16:00",
-              "name": "BODYBALANCE 106 45",
-              "duration": 45
+              "duration": 45,
+              "video": {
+                "id": "AX98m8iwSXxQza4VB4JU",
+                "name": "BODYBALANCE 106 45",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "45"
+              }
             },
             {
               "time": "21:05",
-              "name": "THE TRIP 30",
-              "duration": 45
+              "duration": 45,
+              "video": {
+                "id": "PUT7dOjtKOonAA1oXNSZ",
+                "name": "THE TRIP 30",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "45"
+              }
             }
           ]
         },
-        "wed": {
+        {
+          "key": "wed",
+          "name": "Onsdag",
           "date": "2025-12-30",
-          "dayName": "Onsdag",
           "classes": [
             {
               "time": "06:00",
-              "name": "BODYPUMP 131 45",
-              "duration": 45
+              "duration": 45,
+              "video": {
+                "id": "FQ2tJE2gZKx7a5TREv2t",
+                "name": "BODYPUMP 131 45",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "45"
+              }
             },
             {
               "time": "07:50",
-              "name": "THE TRIP 41",
-              "duration": 45
+              "duration": 45,
+              "video": {
+                "id": "CpzgNpJgjo90JGiQPX8N",
+                "name": "THE TRIP 41",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "45"
+              }
             },
             {
               "time": "08:45",
-              "name": "GRIT ATHLETIC 46",
-              "duration": 30
+              "duration": 30,
+              "video": {
+                "id": "RXNGg7NkN7T5105IUrhE",
+                "name": "GRIT ATHLETIC 46",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "30"
+              }
             },
             {
               "time": "09:30",
-              "name": "BODYPUMP 131 45",
-              "duration": 45
+              "duration": 45,
+              "video": {
+                "id": "FQ2tJE2gZKx7a5TREv2t",
+                "name": "BODYPUMP 131 45",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "45"
+              }
             },
             {
               "time": "10:30",
-              "name": "SPRINT 34",
-              "duration": 30
+              "duration": 30,
+              "video": {
+                "id": "IzePuqosU3kGSFZLIm96",
+                "name": "SPRINT 34",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "30"
+              }
             },
             {
               "time": "11:15",
-              "name": "CORE 52 Express",
-              "duration": 30
+              "duration": 30,
+              "video": {
+                "id": "M8xhCFMmJelk7iDV9rRU",
+                "name": "CORE 52 Express",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "30"
+              }
             },
             {
               "time": "12:00",
-              "name": "GRIT CARDIO Base",
-              "duration": 30
+              "duration": 30,
+              "video": {
+                "id": "A4ByncuykdXdro0hRJFO",
+                "name": "GRIT CARDIO Base",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "20"
+              }
             },
             {
               "time": "12:35",
-              "name": "BODYBALANCE 103 FLEX",
-              "duration": 30
+              "duration": 30,
+              "video": {
+                "id": "6QEo98o12UvosBgww95b",
+                "name": "BODYBALANCE 103 FLEX",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "30"
+              }
             },
             {
               "time": "13:15",
-              "name": "THE TRIP 23",
-              "duration": 45
+              "duration": 45,
+              "video": {
+                "id": "MMy0NZi6nQt5B6xoaAL8",
+                "name": "THE TRIP 23",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "45"
+              }
             },
             {
               "time": "14:15",
-              "name": "CORE 52 Express",
-              "duration": 30
+              "duration": 30,
+              "video": {
+                "id": "M8xhCFMmJelk7iDV9rRU",
+                "name": "CORE 52 Express",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "30"
+              }
             },
             {
               "time": "15:00",
-              "name": "THE TRIP 37",
-              "duration": 45
+              "duration": 45,
+              "video": {
+                "id": "yyGxH30vznar87mSsRnk",
+                "name": "THE TRIP 37",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "45"
+              }
             },
             {
               "time": "16:00",
-              "name": "BODYCOMBAT 99 Express",
-              "duration": 30
+              "duration": 30,
+              "video": {
+                "id": "ZCcpNs3nn5QGll9bB5vA",
+                "name": "BODYCOMBAT 99 Express",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "30"
+              }
             },
             {
               "time": "20:15",
-              "name": "BODYPUMP 131 45",
-              "duration": 45
+              "duration": 45,
+              "video": {
+                "id": "FQ2tJE2gZKx7a5TREv2t",
+                "name": "BODYPUMP 131 45",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "45"
+              }
             }
           ]
         },
-        "thu": {
+        {
+          "key": "thu",
+          "name": "Torsdag",
           "date": "2025-12-31",
-          "dayName": "Torsdag",
           "classes": [
             {
               "time": "05:45",
-              "name": "THE TRIP 32",
-              "duration": 45
+              "duration": 45,
+              "video": {
+                "id": "9Vd6f9GVqsMYk5Kd4UOJ",
+                "name": "THE TRIP 32",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "45"
+              }
             },
             {
               "time": "07:00",
-              "name": "THE TRIP 36",
-              "duration": 45
+              "duration": 45,
+              "video": {
+                "id": "EimhUeHlhNXAFjIPau3Z",
+                "name": "THE TRIP 36",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "45"
+              }
             },
             {
               "time": "08:00",
-              "name": "CORE 53",
-              "duration": 45
+              "duration": 45,
+              "video": {
+                "id": "9rVjWTIt5dLLO1wYh3bF",
+                "name": "CORE 53",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "45"
+              }
             },
             {
               "time": "11:00",
-              "name": "CORE 51 Express",
-              "duration": 30
+              "duration": 30,
+              "video": {
+                "id": "34nLHM7eCQQUHQQIEhf8",
+                "name": "CORE 51 Express",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "30"
+              }
             },
             {
               "time": "11:45",
-              "name": "CORE 53 Express",
-              "duration": 30
+              "duration": 30,
+              "video": {
+                "id": "F1Xnj27M41esXW85wp5V",
+                "name": "CORE 53 Express",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "30"
+              }
             },
             {
               "time": "13:00",
-              "name": "RPM 101",
-              "duration": 45
+              "duration": 45,
+              "video": {
+                "id": "fhha7VuDlDUEcKMs4bUt",
+                "name": "RPM 101",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "45"
+              }
             },
             {
               "time": "14:00",
-              "name": "BODYCOMBAT 97",
-              "duration": 55
+              "duration": 55,
+              "video": {
+                "id": "TRau74e8st992PxiK7fN",
+                "name": "BODYCOMBAT 97",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "55"
+              }
             },
             {
               "time": "15:00",
-              "name": "THE TRIP 36",
-              "duration": 45
+              "duration": 45,
+              "video": {
+                "id": "EimhUeHlhNXAFjIPau3Z",
+                "name": "THE TRIP 36",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "45"
+              }
             },
             {
               "time": "16:00",
-              "name": "CORE 56",
-              "duration": 45
+              "duration": 45,
+              "video": {
+                "id": "iLfhyQRi3SPNVNTTiOMR",
+                "name": "CORE 56",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "45"
+              }
             },
             {
               "time": "16:45",
-              "name": "SPRINT 33",
-              "duration": 30
+              "duration": 30,
+              "video": {
+                "id": "zGDbBnJHQrv73WuzOqk9",
+                "name": "SPRINT 33",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "30"
+              }
             },
             {
               "time": "20:20",
-              "name": "CORE 52 Express",
-              "duration": 30
+              "duration": 30,
+              "video": {
+                "id": "M8xhCFMmJelk7iDV9rRU",
+                "name": "CORE 52 Express",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "30"
+              }
             }
           ]
         },
-        "fri": {
+        {
+          "key": "fri",
+          "name": "Fredag",
           "date": "2026-01-01",
-          "dayName": "Fredag",
           "classes": [
             {
               "time": "06:00",
-              "name": "BODYBALANCE 106 FLEX",
-              "duration": 30
+              "duration": 30,
+              "video": {
+                "id": "YdvQoSVf3votBHfS8XiV",
+                "name": "BODYBALANCE 106 FLEX",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "30"
+              }
             },
             {
               "time": "06:30",
-              "name": "SPRINT 33",
-              "duration": 30
+              "duration": 30,
+              "video": {
+                "id": "zGDbBnJHQrv73WuzOqk9",
+                "name": "SPRINT 33",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "30"
+              }
             },
             {
               "time": "07:05",
-              "name": "CORE 56 Express",
-              "duration": 30
+              "duration": 30,
+              "video": {
+                "id": "JmFpqS0gW9mw2raUAsQV",
+                "name": "CORE 56 Express",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "30"
+              }
             },
             {
               "time": "07:45",
-              "name": "RPM 101",
-              "duration": 45
+              "duration": 45,
+              "video": {
+                "id": "fhha7VuDlDUEcKMs4bUt",
+                "name": "RPM 101",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "45"
+              }
             },
             {
               "time": "08:45",
-              "name": "BODYCOMBAT 97 45",
-              "duration": 45
+              "duration": 45,
+              "video": {
+                "id": "LilJrxI8WjfWh1suBo9j",
+                "name": "BODYCOMBAT 97 45",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "45"
+              }
             },
             {
               "time": "13:15",
-              "name": "GRIT ATHLETIC 46",
-              "duration": 30
+              "duration": 30,
+              "video": {
+                "id": "RXNGg7NkN7T5105IUrhE",
+                "name": "GRIT ATHLETIC 46",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "30"
+              }
             },
             {
               "time": "14:00",
-              "name": "THE TRIP 31",
-              "duration": 45
+              "duration": 45,
+              "video": {
+                "id": "NsPFSbXMyHjUCtS9EK8M",
+                "name": "THE TRIP 31",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "45"
+              }
             },
             {
               "time": "15:00",
-              "name": "BODYCOMBAT 99 45",
-              "duration": 45
+              "duration": 45,
+              "video": {
+                "id": "oh1valluH0znFXK3V0VQ",
+                "name": "BODYCOMBAT 99 45",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "45"
+              }
             },
             {
               "time": "15:50",
-              "name": "BODYCOMBAT 99 45",
-              "duration": 45
+              "duration": 45,
+              "video": {
+                "id": "oh1valluH0znFXK3V0VQ",
+                "name": "BODYCOMBAT 99 45",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "45"
+              }
             }
           ]
         },
-        "sat": {
+        {
+          "key": "sat",
+          "name": "Lördag",
           "date": "2026-01-02",
-          "dayName": "Lördag",
           "classes": [
             {
               "time": "07:00",
-              "name": "BODYBALANCE 106 FLEX",
-              "duration": 30
+              "duration": 30,
+              "video": {
+                "id": "YdvQoSVf3votBHfS8XiV",
+                "name": "BODYBALANCE 106 FLEX",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "30"
+              }
             },
             {
               "time": "07:35",
-              "name": "BODYBALANCE 105 STRENGTH",
-              "duration": 30
+              "duration": 30,
+              "video": {
+                "id": "D4DhkLlGBUjTqrLh2lPl",
+                "name": "BODYBALANCE 105 STRENGTH",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "30"
+              }
             },
             {
               "time": "08:10",
-              "name": "SPRINT 33",
-              "duration": 30
+              "duration": 30,
+              "video": {
+                "id": "zGDbBnJHQrv73WuzOqk9",
+                "name": "SPRINT 33",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "30"
+              }
             },
             {
               "time": "12:30",
-              "name": "RPM 99",
-              "duration": 45
+              "duration": 45,
+              "video": {
+                "id": "epPz7o4ZipkPzkAZcQ1N",
+                "name": "RPM 99",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "45"
+              }
             },
             {
               "time": "14:05",
-              "name": "BODYBALANCE 106 45",
-              "duration": 45
+              "duration": 45,
+              "video": {
+                "id": "AX98m8iwSXxQza4VB4JU",
+                "name": "BODYBALANCE 106 45",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "45"
+              }
             },
             {
               "time": "15:00",
-              "name": "THE TRIP 31",
-              "duration": 45
+              "duration": 45,
+              "video": {
+                "id": "NsPFSbXMyHjUCtS9EK8M",
+                "name": "THE TRIP 31",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "45"
+              }
             },
             {
               "time": "16:00",
-              "name": "BODYATTACK 126",
-              "duration": 55
+              "duration": 55,
+              "video": {
+                "id": "dWUXChZxMLf7SAfsp99B",
+                "name": "BODYATTACK 126",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "55"
+              }
             },
             {
               "time": "17:00",
-              "name": "CORE 56",
-              "duration": 45
+              "duration": 45,
+              "video": {
+                "id": "iLfhyQRi3SPNVNTTiOMR",
+                "name": "CORE 56",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "45"
+              }
             },
             {
               "time": "18:00",
-              "name": "BODYPUMP 131",
-              "duration": 55
+              "duration": 55,
+              "video": {
+                "id": "CPSdjNErK0XQjc2TW0tg",
+                "name": "BODYPUMP 131",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "55"
+              }
             }
           ]
         },
-        "sun": {
+        {
+          "key": "sun",
+          "name": "Söndag",
           "date": "2026-01-03",
-          "dayName": "Söndag",
           "classes": [
             {
               "time": "07:30",
-              "name": "SPRINT 39",
-              "duration": 30
+              "duration": 30,
+              "video": {
+                "id": "yWSefdZQlPmmreZNdkPA",
+                "name": "SPRINT 39",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "30"
+              }
             },
             {
               "time": "11:00",
-              "name": "BODYPUMP 131",
-              "duration": 55
+              "duration": 55,
+              "video": {
+                "id": "CPSdjNErK0XQjc2TW0tg",
+                "name": "BODYPUMP 131",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "55"
+              }
             },
             {
               "time": "13:00",
-              "name": "THE TRIP 33",
-              "duration": 45
+              "duration": 45,
+              "video": {
+                "id": "0lAPQDtVlxD2X1ChNirL",
+                "name": "THE TRIP 33",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "45"
+              }
             },
             {
               "time": "14:00",
-              "name": "BODYBALANCE 106",
-              "duration": 55
+              "duration": 55,
+              "video": {
+                "id": "di3XNNUjimrWWXCoB2q8",
+                "name": "BODYBALANCE 106",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "55"
+              }
             },
             {
               "time": "15:00",
-              "name": "BODYCOMBAT 99 45",
-              "duration": 45
+              "duration": 45,
+              "video": {
+                "id": "oh1valluH0znFXK3V0VQ",
+                "name": "BODYCOMBAT 99 45",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "45"
+              }
             },
             {
               "time": "15:50",
-              "name": "BODYPUMP 133",
-              "duration": 55
+              "duration": 55,
+              "video": {
+                "id": "37idp1yfC6fuV0UTKjr4",
+                "name": "BODYPUMP 133",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "55"
+              }
             },
             {
               "time": "17:00",
-              "name": "THE TRIP 40",
-              "duration": 45
+              "duration": 45,
+              "video": {
+                "id": "NafRW78sdXMOUZ31NfMJ",
+                "name": "THE TRIP 40",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "45"
+              }
             },
             {
               "time": "18:00",
-              "name": "BODYPUMP 131",
-              "duration": 55
+              "duration": 55,
+              "video": {
+                "id": "CPSdjNErK0XQjc2TW0tg",
+                "name": "BODYPUMP 131",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "55"
+              }
             }
           ]
         }
-      }
+      ]
     },
     {
-      "week": 2,
+      "weekNumber": 2,
       "year": 2026,
-      "startDate": "2026-01-04",
-      "days": {
-        "mon": {
+      "days": [
+        {
+          "key": "mon",
+          "name": "Måndag",
           "date": "2026-01-04",
-          "dayName": "Måndag",
           "classes": [
             {
               "time": "06:00",
-              "name": "BODYBALANCE 106 45",
-              "duration": 45
+              "duration": 45,
+              "video": {
+                "id": "AX98m8iwSXxQza4VB4JU",
+                "name": "BODYBALANCE 106 45",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "45"
+              }
             },
             {
               "time": "07:45",
-              "name": "BODYCOMBAT 99",
-              "duration": 55
+              "duration": 55,
+              "video": {
+                "id": "MlG24xXclc201I4kZwE3",
+                "name": "BODYCOMBAT 99",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "55"
+              }
             },
             {
               "time": "10:15",
-              "name": "THE TRIP 41",
-              "duration": 45
+              "duration": 45,
+              "video": {
+                "id": "CpzgNpJgjo90JGiQPX8N",
+                "name": "THE TRIP 41",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "45"
+              }
             },
             {
               "time": "11:30",
-              "name": "CORE 56",
-              "duration": 45
+              "duration": 45,
+              "video": {
+                "id": "iLfhyQRi3SPNVNTTiOMR",
+                "name": "CORE 56",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "45"
+              }
             },
             {
               "time": "13:45",
-              "name": "BODYPUMP 131 45",
-              "duration": 45
+              "duration": 45,
+              "video": {
+                "id": "FQ2tJE2gZKx7a5TREv2t",
+                "name": "BODYPUMP 131 45",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "45"
+              }
             },
             {
               "time": "15:00",
-              "name": "THE TRIP 33",
-              "duration": 45
+              "duration": 45,
+              "video": {
+                "id": "0lAPQDtVlxD2X1ChNirL",
+                "name": "THE TRIP 33",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "45"
+              }
             }
           ]
         },
-        "tue": {
+        {
+          "key": "tue",
+          "name": "Tisdag",
           "date": "2026-01-05",
-          "dayName": "Tisdag",
           "classes": [
             {
               "time": "07:00",
-              "name": "CORE 53",
-              "duration": 45
+              "duration": 45,
+              "video": {
+                "id": "9rVjWTIt5dLLO1wYh3bF",
+                "name": "CORE 53",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "45"
+              }
             },
             {
               "time": "09:00",
-              "name": "BODYPUMP 131 45",
-              "duration": 45
+              "duration": 45,
+              "video": {
+                "id": "FQ2tJE2gZKx7a5TREv2t",
+                "name": "BODYPUMP 131 45",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "45"
+              }
             },
             {
               "time": "13:45",
-              "name": "THE TRIP 32",
-              "duration": 45
+              "duration": 45,
+              "video": {
+                "id": "9Vd6f9GVqsMYk5Kd4UOJ",
+                "name": "THE TRIP 32",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "45"
+              }
             },
             {
               "time": "15:15",
-              "name": "GRIT STRENGTH 50",
-              "duration": 30
+              "duration": 30,
+              "video": {
+                "id": "ndI3Ni8cZA5dPjwsuMA6",
+                "name": "GRIT STRENGTH 50",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "30"
+              }
             },
             {
               "time": "16:00",
-              "name": "BODYBALANCE 106 45",
-              "duration": 45
+              "duration": 45,
+              "video": {
+                "id": "AX98m8iwSXxQza4VB4JU",
+                "name": "BODYBALANCE 106 45",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "45"
+              }
             },
             {
               "time": "21:05",
-              "name": "THE TRIP 30",
-              "duration": 45
+              "duration": 45,
+              "video": {
+                "id": "PUT7dOjtKOonAA1oXNSZ",
+                "name": "THE TRIP 30",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "45"
+              }
             }
           ]
         },
-        "wed": {
+        {
+          "key": "wed",
+          "name": "Onsdag",
           "date": "2026-01-06",
-          "dayName": "Onsdag",
           "classes": [
             {
               "time": "06:00",
-              "name": "BODYPUMP 131 45",
-              "duration": 45
+              "duration": 45,
+              "video": {
+                "id": "FQ2tJE2gZKx7a5TREv2t",
+                "name": "BODYPUMP 131 45",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "45"
+              }
             },
             {
               "time": "07:50",
-              "name": "THE TRIP 41",
-              "duration": 45
+              "duration": 45,
+              "video": {
+                "id": "CpzgNpJgjo90JGiQPX8N",
+                "name": "THE TRIP 41",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "45"
+              }
             },
             {
               "time": "08:45",
-              "name": "GRIT ATHLETIC 46",
-              "duration": 30
+              "duration": 30,
+              "video": {
+                "id": "RXNGg7NkN7T5105IUrhE",
+                "name": "GRIT ATHLETIC 46",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "30"
+              }
             },
             {
               "time": "09:30",
-              "name": "BODYPUMP 131 45",
-              "duration": 45
+              "duration": 45,
+              "video": {
+                "id": "FQ2tJE2gZKx7a5TREv2t",
+                "name": "BODYPUMP 131 45",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "45"
+              }
             },
             {
               "time": "10:30",
-              "name": "SPRINT 34",
-              "duration": 30
+              "duration": 30,
+              "video": {
+                "id": "IzePuqosU3kGSFZLIm96",
+                "name": "SPRINT 34",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "30"
+              }
             },
             {
               "time": "11:15",
-              "name": "CORE 52 Express",
-              "duration": 30
+              "duration": 30,
+              "video": {
+                "id": "M8xhCFMmJelk7iDV9rRU",
+                "name": "CORE 52 Express",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "30"
+              }
             },
             {
               "time": "12:00",
-              "name": "GRIT CARDIO Base",
-              "duration": 30
+              "duration": 30,
+              "video": {
+                "id": "A4ByncuykdXdro0hRJFO",
+                "name": "GRIT CARDIO Base",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "20"
+              }
             },
             {
               "time": "12:35",
-              "name": "BODYBALANCE 103 FLEX",
-              "duration": 30
+              "duration": 30,
+              "video": {
+                "id": "6QEo98o12UvosBgww95b",
+                "name": "BODYBALANCE 103 FLEX",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "30"
+              }
             },
             {
               "time": "13:15",
-              "name": "THE TRIP 23",
-              "duration": 45
+              "duration": 45,
+              "video": {
+                "id": "MMy0NZi6nQt5B6xoaAL8",
+                "name": "THE TRIP 23",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "45"
+              }
             },
             {
               "time": "14:15",
-              "name": "CORE 52 Express",
-              "duration": 30
+              "duration": 30,
+              "video": {
+                "id": "M8xhCFMmJelk7iDV9rRU",
+                "name": "CORE 52 Express",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "30"
+              }
             },
             {
               "time": "15:00",
-              "name": "THE TRIP 37",
-              "duration": 45
+              "duration": 45,
+              "video": {
+                "id": "yyGxH30vznar87mSsRnk",
+                "name": "THE TRIP 37",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "45"
+              }
             },
             {
               "time": "16:00",
-              "name": "BODYCOMBAT 99 Express",
-              "duration": 30
+              "duration": 30,
+              "video": {
+                "id": "ZCcpNs3nn5QGll9bB5vA",
+                "name": "BODYCOMBAT 99 Express",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "30"
+              }
             },
             {
               "time": "20:15",
-              "name": "BODYPUMP 131 45",
-              "duration": 45
+              "duration": 45,
+              "video": {
+                "id": "FQ2tJE2gZKx7a5TREv2t",
+                "name": "BODYPUMP 131 45",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "45"
+              }
             }
           ]
         },
-        "thu": {
+        {
+          "key": "thu",
+          "name": "Torsdag",
           "date": "2026-01-07",
-          "dayName": "Torsdag",
           "classes": [
             {
               "time": "05:45",
-              "name": "THE TRIP 32",
-              "duration": 45
+              "duration": 45,
+              "video": {
+                "id": "9Vd6f9GVqsMYk5Kd4UOJ",
+                "name": "THE TRIP 32",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "45"
+              }
             },
             {
               "time": "07:00",
-              "name": "THE TRIP 36",
-              "duration": 45
+              "duration": 45,
+              "video": {
+                "id": "EimhUeHlhNXAFjIPau3Z",
+                "name": "THE TRIP 36",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "45"
+              }
             },
             {
               "time": "08:00",
-              "name": "CORE 53",
-              "duration": 45
+              "duration": 45,
+              "video": {
+                "id": "9rVjWTIt5dLLO1wYh3bF",
+                "name": "CORE 53",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "45"
+              }
             },
             {
               "time": "11:00",
-              "name": "CORE 51 Express",
-              "duration": 30
+              "duration": 30,
+              "video": {
+                "id": "34nLHM7eCQQUHQQIEhf8",
+                "name": "CORE 51 Express",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "30"
+              }
             },
             {
               "time": "11:45",
-              "name": "CORE 53 Express",
-              "duration": 30
+              "duration": 30,
+              "video": {
+                "id": "F1Xnj27M41esXW85wp5V",
+                "name": "CORE 53 Express",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "30"
+              }
             },
             {
               "time": "13:00",
-              "name": "RPM 101",
-              "duration": 45
+              "duration": 45,
+              "video": {
+                "id": "fhha7VuDlDUEcKMs4bUt",
+                "name": "RPM 101",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "45"
+              }
             },
             {
               "time": "14:00",
-              "name": "BODYCOMBAT 97",
-              "duration": 55
+              "duration": 55,
+              "video": {
+                "id": "TRau74e8st992PxiK7fN",
+                "name": "BODYCOMBAT 97",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "55"
+              }
             },
             {
               "time": "15:00",
-              "name": "THE TRIP 36",
-              "duration": 45
+              "duration": 45,
+              "video": {
+                "id": "EimhUeHlhNXAFjIPau3Z",
+                "name": "THE TRIP 36",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "45"
+              }
             },
             {
               "time": "16:00",
-              "name": "CORE 56",
-              "duration": 45
+              "duration": 45,
+              "video": {
+                "id": "iLfhyQRi3SPNVNTTiOMR",
+                "name": "CORE 56",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "45"
+              }
             },
             {
               "time": "16:45",
-              "name": "SPRINT 33",
-              "duration": 30
+              "duration": 30,
+              "video": {
+                "id": "zGDbBnJHQrv73WuzOqk9",
+                "name": "SPRINT 33",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "30"
+              }
             },
             {
               "time": "20:20",
-              "name": "CORE 52 Express",
-              "duration": 30
+              "duration": 30,
+              "video": {
+                "id": "M8xhCFMmJelk7iDV9rRU",
+                "name": "CORE 52 Express",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "30"
+              }
             }
           ]
         },
-        "fri": {
+        {
+          "key": "fri",
+          "name": "Fredag",
           "date": "2026-01-08",
-          "dayName": "Fredag",
           "classes": [
             {
               "time": "06:00",
-              "name": "BODYBALANCE 106 FLEX",
-              "duration": 30
+              "duration": 30,
+              "video": {
+                "id": "YdvQoSVf3votBHfS8XiV",
+                "name": "BODYBALANCE 106 FLEX",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "30"
+              }
             },
             {
               "time": "06:30",
-              "name": "SPRINT 33",
-              "duration": 30
+              "duration": 30,
+              "video": {
+                "id": "zGDbBnJHQrv73WuzOqk9",
+                "name": "SPRINT 33",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "30"
+              }
             },
             {
               "time": "07:05",
-              "name": "CORE 56 Express",
-              "duration": 30
+              "duration": 30,
+              "video": {
+                "id": "JmFpqS0gW9mw2raUAsQV",
+                "name": "CORE 56 Express",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "30"
+              }
             },
             {
               "time": "07:45",
-              "name": "RPM 101",
-              "duration": 45
+              "duration": 45,
+              "video": {
+                "id": "fhha7VuDlDUEcKMs4bUt",
+                "name": "RPM 101",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "45"
+              }
             },
             {
               "time": "08:45",
-              "name": "BODYCOMBAT 97 45",
-              "duration": 45
+              "duration": 45,
+              "video": {
+                "id": "LilJrxI8WjfWh1suBo9j",
+                "name": "BODYCOMBAT 97 45",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "45"
+              }
             },
             {
               "time": "13:15",
-              "name": "GRIT ATHLETIC 46",
-              "duration": 30
+              "duration": 30,
+              "video": {
+                "id": "RXNGg7NkN7T5105IUrhE",
+                "name": "GRIT ATHLETIC 46",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "30"
+              }
             },
             {
               "time": "14:00",
-              "name": "THE TRIP 31",
-              "duration": 45
+              "duration": 45,
+              "video": {
+                "id": "NsPFSbXMyHjUCtS9EK8M",
+                "name": "THE TRIP 31",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "45"
+              }
             },
             {
               "time": "15:00",
-              "name": "BODYCOMBAT 99 45",
-              "duration": 45
+              "duration": 45,
+              "video": {
+                "id": "oh1valluH0znFXK3V0VQ",
+                "name": "BODYCOMBAT 99 45",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "45"
+              }
             },
             {
               "time": "15:50",
-              "name": "BODYCOMBAT 99 45",
-              "duration": 45
+              "duration": 45,
+              "video": {
+                "id": "oh1valluH0znFXK3V0VQ",
+                "name": "BODYCOMBAT 99 45",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "45"
+              }
             }
           ]
         },
-        "sat": {
+        {
+          "key": "sat",
+          "name": "Lördag",
           "date": "2026-01-09",
-          "dayName": "Lördag",
           "classes": [
             {
               "time": "07:00",
-              "name": "BODYBALANCE 106 FLEX",
-              "duration": 30
+              "duration": 30,
+              "video": {
+                "id": "YdvQoSVf3votBHfS8XiV",
+                "name": "BODYBALANCE 106 FLEX",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "30"
+              }
             },
             {
               "time": "07:35",
-              "name": "BODYBALANCE 105 STRENGTH",
-              "duration": 30
+              "duration": 30,
+              "video": {
+                "id": "D4DhkLlGBUjTqrLh2lPl",
+                "name": "BODYBALANCE 105 STRENGTH",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "30"
+              }
             },
             {
               "time": "08:10",
-              "name": "SPRINT 33",
-              "duration": 30
+              "duration": 30,
+              "video": {
+                "id": "zGDbBnJHQrv73WuzOqk9",
+                "name": "SPRINT 33",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "30"
+              }
             },
             {
               "time": "12:30",
-              "name": "RPM 99",
-              "duration": 45
+              "duration": 45,
+              "video": {
+                "id": "epPz7o4ZipkPzkAZcQ1N",
+                "name": "RPM 99",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "45"
+              }
             },
             {
               "time": "14:05",
-              "name": "BODYBALANCE 106 45",
-              "duration": 45
+              "duration": 45,
+              "video": {
+                "id": "AX98m8iwSXxQza4VB4JU",
+                "name": "BODYBALANCE 106 45",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "45"
+              }
             },
             {
               "time": "15:00",
-              "name": "THE TRIP 31",
-              "duration": 45
+              "duration": 45,
+              "video": {
+                "id": "NsPFSbXMyHjUCtS9EK8M",
+                "name": "THE TRIP 31",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "45"
+              }
             },
             {
               "time": "16:00",
-              "name": "BODYATTACK 126",
-              "duration": 55
+              "duration": 55,
+              "video": {
+                "id": "dWUXChZxMLf7SAfsp99B",
+                "name": "BODYATTACK 126",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "55"
+              }
             },
             {
               "time": "17:00",
-              "name": "CORE 56",
-              "duration": 45
+              "duration": 45,
+              "video": {
+                "id": "iLfhyQRi3SPNVNTTiOMR",
+                "name": "CORE 56",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "45"
+              }
             },
             {
               "time": "18:00",
-              "name": "BODYPUMP 131",
-              "duration": 55
+              "duration": 55,
+              "video": {
+                "id": "CPSdjNErK0XQjc2TW0tg",
+                "name": "BODYPUMP 131",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "55"
+              }
             }
           ]
         },
-        "sun": {
+        {
+          "key": "sun",
+          "name": "Söndag",
           "date": "2026-01-10",
-          "dayName": "Söndag",
           "classes": [
             {
               "time": "07:30",
-              "name": "SPRINT 39",
-              "duration": 30
+              "duration": 30,
+              "video": {
+                "id": "yWSefdZQlPmmreZNdkPA",
+                "name": "SPRINT 39",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "30"
+              }
             },
             {
               "time": "11:00",
-              "name": "BODYPUMP 131",
-              "duration": 55
+              "duration": 55,
+              "video": {
+                "id": "CPSdjNErK0XQjc2TW0tg",
+                "name": "BODYPUMP 131",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "55"
+              }
             },
             {
               "time": "13:00",
-              "name": "THE TRIP 33",
-              "duration": 45
+              "duration": 45,
+              "video": {
+                "id": "0lAPQDtVlxD2X1ChNirL",
+                "name": "THE TRIP 33",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "45"
+              }
             },
             {
               "time": "14:00",
-              "name": "BODYBALANCE 106",
-              "duration": 55
+              "duration": 55,
+              "video": {
+                "id": "di3XNNUjimrWWXCoB2q8",
+                "name": "BODYBALANCE 106",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "55"
+              }
             },
             {
               "time": "15:00",
-              "name": "BODYCOMBAT 99 45",
-              "duration": 45
+              "duration": 45,
+              "video": {
+                "id": "oh1valluH0znFXK3V0VQ",
+                "name": "BODYCOMBAT 99 45",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "45"
+              }
             },
             {
               "time": "15:50",
-              "name": "BODYPUMP 133",
-              "duration": 55
+              "duration": 55,
+              "video": {
+                "id": "37idp1yfC6fuV0UTKjr4",
+                "name": "BODYPUMP 133",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "55"
+              }
             },
             {
               "time": "17:00",
-              "name": "THE TRIP 40",
-              "duration": 45
+              "duration": 45,
+              "video": {
+                "id": "NafRW78sdXMOUZ31NfMJ",
+                "name": "THE TRIP 40",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "45"
+              }
             },
             {
               "time": "18:00",
-              "name": "BODYPUMP 131",
-              "duration": 55
+              "duration": 55,
+              "video": {
+                "id": "CPSdjNErK0XQjc2TW0tg",
+                "name": "BODYPUMP 131",
+                "brand": "IGvJBHEhFEjj7siGvmyS",
+                "category": null,
+                "duration": "55"
+              }
             }
           ]
         }
-      }
-    },
-    {
-      "week": 3,
-      "year": 2026,
-      "startDate": "2026-01-11",
-      "days": {
-        "mon": {
-          "date": "2026-01-11",
-          "dayName": "Måndag",
-          "classes": [
-            {
-              "time": "06:00",
-              "name": "BODYBALANCE 106 45",
-              "duration": 45
-            },
-            {
-              "time": "07:45",
-              "name": "BODYCOMBAT 99",
-              "duration": 55
-            },
-            {
-              "time": "10:15",
-              "name": "THE TRIP 41",
-              "duration": 45
-            },
-            {
-              "time": "11:30",
-              "name": "CORE 56",
-              "duration": 45
-            },
-            {
-              "time": "13:45",
-              "name": "BODYPUMP 131 45",
-              "duration": 45
-            },
-            {
-              "time": "15:00",
-              "name": "THE TRIP 33",
-              "duration": 45
-            }
-          ]
-        },
-        "tue": {
-          "date": "2026-01-12",
-          "dayName": "Tisdag",
-          "classes": [
-            {
-              "time": "07:00",
-              "name": "CORE 53",
-              "duration": 45
-            },
-            {
-              "time": "09:00",
-              "name": "BODYPUMP 131 45",
-              "duration": 45
-            },
-            {
-              "time": "13:45",
-              "name": "THE TRIP 32",
-              "duration": 45
-            },
-            {
-              "time": "15:15",
-              "name": "GRIT STRENGTH 50",
-              "duration": 30
-            },
-            {
-              "time": "16:00",
-              "name": "BODYBALANCE 106 45",
-              "duration": 45
-            },
-            {
-              "time": "21:05",
-              "name": "THE TRIP 30",
-              "duration": 45
-            }
-          ]
-        },
-        "wed": {
-          "date": "2026-01-13",
-          "dayName": "Onsdag",
-          "classes": [
-            {
-              "time": "06:00",
-              "name": "BODYPUMP 131 45",
-              "duration": 45
-            },
-            {
-              "time": "07:50",
-              "name": "THE TRIP 41",
-              "duration": 45
-            },
-            {
-              "time": "08:45",
-              "name": "GRIT ATHLETIC 46",
-              "duration": 30
-            },
-            {
-              "time": "09:30",
-              "name": "BODYPUMP 131 45",
-              "duration": 45
-            },
-            {
-              "time": "10:30",
-              "name": "SPRINT 34",
-              "duration": 30
-            },
-            {
-              "time": "11:15",
-              "name": "CORE 52 Express",
-              "duration": 30
-            },
-            {
-              "time": "12:00",
-              "name": "GRIT CARDIO Base",
-              "duration": 30
-            },
-            {
-              "time": "12:35",
-              "name": "BODYBALANCE 103 FLEX",
-              "duration": 30
-            },
-            {
-              "time": "13:15",
-              "name": "THE TRIP 23",
-              "duration": 45
-            },
-            {
-              "time": "14:15",
-              "name": "CORE 52 Express",
-              "duration": 30
-            },
-            {
-              "time": "15:00",
-              "name": "THE TRIP 37",
-              "duration": 45
-            },
-            {
-              "time": "16:00",
-              "name": "BODYCOMBAT 99 Express",
-              "duration": 30
-            },
-            {
-              "time": "20:15",
-              "name": "BODYPUMP 131 45",
-              "duration": 45
-            }
-          ]
-        },
-        "thu": {
-          "date": "2026-01-14",
-          "dayName": "Torsdag",
-          "classes": [
-            {
-              "time": "05:45",
-              "name": "THE TRIP 32",
-              "duration": 45
-            },
-            {
-              "time": "07:00",
-              "name": "THE TRIP 36",
-              "duration": 45
-            },
-            {
-              "time": "08:00",
-              "name": "CORE 53",
-              "duration": 45
-            },
-            {
-              "time": "11:00",
-              "name": "CORE 51 Express",
-              "duration": 30
-            },
-            {
-              "time": "11:45",
-              "name": "CORE 53 Express",
-              "duration": 30
-            },
-            {
-              "time": "13:00",
-              "name": "RPM 101",
-              "duration": 45
-            },
-            {
-              "time": "14:00",
-              "name": "BODYCOMBAT 97",
-              "duration": 55
-            },
-            {
-              "time": "15:00",
-              "name": "THE TRIP 36",
-              "duration": 45
-            },
-            {
-              "time": "16:00",
-              "name": "CORE 56",
-              "duration": 45
-            },
-            {
-              "time": "16:45",
-              "name": "SPRINT 33",
-              "duration": 30
-            },
-            {
-              "time": "20:20",
-              "name": "CORE 52 Express",
-              "duration": 30
-            }
-          ]
-        },
-        "fri": {
-          "date": "2026-01-15",
-          "dayName": "Fredag",
-          "classes": [
-            {
-              "time": "06:00",
-              "name": "BODYBALANCE 106 FLEX",
-              "duration": 30
-            },
-            {
-              "time": "06:30",
-              "name": "SPRINT 33",
-              "duration": 30
-            },
-            {
-              "time": "07:05",
-              "name": "CORE 56 Express",
-              "duration": 30
-            },
-            {
-              "time": "07:45",
-              "name": "RPM 101",
-              "duration": 45
-            },
-            {
-              "time": "08:45",
-              "name": "BODYCOMBAT 97 45",
-              "duration": 45
-            },
-            {
-              "time": "13:15",
-              "name": "GRIT ATHLETIC 46",
-              "duration": 30
-            },
-            {
-              "time": "14:00",
-              "name": "THE TRIP 31",
-              "duration": 45
-            },
-            {
-              "time": "15:00",
-              "name": "BODYCOMBAT 99 45",
-              "duration": 45
-            },
-            {
-              "time": "15:50",
-              "name": "BODYCOMBAT 99 45",
-              "duration": 45
-            }
-          ]
-        },
-        "sat": {
-          "date": "2026-01-16",
-          "dayName": "Lördag",
-          "classes": [
-            {
-              "time": "07:00",
-              "name": "BODYBALANCE 106 FLEX",
-              "duration": 30
-            },
-            {
-              "time": "07:35",
-              "name": "BODYBALANCE 105 STRENGTH",
-              "duration": 30
-            },
-            {
-              "time": "08:10",
-              "name": "SPRINT 33",
-              "duration": 30
-            },
-            {
-              "time": "12:30",
-              "name": "RPM 99",
-              "duration": 45
-            },
-            {
-              "time": "14:05",
-              "name": "BODYBALANCE 106 45",
-              "duration": 45
-            },
-            {
-              "time": "15:00",
-              "name": "THE TRIP 31",
-              "duration": 45
-            },
-            {
-              "time": "16:00",
-              "name": "BODYATTACK 126",
-              "duration": 55
-            },
-            {
-              "time": "17:00",
-              "name": "CORE 56",
-              "duration": 45
-            },
-            {
-              "time": "18:00",
-              "name": "BODYPUMP 131",
-              "duration": 55
-            }
-          ]
-        },
-        "sun": {
-          "date": "2026-01-17",
-          "dayName": "Söndag",
-          "classes": [
-            {
-              "time": "07:30",
-              "name": "SPRINT 39",
-              "duration": 30
-            },
-            {
-              "time": "11:00",
-              "name": "BODYPUMP 131",
-              "duration": 55
-            },
-            {
-              "time": "13:00",
-              "name": "THE TRIP 33",
-              "duration": 45
-            },
-            {
-              "time": "14:00",
-              "name": "BODYBALANCE 106",
-              "duration": 55
-            },
-            {
-              "time": "15:00",
-              "name": "BODYCOMBAT 99 45",
-              "duration": 45
-            },
-            {
-              "time": "15:50",
-              "name": "BODYPUMP 133",
-              "duration": 55
-            },
-            {
-              "time": "17:00",
-              "name": "THE TRIP 40",
-              "duration": 45
-            },
-            {
-              "time": "18:00",
-              "name": "BODYPUMP 131",
-              "duration": 55
-            }
-          ]
-        }
-      }
+      ]
     }
-  ],
-  "type": "virtual",
-  "provider": "Les Mills / EWVirtual"
+  ]
 }

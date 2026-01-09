@@ -30,12 +30,20 @@ export default defineNuxtConfig({
         { property: 'og:title', content: 'Core Gym Club - Kom som du är' },
         { property: 'og:description', content: 'Fyra gym i Haninge. Öppet alla dagar. Inga pekpinnar, bara träning som passar dig.' },
         { property: 'og:type', content: 'website' },
-        { property: 'og:url', content: 'https://coregymclub.se' },
+        { property: 'og:url', content: 'https://coregym.club' },
+        { property: 'og:image', content: 'https://coregym.club/og-image.jpg?v=2' },
+        { property: 'og:image:width', content: '1200' },
+        { property: 'og:image:height', content: '630' },
+        { name: 'twitter:card', content: 'summary_large_image' },
+        { name: 'twitter:image', content: 'https://coregym.club/og-image.jpg?v=2' },
         // Allow indexing on production
         { name: 'robots', content: 'index, follow' },
       ],
       link: [
-        { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+        { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg?v=3' },
+        { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico?v=3' },
+        { rel: 'apple-touch-icon', sizes: '180x180', href: '/apple-touch-icon.png?v=3' },
+        { rel: 'mask-icon', href: '/safari-pinned-tab.svg', color: '#ed1a37' },
       ]
     }
   },
@@ -44,5 +52,11 @@ export default defineNuxtConfig({
   ssr: true,
   nitro: {
     preset: 'cloudflare-pages'
+  },
+
+  // Redirects
+  routeRules: {
+    '/anlaggningar': { redirect: '/' },
+    '/anlaggningar/**': { redirect: '/' }
   }
 })

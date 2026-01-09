@@ -247,8 +247,8 @@ const faqs = [
             <NuxtLink to="/kontakt" class="btn btn-secondary bg-white hover:bg-blue-50">
               Kontakta oss
             </NuxtLink>
-            <a href="tel:08-7452220" class="btn bg-transparent text-on-surface border border-outline hover:bg-white hover:border-blue-200">
-              Ring 08-745 22 20
+            <a href="tel:0850924549" class="btn bg-transparent text-on-surface border border-outline hover:bg-white hover:border-blue-200">
+              Ring 08-509 245 49
             </a>
           </div>
         </div>

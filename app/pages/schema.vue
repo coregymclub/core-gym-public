@@ -13,6 +13,61 @@ const { schedule, loading, error, selectedClass, fetchSchedule, selectClass, cle
 
 const selectedSite = ref<number | null>(null)
 const showDropdown = ref(false)
+const selectedClassType = ref<string | null>(null)
+
+// Carousel images for visual display
+const carouselImages = [
+  { src: '/images/yoga-class-group.webp', alt: 'Yoga' },
+  { src: '/images/bodypump.webp', alt: 'Bodypump' },
+  { src: '/images/mikaela-lauren-box.webp', alt: 'Boxning med Mikaela Lauren' },
+  { src: '/images/classes/cycling.jpg', alt: 'Cykel' },
+  { src: '/images/denise-biking.webp', alt: 'Spinning' },
+  { src: '/images/yoga-class.webp', alt: 'Yoga' },
+]
+
+const carouselRef = ref<HTMLElement | null>(null)
+const isScrolling = ref(false)
+const infiniteImages = computed(() => [...carouselImages, ...carouselImages, ...carouselImages])
+
+const getItemWidth = () => {
+  if (typeof window === 'undefined') return 105
+  return window.innerWidth >= 768 ? 180 : 105
+}
+
+const onCarouselScroll = () => {
+  if (!carouselRef.value || isScrolling.value) return
+  const container = carouselRef.value
+  const itemWidth = getItemWidth()
+  const singleSetWidth = carouselImages.length * itemWidth
+  const scrollLeft = container.scrollLeft
+
+  if (scrollLeft >= singleSetWidth * 2 - container.clientWidth / 2) {
+    isScrolling.value = true
+    container.scrollLeft = scrollLeft - singleSetWidth
+    requestAnimationFrame(() => { isScrolling.value = false })
+  } else if (scrollLeft <= singleSetWidth / 2) {
+    isScrolling.value = true
+    container.scrollLeft = scrollLeft + singleSetWidth
+    requestAnimationFrame(() => { isScrolling.value = false })
+  }
+}
+
+const scrollToCenter = () => {
+  if (!carouselRef.value) return
+  const container = carouselRef.value
+  const itemWidth = getItemWidth()
+  const centerPosition = carouselImages.length * itemWidth + (carouselImages.length / 2) * itemWidth
+  container.scrollTo({ left: centerPosition, behavior: 'instant' })
+}
+
+// Class type filters
+const classTypes = [
+  { id: 'strength', name: 'Styrka', color: 'bg-brand' },
+  { id: 'cardio', name: 'Cardio', color: 'bg-rose-500' },
+  { id: 'mindbody', name: 'Yoga', color: 'bg-teal-500' },
+  { id: 'cycle', name: 'Cykel', color: 'bg-blue-500' },
+  { id: 'hiit', name: 'HIIT', color: 'bg-purple-500' },
+]
 
 // Trial form
 const trialForm = ref({ name: '', email: '', phone: '' })
@@ -21,10 +76,15 @@ const formSuccess = ref(false)
 const formError = ref<string | null>(null)
 
 const filteredSchedule = computed(() => {
-  if (!selectedSite.value) return schedule.value
   return schedule.value.map(day => ({
     ...day,
-    classes: day.classes.filter(c => c.siteId === selectedSite.value)
+    classes: day.classes.filter(c => {
+      // Filter by site
+      if (selectedSite.value && c.siteId !== selectedSite.value) return false
+      // Filter by class type category (from chips)
+      if (selectedClassType.value && getClassCategory(c.name) !== selectedClassType.value) return false
+      return true
+    })
   })).filter(day => day.classes.length > 0)
 })
 
@@ -42,14 +102,39 @@ function getCategoryColor(name: string): string {
     cycle: 'bg-blue-500',
     hiit: 'bg-purple-500',
     core: 'bg-amber-500',
+    toning: 'bg-pink-400',
+    special: 'bg-gradient-to-b from-yellow-400 to-orange-500',
     other: 'bg-on-surface-dim'
   }
-  return colors[category] || colors.other
+  return colors[category] ?? colors.other!
 }
 
 function formatDateShort(dateStr: string): string {
   const [, month, day] = dateStr.split('-').map(Number)
   return `${day}/${month}`
+}
+
+function calculateDuration(startTime: string, endTime: string): string {
+  const startParts = startTime.split(':').map(Number)
+  const endParts = endTime.split(':').map(Number)
+  const startH = startParts[0] ?? 0
+  const startM = startParts[1] ?? 0
+  const endH = endParts[0] ?? 0
+  const endM = endParts[1] ?? 0
+  const startMinutes = startH * 60 + startM
+  const endMinutes = endH * 60 + endM
+  const duration = endMinutes - startMinutes
+  return `${duration} min`
+}
+
+const SITE_ABBREV: Record<number, string> = {
+  1: 'VEGA',
+  2: 'TUNG',
+  3: 'VH'
+}
+
+function getSiteAbbrev(siteId: number): string {
+  return SITE_ABBREV[siteId] || '?'
 }
 
 function selectSite(siteId: number | null) {
@@ -92,25 +177,50 @@ async function submitTrialBooking() {
   try {
     const classDate = schedule.value.find(d => d.classes.some(c => c.id === selectedClass.value?.id))
     const dateStr = classDate ? `${classDate.dayName} ${formatDateShort(classDate.date)}` : ''
+    const fullDate = classDate?.date || ''
+    const bookingUrl = `https://coregym.club/schema?pass=${selectedClass.value.id}`
 
-    const response = await fetch('https://hooks.zapier.com/hooks/catch/22018aborb/trial-booking/', {
+    const response = await fetch('https://student-email.coregymclub.se/send', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        type: 'trial_booking',
-        name: trialForm.value.name,
-        email: trialForm.value.email,
-        phone: trialForm.value.phone,
-        class_name: selectedClass.value.name,
-        class_time: selectedClass.value.time,
-        class_date: dateStr,
-        class_site: selectedClass.value.site,
-        instructor: selectedClass.value.instructor
+        to: 'info@coregym.club',
+        subject: `Provträning: ${selectedClass.value.name} - ${dateStr}`,
+        html: `
+          <h2>Ny förfrågan om provträning</h2>
+          <p><strong>Namn:</strong> ${trialForm.value.name}</p>
+          <p><strong>E-post:</strong> ${trialForm.value.email}</p>
+          <p><strong>Telefon:</strong> ${trialForm.value.phone}</p>
+          <hr>
+          <h3>Passinfo</h3>
+          <p><strong>Pass:</strong> ${selectedClass.value.name}</p>
+          <p><strong>Tid:</strong> ${selectedClass.value.time} - ${selectedClass.value.endTime}</p>
+          <p><strong>Datum:</strong> ${dateStr} (${fullDate})</p>
+          <p><strong>Gym:</strong> ${selectedClass.value.site}</p>
+          <p><strong>Instruktör:</strong> ${selectedClass.value.instructor || 'Ej angiven'}</p>
+          <p><strong>Lediga platser:</strong> ${selectedClass.value.spotsLeft}</p>
+          <hr>
+          <p><a href="${bookingUrl}">Länk till passet</a></p>
+        `
       })
     })
 
     if (response.ok) {
       formSuccess.value = true
+
+      // Skicka också till team-chatten
+      try {
+        await fetch('https://teamchat.coregym.club/api/chat/reception', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            message: `🏋️ **Provträning**\n${trialForm.value.name} vill prova **${selectedClass.value.name}**\n📅 ${dateStr} kl ${selectedClass.value.time}\n📍 ${selectedClass.value.site}\n📧 ${trialForm.value.email}\n📱 ${trialForm.value.phone}`,
+            author: 'System'
+          })
+        })
+      } catch (e) {
+        // Ignorera chat-fel, mejlet gick iväg
+      }
     } else {
       throw new Error()
     }
@@ -164,6 +274,10 @@ function handleClickOutside(event: MouseEvent) {
 
 onMounted(() => {
   document.addEventListener('click', handleClickOutside)
+  // Scroll carousel to center
+  nextTick(() => {
+    scrollToCenter()
+  })
 })
 
 onUnmounted(() => {
@@ -172,84 +286,78 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div>
+  <div class="overflow-x-hidden">
     <!-- Hero -->
-    <section class="min-h-[70vh] flex items-center justify-center bg-brand-dark text-white px-6 relative overflow-hidden">
-      <!-- Background Image with Red Overlay -->
-      <div class="absolute inset-0 z-0">
-        <img 
-          src="/images/classes/strength.webp" 
-          alt="Gruppträning" 
-          class="w-full h-full object-cover opacity-30 mix-blend-luminosity"
-        />
-        <!-- Strong red gradient overlay to match reference -->
-        <div class="absolute inset-0 bg-gradient-to-t from-brand-dark/90 via-brand/80 to-brand-dark/80 mix-blend-multiply" />
-        <div class="absolute inset-0 bg-gradient-to-b from-black/40 to-transparent" />
-      </div>
-
-      <div class="text-center relative z-10 max-w-5xl mx-auto mt-10">
-        <span class="inline-block px-6 py-2 rounded-full bg-[#D93636] text-white mb-8 text-sm font-bold tracking-widest uppercase shadow-lg">
+    <section class="flex flex-col justify-center bg-[#2a2a2e] px-6 relative overflow-hidden pt-24 pb-24">
+      <div class="text-center relative z-10 max-w-4xl mx-auto mb-6">
+        <span class="inline-block px-5 py-1.5 rounded-full text-xs font-bold tracking-widest uppercase border border-white/15 text-white/60 bg-white/5 mb-6">
           Gruppträning
         </span>
-        <h1 class="font-display font-bold text-5xl md:text-7xl lg:text-[7rem] leading-[0.9] text-white mb-8 uppercase tracking-tighter">
+        <h1 class="font-display font-bold text-5xl md:text-7xl lg:text-8xl leading-[0.9] text-white mb-6 uppercase tracking-tighter">
           Hitta din grej
         </h1>
-        <p class="text-xl md:text-2xl lg:text-3xl text-white/90 mb-12 max-w-2xl mx-auto leading-tight font-medium">
-          Från lugn yoga till svettiga HIIT-pass. <br class="hidden md:inline" />
-          Välj det som får dig att må bra.
+        <p class="text-xl md:text-2xl text-white/70 mb-8 max-w-2xl mx-auto leading-relaxed font-medium">
+          Från lugn yoga till svettiga HIIT-pass. Över 50 klasser i veckan. <br class="hidden md:inline" />
+          Alltid inkluderat i ditt medlemskap.
         </p>
 
         <!-- Site filter -->
-        <div class="flex justify-center pb-20">
-          <div class="dropdown-container relative z-30">
+        <div class="flex justify-center">
+          <div class="dropdown-container relative">
             <button
-              class="flex items-center gap-4 px-8 py-4 bg-white text-on-surface shadow-xl hover:shadow-2xl hover:scale-105 rounded-full text-xl font-bold transition-all border border-white/20"
+              class="flex items-center gap-3 px-6 py-3 bg-white/10 hover:bg-white/15 text-white shadow-lg hover:shadow-xl hover:-translate-y-0.5 rounded-full text-lg font-bold transition-all backdrop-blur-sm"
               @click.stop="showDropdown = !showDropdown"
             >
-              <span class="w-3 h-3 rounded-full" :class="selectedSite ? 'bg-brand' : 'bg-surface-dim'" />
+              <span class="w-2.5 h-2.5 rounded-full" :class="selectedSite ? 'bg-brand' : 'bg-white/40'" />
               {{ selectedSiteName }}
-              <svg class="w-5 h-5 text-on-surface-dim transition-transform duration-300" :class="showDropdown ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="w-5 h-5 text-white/60 transition-transform duration-300" :class="showDropdown ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
               </svg>
             </button>
+          </div>
+        </div>
+      </div>
 
-            <Transition
-              enter-active-class="transition duration-200 ease-out"
-              enter-from-class="opacity-0 scale-95 -translate-y-2"
-              enter-to-class="opacity-100 scale-100 translate-y-0"
-              leave-active-class="transition duration-150 ease-in"
-              leave-from-class="opacity-100 scale-100 translate-y-0"
-              leave-to-class="opacity-0 scale-95 -translate-y-2"
-            >
-              <div v-if="showDropdown" class="absolute top-full left-1/2 -translate-x-1/2 mt-3 w-64 bg-white rounded-2xl shadow-xl border border-outline/50 overflow-hidden">
-                <button
-                  class="w-full flex items-center gap-4 px-6 py-4 text-left text-lg hover:bg-surface-dim transition-colors text-on-surface"
-                  :class="selectedSite === null ? 'font-bold bg-surface-dim/50' : ''"
-                  @click="selectSite(null)"
-                >
-                  <span class="w-2 h-2 rounded-full" :class="selectedSite === null ? 'bg-brand' : 'bg-outline'" />
-                  Alla gym
-                </button>
-                <button
-                  v-for="(name, id) in SITE_NAMES"
-                  :key="id"
-                  class="w-full flex items-center gap-4 px-6 py-4 text-left text-lg hover:bg-surface-dim transition-colors text-on-surface"
-                  :class="selectedSite === Number(id) ? 'font-bold bg-surface-dim/50' : ''"
-                  @click="selectSite(Number(id))"
-                >
-                  <span class="w-2 h-2 rounded-full" :class="selectedSite === Number(id) ? 'bg-brand' : 'bg-outline'" />
-                  {{ name }}
-                </button>
-              </div>
-            </Transition>
+      <!-- Visual Carousel -->
+      <div class="carousel-container relative z-10 mt-4">
+        <div ref="carouselRef" class="carousel-track" @scroll="onCarouselScroll">
+          <div
+            v-for="(image, index) in infiniteImages"
+            :key="index"
+            class="carousel-item"
+          >
+            <img :src="image.src" :alt="image.alt" />
           </div>
         </div>
       </div>
     </section>
 
     <!-- Schedule -->
-    <section class="section bg-surface relative z-10 -mt-16 rounded-t-[3rem] pt-16">
+    <section class="section bg-surface relative z-10 -mt-12 rounded-t-[2.5rem] pt-12">
       <div class="container">
+        
+        <!-- Class Type Filter Chips -->
+        <div class="mb-12 max-w-4xl mx-auto">
+          <div class="chip-group justify-center pb-0">
+            <button
+              class="chip-filter"
+              :class="{ 'is-selected': selectedClassType === null }"
+              @click="selectedClassType = null"
+            >
+              Alla
+            </button>
+            <button
+              v-for="type in classTypes"
+              :key="type.id"
+              class="chip-filter"
+              :class="{ 'is-selected': selectedClassType === type.id }"
+              @click="selectedClassType = type.id"
+            >
+              <span class="w-2 h-2 rounded-full" :class="type.color" />
+              {{ type.name }}
+            </button>
+          </div>
+        </div>
         
         <!-- Loading -->
         <div v-if="loading" class="text-center py-24">
@@ -264,59 +372,58 @@ onUnmounted(() => {
           <button @click="fetchSchedule(7)" class="btn btn-secondary">Försök igen</button>
         </div>
 
-        <!-- Schedule Grid -->
-        <div v-else-if="filteredSchedule.length > 0" class="space-y-20 max-w-4xl mx-auto">
+        <!-- Schedule Grid - Responsive -->
+        <div v-else-if="filteredSchedule.length > 0" class="space-y-16 lg:space-y-20 max-w-7xl mx-auto">
           <div v-for="day in filteredSchedule" :key="day.date">
             <!-- Day Header -->
-            <div class="flex items-baseline gap-4 mb-8 border-b border-outline/30 pb-4">
+            <div class="flex items-baseline gap-4 mb-6 lg:mb-8 border-b border-outline/30 pb-4">
               <h3 class="font-display font-bold text-3xl sm:text-4xl md:text-5xl capitalize text-on-surface">{{ day.dayName }}</h3>
               <span class="text-2xl md:text-3xl text-on-surface-dim/40 font-medium">{{ formatDateShort(day.date) }}</span>
             </div>
 
-            <!-- Classes -->
-            <div class="grid gap-4">
+            <!-- Classes - Vertical list -->
+            <div class="flex flex-col gap-2 overflow-hidden max-w-3xl">
               <button
                 v-for="cls in day.classes"
                 :key="cls.id"
-                class="group relative w-full text-left bg-surface hover:bg-surface-dim rounded-2xl p-4 md:py-6 md:px-6 transition-all duration-200 hover:shadow-sm"
+                class="group relative w-full text-left bg-surface hover:bg-surface-dim rounded-xl lg:rounded-2xl pl-3 pr-4 py-3.5 sm:pl-4 sm:pr-5 sm:py-4 lg:p-5 transition-all duration-200 overflow-hidden border border-transparent hover:border-outline/20"
                 @click="handleClassClick(cls)"
               >
-                <div class="flex items-center gap-6">
-                  <!-- Time -->
-                  <div class="flex flex-col items-start w-16 flex-shrink-0">
-                    <span class="font-display font-bold text-2xl leading-none mb-1 text-on-surface">{{ cls.time }}</span>
-                    <span class="text-sm font-medium text-on-surface-dim/60">{{ cls.endTime }}</span>
+                <div class="flex items-center gap-3 sm:gap-4">
+                  <!-- Time & Duration -->
+                  <div class="flex flex-col items-center w-14 sm:w-16 flex-shrink-0">
+                    <span class="font-display font-bold text-xl sm:text-2xl leading-none text-on-surface tabular-nums">{{ cls.time }}</span>
+                    <span class="text-xs sm:text-sm font-medium text-on-surface-dim/50 mt-1">{{ calculateDuration(cls.time, cls.endTime) }}</span>
                   </div>
 
                   <!-- Vertical Line Indicator -->
-                  <div class="w-1.5 h-12 rounded-full flex-shrink-0" :class="getCategoryColor(cls.name)" />
+                  <div class="w-1.5 h-12 sm:h-14 rounded-full flex-shrink-0" :class="getCategoryColor(cls.name)" />
 
                   <!-- Info -->
                   <div class="flex-1 min-w-0">
-                    <h4 class="font-display font-bold text-xl md:text-2xl uppercase tracking-tight mb-1 truncate group-hover:text-brand transition-colors text-on-surface">{{ cls.name }}</h4>
-                    <div class="flex flex-wrap items-center gap-x-6 gap-y-1 text-base font-medium text-on-surface-dim">
-                      <span v-if="cls.instructor" class="flex items-center gap-2">
-                        <svg class="w-5 h-5 opacity-40" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
-                        {{ cls.instructor }}
+                    <h4 class="font-display font-bold text-base sm:text-lg lg:text-xl uppercase tracking-tight truncate group-hover:text-brand transition-colors text-on-surface mb-1">{{ cls.name }}</h4>
+                    <div class="flex items-center gap-2 text-sm text-on-surface-dim/70">
+                      <span v-if="cls.instructorImage" class="w-5 h-5 rounded-full overflow-hidden flex-shrink-0 border border-outline/20">
+                        <img :src="cls.instructorImage" :alt="cls.instructor || ''" class="w-full h-full object-cover grayscale" />
                       </span>
-                      <span v-if="!selectedSite" class="flex items-center gap-2">
-                        <svg class="w-5 h-5 opacity-40" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
-                        {{ cls.site }}
-                      </span>
+                      <span v-if="cls.instructor" class="truncate">{{ cls.instructor }}</span>
                     </div>
                   </div>
 
-                  <!-- Spots (Hidden on mobile if needed, or shown) -->
-                  <div class="hidden sm:flex flex-col items-end gap-2 flex-shrink-0">
+                  <!-- Right side: Site + Availability -->
+                  <div class="flex items-center gap-2 flex-shrink-0">
+                    <!-- Site indicator (only when showing all gyms) -->
                     <span
-                      v-if="cls.spotsLeft === 0"
-                      class="px-3 py-1 rounded-full text-xs font-bold tracking-wide uppercase bg-red-100 text-red-700"
+                      v-if="!selectedSite"
+                      class="px-2 py-1 rounded-md bg-surface-dim text-[10px] sm:text-xs font-bold text-on-surface-dim/60 tracking-wide"
                     >
-                      Fullt
+                      {{ getSiteAbbrev(cls.siteId) }}
                     </span>
-                    <span v-else-if="cls.spotsLeft < 5" class="text-sm font-bold text-brand">
-                      {{ cls.spotsLeft }} platser
-                    </span>
+                    <!-- Availability indicator - BIGGER -->
+                    <div class="flex items-center justify-center min-w-[2.5rem]">
+                      <span v-if="cls.spotsLeft === 0" class="px-2 py-0.5 rounded-full text-xs font-bold bg-amber-100 text-amber-600">Kö</span>
+                      <span v-else class="w-3 h-3 rounded-full bg-green-500 shadow-sm shadow-green-500/30" />
+                    </div>
                   </div>
                 </div>
               </button>
@@ -374,6 +481,76 @@ onUnmounted(() => {
       </div>
     </section>
 
+    <!-- Gym Selector Bottom Sheet -->
+    <Teleport to="body">
+      <Transition
+        enter-active-class="transition duration-300 ease-out"
+        enter-from-class="opacity-0"
+        enter-to-class="opacity-100"
+        leave-active-class="transition duration-200 ease-in"
+        leave-from-class="opacity-100"
+        leave-to-class="opacity-0"
+      >
+        <div v-if="showDropdown" class="fixed inset-0 z-[500] bg-black/40 backdrop-blur-sm" @click="showDropdown = false" />
+      </Transition>
+
+      <Transition
+        enter-active-class="transition duration-400 cubic-bezier(0.32, 0.72, 0, 1)"
+        enter-from-class="translate-y-full"
+        enter-to-class="translate-y-0"
+        leave-active-class="transition duration-250 ease-in"
+        leave-from-class="translate-y-0"
+        leave-to-class="translate-y-full"
+      >
+        <div v-if="showDropdown" class="fixed bottom-0 left-0 right-0 z-[501] bg-surface rounded-t-[2.5rem] shadow-2xl">
+          <!-- Handle -->
+          <div class="pt-4 pb-2 flex justify-center" @click="showDropdown = false">
+            <div class="w-12 h-1.5 bg-outline/50 rounded-full" />
+          </div>
+
+          <div class="px-6 pb-10 pt-2">
+            <!-- Logo that rotates -->
+            <div class="flex justify-center mb-6">
+              <div class="w-16 h-16 relative">
+                <img
+                  src="/images/logo.svg"
+                  alt="Core Gym"
+                  class="w-full h-full transition-transform duration-500"
+                  :class="showDropdown ? 'rotate-[360deg]' : ''"
+                />
+              </div>
+            </div>
+
+            <h3 class="font-display font-bold text-2xl text-center uppercase tracking-tight mb-6">Välj gym</h3>
+
+            <!-- Gym options -->
+            <div class="space-y-2 max-w-sm mx-auto">
+              <button
+                class="w-full flex items-center gap-4 px-5 py-4 rounded-2xl text-left text-lg transition-all"
+                :class="selectedSite === null ? 'bg-brand text-white font-bold shadow-lg' : 'bg-surface-dim hover:bg-surface-container text-on-surface'"
+                @click="selectSite(null)"
+              >
+                <span class="w-3 h-3 rounded-full border-2" :class="selectedSite === null ? 'bg-white border-white' : 'border-outline'" />
+                <span class="flex-1">Alla gym</span>
+                <span v-if="selectedSite === null" class="text-sm opacity-80">Visar allt</span>
+              </button>
+
+              <button
+                v-for="(name, id) in SITE_NAMES"
+                :key="id"
+                class="w-full flex items-center gap-4 px-5 py-4 rounded-2xl text-left text-lg transition-all"
+                :class="selectedSite === Number(id) ? 'bg-brand text-white font-bold shadow-lg' : 'bg-surface-dim hover:bg-surface-container text-on-surface'"
+                @click="selectSite(Number(id))"
+              >
+                <span class="w-3 h-3 rounded-full border-2" :class="selectedSite === Number(id) ? 'bg-white border-white' : 'border-outline'" />
+                <span class="flex-1">{{ name }}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </Transition>
+    </Teleport>
+
     <!-- Bottom Sheet Details -->
     <Teleport to="body">
       <Transition
@@ -401,44 +578,45 @@ onUnmounted(() => {
             <div class="w-12 h-1.5 bg-outline/50 rounded-full" />
           </div>
 
-          <div class="px-6 pb-12 pt-4 max-w-2xl mx-auto">
+          <div class="px-5 sm:px-6 pb-10 pt-2 max-w-xl mx-auto">
             <!-- Header -->
-            <div class="flex items-start justify-between gap-4 mb-8">
-              <div>
-                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface-dim mb-4">
+            <div class="flex items-start justify-between gap-3 mb-6">
+              <div class="flex-1 min-w-0">
+                <div class="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-surface-dim mb-3">
                   <span class="w-2 h-2 rounded-full" :class="getCategoryColor(selectedClass.name)" />
-                  <span class="text-xs font-bold uppercase tracking-wider text-on-surface-dim">{{ getClassCategory(selectedClass.name) }}</span>
+                  <span class="text-[11px] font-bold uppercase tracking-wider text-on-surface-dim">{{ getClassCategory(selectedClass.name) }}</span>
                 </div>
-                <h2 class="text-display text-3xl mb-2">{{ selectedClass.name }}</h2>
-                <div class="flex items-center gap-2 text-on-surface-dim font-medium">
-                  <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                <h2 class="font-display font-bold text-3xl sm:text-4xl uppercase tracking-tight mb-1.5 text-on-surface">{{ selectedClass.name }}</h2>
+                <div class="flex items-center gap-1.5 text-sm text-on-surface-dim font-medium">
+                  <svg class="w-4 h-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
                   {{ selectedClass.site }}
                 </div>
               </div>
-              <button class="p-3 -mr-3 rounded-full hover:bg-surface-dim transition-colors text-on-surface-dim" @click="handleCloseSheet">
-                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <button class="p-2 -mr-2 -mt-1 rounded-full hover:bg-surface-dim transition-colors text-on-surface-dim" @click="handleCloseSheet">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
             </div>
 
-            <!-- Details Grid -->
-            <div class="grid grid-cols-2 gap-4 mb-8">
-              <div class="bg-surface-dim p-5 rounded-2xl">
-                <span class="text-xs font-bold uppercase tracking-wider text-on-surface-dim block mb-1">Tid</span>
-                <span class="text-title text-xl">{{ selectedClass.time }} - {{ selectedClass.endTime }}</span>
+            <!-- Compact info row -->
+            <div class="flex items-center gap-3 mb-6">
+              <div class="flex-1 bg-surface-dim px-4 py-3 rounded-xl">
+                <span class="text-[11px] font-bold uppercase tracking-wider text-on-surface-dim block mb-0.5">Tid</span>
+                <span class="font-display font-bold text-lg">{{ selectedClass.time }} <span class="text-on-surface-dim font-normal">({{ calculateDuration(selectedClass.time, selectedClass.endTime) }})</span></span>
               </div>
-              <div class="bg-surface-dim p-5 rounded-2xl">
-                <span class="text-xs font-bold uppercase tracking-wider text-on-surface-dim block mb-1">Platser</span>
-                <span class="text-title text-xl" :class="selectedClass.spotsLeft === 0 ? 'text-red-500' : ''">
-                  {{ selectedClass.spotsLeft }} <span class="text-base font-normal text-on-surface-dim">/ {{ selectedClass.spots }}</span>
-                </span>
+              <div class="flex items-center gap-2 px-4 py-3">
+                <span v-if="selectedClass.spotsLeft === 0" class="px-3 py-1.5 rounded-full text-xs font-bold bg-amber-500/10 text-amber-600">Kö</span>
+                <template v-else>
+                  <span class="w-2.5 h-2.5 rounded-full bg-green-500/60" />
+                  <span class="text-sm font-medium text-green-600/80">Ledigt</span>
+                </template>
               </div>
             </div>
 
             <!-- Instructor -->
-            <div v-if="selectedClass.instructor" class="bg-surface-dim p-5 rounded-2xl flex items-center gap-5 mb-8">
-              <div class="w-14 h-14 rounded-full overflow-hidden bg-surface flex-shrink-0 border-2 border-surface">
+            <div v-if="selectedClass.instructor" class="bg-surface-dim px-4 py-3 rounded-xl flex items-center gap-4 mb-6">
+              <div class="w-12 h-12 rounded-full overflow-hidden bg-surface flex-shrink-0">
                 <img
                   v-if="selectedClass.instructorImage"
                   :src="selectedClass.instructorImage"
@@ -446,31 +624,37 @@ onUnmounted(() => {
                   class="w-full h-full object-cover"
                 />
                 <div v-else class="w-full h-full flex items-center justify-center bg-brand text-white">
-                  <span class="text-xl font-bold">{{ selectedClass.instructor.charAt(0) }}</span>
+                  <span class="text-lg font-bold">{{ selectedClass.instructor.charAt(0) }}</span>
                 </div>
               </div>
               <div>
-                <span class="text-xs font-bold uppercase tracking-wider text-on-surface-dim block mb-0.5">Din instruktör</span>
-                <span class="text-title text-xl">{{ selectedClass.instructor }}</span>
+                <span class="text-[11px] font-bold uppercase tracking-wider text-on-surface-dim block">Instruktör</span>
+                <span class="font-display font-bold text-lg">{{ selectedClass.instructor }}</span>
               </div>
+            </div>
+
+            <!-- Description -->
+            <div v-if="selectedClass.description" class="mb-6">
+              <h3 class="text-[11px] font-bold uppercase tracking-wider text-on-surface-dim mb-2">Om passet</h3>
+              <p class="text-on-surface leading-relaxed">{{ selectedClass.description }}</p>
             </div>
 
             <!-- Booking Section -->
             <div v-if="selectedClass.spotsLeft > 0" class="border-t border-outline/50 pt-8">
               <div v-if="formSuccess" class="text-center py-6 bg-green-50 rounded-3xl border border-green-100">
-                <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4 animate-bounce">
+                <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
                   <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                   </svg>
                 </div>
-                <h3 class="text-title mb-2 text-green-900">Bokningsförfrågan skickad!</h3>
-                <p class="text-body text-green-700">Vi hör av oss till dig inom kort.</p>
+                <h3 class="text-title mb-2 text-green-900">Förfrågan mottagen!</h3>
+                <p class="text-body text-green-700">Vi kollar om det finns plats och återkommer till dig via mail eller telefon.</p>
               </div>
 
-              <form v-else @submit.prevent="submitTrialBooking" class="space-y-6">
+              <form v-else @submit.prevent="submitTrialBooking" class="space-y-5">
                 <div>
-                  <h3 class="text-display text-2xl mb-2">Prova på detta pass</h3>
-                  <p class="text-body text-on-surface-dim">Är du medlem? <a href="https://app.coregymclub.se" class="text-brand font-bold hover:underline">Boka i appen istället</a></p>
+                  <h3 class="font-bold text-lg mb-1">Vill du prova?</h3>
+                  <p class="text-sm text-on-surface-dim">Är du medlem? <a href="https://app.coregymclub.se" class="text-brand font-medium hover:underline">Boka i appen</a></p>
                 </div>
 
                 <div class="space-y-4">
@@ -527,10 +711,9 @@ onUnmounted(() => {
               </form>
             </div>
 
-            <div v-else class="text-center py-8 bg-surface-dim rounded-3xl mt-8">
-              <span class="block text-2xl mb-2">😔</span>
-              <h3 class="text-title mb-2">Fullbokat</h3>
-              <p class="text-body text-on-surface-dim">Håll utkik i appen om någon avbokar.</p>
+            <div v-else class="text-center py-8 bg-amber-50 rounded-3xl mt-8 border border-amber-100">
+              <h3 class="text-title mb-2 text-amber-800">Kö</h3>
+              <p class="text-body text-amber-700">Det här passet är fullt just nu.</p>
             </div>
           </div>
         </div>
@@ -538,3 +721,125 @@ onUnmounted(() => {
     </Teleport>
   </div>
 </template>
+
+<style scoped>
+.carousel-container {
+  --item-size: 140px;
+  --item-gap: -35px;
+  position: relative;
+  margin-left: -1.5rem;
+  margin-right: -1.5rem;
+  perspective: 800px;
+}
+
+@media (min-width: 768px) {
+  .carousel-container {
+    --item-size: 240px;
+    --item-gap: -60px;
+    margin-left: -3rem;
+    margin-right: -3rem;
+    perspective: 1200px;
+  }
+}
+
+.carousel-track {
+  display: flex;
+  gap: 0;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding: 2rem calc(50% - var(--item-size) / 2);
+  scroll-behavior: auto;
+  transform-style: preserve-3d;
+}
+
+.carousel-track::-webkit-scrollbar {
+  display: none;
+}
+
+.carousel-item {
+  flex-shrink: 0;
+  width: var(--item-size);
+  height: var(--item-size);
+  margin-right: var(--item-gap);
+  scroll-snap-align: center;
+  border-radius: 1rem;
+  overflow: hidden;
+  box-shadow: 0 8px 32px -8px rgba(0, 0, 0, 0.6);
+  position: relative;
+  will-change: transform, opacity;
+  transform-style: preserve-3d;
+  animation: carousel3d linear;
+  animation-timeline: view(inline);
+  animation-range: entry 0% exit 100%;
+}
+
+.carousel-item:last-child {
+  margin-right: 0;
+}
+
+@media (min-width: 768px) {
+  .carousel-item {
+    border-radius: 1.25rem;
+  }
+}
+
+.carousel-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+@keyframes carousel3d {
+  0% {
+    transform: rotateY(45deg) scale(0.6) translateZ(-100px);
+    opacity: 0.3;
+    filter: brightness(0.4);
+    z-index: 1;
+  }
+  15% {
+    transform: rotateY(30deg) scale(0.7) translateZ(-60px);
+    opacity: 0.5;
+    filter: brightness(0.5);
+    z-index: 2;
+  }
+  30% {
+    transform: rotateY(15deg) scale(0.85) translateZ(-30px);
+    opacity: 0.75;
+    filter: brightness(0.7);
+    z-index: 3;
+  }
+  50% {
+    transform: rotateY(0deg) scale(1) translateZ(0px);
+    opacity: 1;
+    filter: brightness(1);
+    z-index: 5;
+  }
+  70% {
+    transform: rotateY(-15deg) scale(0.85) translateZ(-30px);
+    opacity: 0.75;
+    filter: brightness(0.7);
+    z-index: 3;
+  }
+  85% {
+    transform: rotateY(-30deg) scale(0.7) translateZ(-60px);
+    opacity: 0.5;
+    filter: brightness(0.5);
+    z-index: 2;
+  }
+  100% {
+    transform: rotateY(-45deg) scale(0.6) translateZ(-100px);
+    opacity: 0.3;
+    filter: brightness(0.4);
+    z-index: 1;
+  }
+}
+
+@supports not (animation-timeline: view()) {
+  .carousel-item {
+    animation: none;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+  }
+}
+</style>

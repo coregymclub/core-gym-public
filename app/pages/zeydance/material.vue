@@ -46,7 +46,8 @@ const materials = [
       { name: 'Gradient', file: '/zeydance-material/qr-modern.png', desc: 'Mörk bakgrund' },
       { name: 'Mörk', file: '/zeydance-material/qr-transparent.png', desc: 'Transparent' },
       { name: 'Vit', file: '/zeydance-material/qr-white.png', desc: 'Transparent' },
-      { name: 'Enkel', file: '/zeydance-material/qr-simple.png', desc: 'Vit bakgrund' },
+      { name: 'Rundad', file: '/zeydance-material/qr-simple.png', desc: 'Vit bakgrund' },
+      { name: 'Klassisk', file: '/zeydance-material/qr-classic.png', desc: 'Vit bakgrund' },
     ]
   },
   {

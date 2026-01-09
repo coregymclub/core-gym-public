@@ -30,12 +30,16 @@ Use these phrases when contextually relevant:
 ## Strict Rules — Always Follow
 
 ### NEVER write:
-- "Prova gratis" / "Testa kostnadsfritt" / "Gratis provträning"
+- "Prova gratis" / "Testa kostnadsfritt" / "Gratis provträning" (See exception below)
 - "Community" (use "gemenskap" instead)
 - Corporate language like "högkvalitativa träningsmöjligheter"
 - References to youth/teenagers on main landing page
 - "Gammal kyrka" about Tungelsta location
 - Excessive exclamation marks
+
+### Forbidden Concepts (Strict)
+- **"Prova gratis" som huvudbudskap:** Vi skyltar inte med gratis provträning på startsidan eller i annonser. Det drar till sig fel målgrupp (gratisturister).
+    - **UNDANTAG:** Det är tillåtet att nämna i FAQ eller vid specifika frågor om medlemskap. Då gäller: "En gång gratis under bemannade tider" eller "Intresseanmälan för gruppträning". Syftet ska alltid vara att testa inför köp.
 
 ### NEVER position Core as:
 - A budget gym

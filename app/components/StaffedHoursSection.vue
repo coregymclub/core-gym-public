@@ -16,6 +16,8 @@ const loading = ref(true)
 const weeklySchedule = computed(() => {
   if (!weekData.value) return []
 
+  const today = new Date().toISOString().split('T')[0]
+
   return weekData.value.days.map(day => {
     const club = day.clubs[String(props.siteId)]
     return {
@@ -27,7 +29,8 @@ const weeklySchedule = computed(() => {
       displayText: club?.displayText || '',
       isHoliday: day.isHoliday || false,
       holidayName: day.holidayName || null,
-      isOverride: club?.isOverride || false
+      isOverride: club?.isOverride || false,
+      isToday: day.date === today
     }
   })
 })
@@ -48,77 +51,138 @@ onMounted(async () => {
 </script>
 
 <template>
-  <section v-if="!loading && hasAnyStaffedHours" class="section bg-on-surface text-white relative overflow-hidden">
-    <!-- Subtle gradient overlay -->
-    <div class="absolute inset-0 bg-gradient-to-br from-brand/10 to-transparent" />
+  <section v-if="!loading && hasAnyStaffedHours" class="section bg-surface-dim">
+    <div class="container">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-start">
 
-    <div class="container relative">
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center max-w-4xl mx-auto">
+        <!-- Left: Info & Status -->
+        <div class="order-2 lg:order-1">
+          <div class="sticky top-32">
+            <span class="inline-block px-4 py-2 rounded-full bg-brand/10 text-brand text-sm font-bold tracking-widest uppercase mb-6">
+              Personlig service
+            </span>
+            <h2 class="text-section text-on-surface text-left mb-6">{{ title }}</h2>
+            <p class="text-lead text-on-surface-dim text-left mb-10">
+              Vi finns här för att hjälpa dig med allt från träningsråd till medlemsfrågor.
+            </p>
 
-        <!-- Left: Info -->
-        <div class="text-center lg:text-left">
-          <h2 class="text-section text-white mb-4">{{ title }}</h2>
-          <p class="text-lead text-white/60 mb-6">
-            Personal på plats för frågor, hjälp med utrustning och träningsråd.
-          </p>
+            <!-- Status Card -->
+            <div class="card card-elevated p-8 mb-8 border-l-4" 
+                 :class="[
+                   currentStatus.status === 'staffed-now' ? 'border-l-success' : 
+                   currentStatus.status === 'staffed-today' ? 'border-l-warning' : 'border-l-on-surface-dim'
+                 ]">
+              <div class="flex items-start gap-4">
+                <!-- Icon based on status -->
+                <div class="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0"
+                     :class="[
+                       currentStatus.status === 'staffed-now' ? 'bg-success/10 text-success' : 
+                       currentStatus.status === 'staffed-today' ? 'bg-warning/10 text-warning' : 'bg-surface-container text-on-surface-dim'
+                     ]">
+                  <svg v-if="currentStatus.status === 'staffed-now'" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                  </svg>
+                  <svg v-else-if="currentStatus.status === 'staffed-today'" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <svg v-else class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                  </svg>
+                </div>
+                
+                <div>
+                  <h3 class="text-xl font-bold text-on-surface mb-1">
+                    {{ currentStatus.text }}
+                  </h3>
+                  <p v-if="currentStatus.subtext" class="text-on-surface-dim">
+                    {{ currentStatus.subtext }}
+                  </p>
+                </div>
+              </div>
+            </div>
 
-          <!-- Live status -->
-          <div
-            v-if="currentStatus.status === 'staffed-now'"
-            class="inline-flex items-center gap-3 px-5 py-3 rounded-xl bg-green-500/20 border border-green-500/30"
-          >
-            <span class="w-2.5 h-2.5 rounded-full bg-green-400 animate-pulse" />
-            <span class="text-title text-green-300">{{ currentStatus.text }}</span>
-            <span v-if="currentStatus.subtext" class="text-body text-green-300/60">{{ currentStatus.subtext }}</span>
+            <!-- Always open note -->
+            <div class="flex items-center gap-4 text-on-surface-dim bg-white p-4 rounded-2xl border border-outline/50">
+              <div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center flex-shrink-0">
+                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
+                </svg>
+              </div>
+              <p class="text-sm font-medium">
+                Gymmet är öppet <span class="text-on-surface font-bold">03:55–00:05</span> varje dag för medlemmar.
+              </p>
+            </div>
           </div>
-
-          <div
-            v-else-if="currentStatus.status === 'staffed-today'"
-            class="inline-flex items-center gap-3 px-5 py-3 rounded-xl bg-amber-500/20 border border-amber-500/30"
-          >
-            <span class="text-title text-amber-300">{{ currentStatus.text }}</span>
-            <span v-if="currentStatus.subtext" class="text-body text-amber-300/60">{{ currentStatus.subtext }}</span>
-          </div>
-
-          <div
-            v-else-if="currentStatus.status === 'next-staffed'"
-            class="inline-flex items-center gap-3 px-5 py-3 rounded-xl bg-white/5 border border-white/10"
-          >
-            <span class="text-title text-white/80">{{ currentStatus.text }}</span>
-            <span v-if="currentStatus.subtext" class="text-body text-white/50">{{ currentStatus.subtext }}</span>
-          </div>
-
-          <!-- Always open note -->
-          <p class="text-body text-white/40 mt-6">
-            Gymmet är öppet 04–00 varje dag, även utan personal.
-          </p>
         </div>
 
-        <!-- Right: Schedule -->
-        <div class="bg-white/5 backdrop-blur-sm rounded-2xl border border-white/10 overflow-hidden">
-          <div class="px-6 py-4 border-b border-white/10">
-            <span class="text-label text-white/60">Veckans schema</span>
-          </div>
-          <div class="divide-y divide-white/5">
-            <div
-              v-for="day in weeklySchedule"
-              :key="day.dayId"
-              class="flex items-center justify-between px-6 py-4"
-              :class="!day.staffed ? 'opacity-40' : ''"
-            >
-              <div class="flex flex-col min-w-0">
-                <div class="flex items-center gap-2">
-                  <span class="text-body font-medium text-white">{{ day.dayName }}</span>
-                  <span
-                    v-if="day.isHoliday"
-                    class="px-2 py-0.5 text-xs font-medium rounded-full bg-red-500/20 text-red-300 border border-red-500/30"
-                  >
-                    {{ day.holidayName }}
+        <!-- Right: Schedule List -->
+        <div class="order-1 lg:order-2">
+          <div class="bg-surface rounded-[2rem] shadow-elevated overflow-hidden border border-outline/20">
+            <!-- Header -->
+            <div class="bg-surface-container/50 px-8 py-6 border-b border-outline/20 flex justify-between items-center">
+              <span class="font-display font-bold text-lg uppercase tracking-wide text-on-surface">Veckans schema</span>
+              <span class="text-sm font-medium text-on-surface-dim bg-white px-3 py-1 rounded-full border border-outline/50">
+                v. {{ weekData?.weekNumber }}
+              </span>
+            </div>
+
+            <div class="divide-y divide-outline/20">
+              <div
+                v-for="day in weeklySchedule"
+                :key="day.dayId"
+                class="group flex items-center justify-between px-6 md:px-8 py-5 transition-colors hover:bg-surface-container/30"
+                :class="[
+                  day.isToday ? 'bg-brand/5' : '',
+                  !day.staffed ? 'opacity-60' : ''
+                ]"
+              >
+                <div class="flex items-center gap-4">
+                  <!-- Day Circle -->
+                  <div class="w-12 h-12 rounded-full flex flex-col items-center justify-center border"
+                       :class="[
+                         day.isToday 
+                           ? 'bg-brand text-white border-brand shadow-lg shadow-brand/20 scale-110' 
+                           : 'bg-surface border-outline text-on-surface-dim'
+                       ]">
+                    <span class="text-[10px] uppercase font-bold tracking-wider leading-none mb-0.5">
+                      {{ day.dayName.substring(0, 3) }}
+                    </span>
+                    <span class="text-lg font-bold leading-none">
+                      {{ new Date(day.date).getDate() }}
+                    </span>
+                  </div>
+                  
+                  <div class="flex flex-col">
+                    <div class="flex items-center gap-2">
+                      <span class="font-bold text-on-surface text-lg capitalize">
+                        {{ day.dayName }}
+                      </span>
+                      <span
+                        v-if="day.isToday"
+                        class="px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded-full bg-brand text-white"
+                      >
+                        Idag
+                      </span>
+                      <span
+                        v-if="day.isHoliday"
+                        class="px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded-full bg-red-100 text-red-700"
+                      >
+                        {{ day.holidayName }}
+                      </span>
+                    </div>
+                    <span v-if="!day.staffed" class="text-sm text-on-surface-dim">Obemannat</span>
+                  </div>
+                </div>
+
+                <div class="text-right">
+                  <span v-if="day.staffed" class="font-display font-bold text-xl text-on-surface">
+                    {{ day.displayText }}
+                  </span>
+                  <span v-else class="text-on-surface-dim/50 font-medium">
+                    —
                   </span>
                 </div>
               </div>
-              <span v-if="!day.staffed" class="text-body text-white/40 ml-4">—</span>
-              <span v-else class="text-body text-white/80 font-mono ml-4 whitespace-nowrap">{{ day.displayText }}</span>
             </div>
           </div>
         </div>

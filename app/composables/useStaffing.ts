@@ -135,15 +135,17 @@ export function useStaffing() {
       return { status: 'unstaffed', text: 'Obemannat' }
     }
 
+    const now = new Date()
+    const currentMinutes = now.getHours() * 60 + now.getMinutes()
+
+    // Check if currently staffed
     if (club.isCurrentlyStaffed) {
       const currentSlot = club.slots.find(slot => {
-        const now = new Date()
-        const currentTime = now.getHours() * 100 + now.getMinutes()
         const [openH, openM] = slot.open.split(':').map(Number)
         const [closeH, closeM] = slot.close.split(':').map(Number)
-        const openTime = openH * 100 + openM
-        const closeTime = closeH * 100 + closeM
-        return currentTime >= openTime && currentTime < closeTime
+        const openTime = openH * 60 + openM
+        const closeTime = closeH * 60 + closeM
+        return currentMinutes >= openTime && currentMinutes < closeTime
       })
 
       return {
@@ -153,14 +155,27 @@ export function useStaffing() {
       }
     }
 
-    if (club.staffed) {
+    // Filter out slots that have already passed
+    const remainingSlots = club.slots.filter(slot => {
+      const [closeH, closeM] = slot.close.split(':').map(Number)
+      const closeTime = closeH * 60 + closeM
+      return closeTime > currentMinutes
+    })
+
+    // If there are remaining slots today, show them
+    if (remainingSlots.length > 0) {
+      const displayText = remainingSlots
+        .map(slot => `${slot.open}-${slot.close}`)
+        .join(', ')
+
       return {
         status: 'staffed-today',
         text: 'Bemannat idag',
-        subtext: club.displayText
+        subtext: displayText
       }
     }
 
+    // All slots passed or no slots today - show next staffed time
     const next = getNextStaffedTime(clubId)
     if (next) {
       return {

@@ -4,14 +4,15 @@ const props = defineProps<{
   siteName: string
 }>()
 
-// Carousel images
+// Carousel images - gruppträning
 const carouselImages = [
+  { src: '/images/yoga-class-group.webp', alt: 'Yoga' },
+  { src: '/images/bodypump.webp', alt: 'Bodypump' },
+  { src: '/images/classes/group-wod.webp', alt: 'Gruppträning' },
   { src: '/images/classes/strength.webp', alt: 'Styrka' },
   { src: '/images/classes/cycling.jpg', alt: 'Cykel' },
-  { src: '/images/lifting-eleiko-nike-dark.webp', alt: 'Träning' },
-  { src: '/images/gyms/vegastaden.webp', alt: 'Vegastaden' },
-  { src: '/images/hero-red.webp', alt: 'Gemenskap' },
-  { src: '/images/denise-hero.webp', alt: 'Träning' },
+  { src: '/images/denise-biking.webp', alt: 'Spinning' },
+  { src: '/images/yoga-class.webp', alt: 'Yoga' },
 ]
 
 // Carousel ref and infinite scroll
@@ -23,8 +24,10 @@ const infiniteImages = computed(() => [...carouselImages, ...carouselImages, ...
 
 // Get item width based on screen size (matches CSS variables)
 const getItemWidth = () => {
-  if (typeof window === 'undefined') return 105 // SSR fallback
-  return window.innerWidth >= 768 ? 180 : 105 // item-size + item-gap
+  if (typeof window === 'undefined') return 118 // SSR fallback
+  if (window.innerWidth >= 1024) return 194 // 180 + 14
+  if (window.innerWidth >= 768) return 172 // 160 + 12
+  return 118 // 110 + 8
 }
 
 // Handle infinite scroll - loop seamlessly
@@ -195,18 +198,14 @@ onMounted(() => {
 </script>
 
 <template>
-  <section class="section bg-[#0c0c0c] text-white relative overflow-hidden">
-    <!-- Subtle pattern background -->
-    <div class="absolute inset-0 z-0">
-      <div class="absolute inset-0 opacity-[0.05]"
-           style="background-image: radial-gradient(#fff 1px, transparent 1px); background-size: 32px 32px;">
-      </div>
-    </div>
-
+  <section class="section bg-surface-dim relative overflow-hidden">
     <div class="container relative z-10">
       <!-- Header - centered -->
       <div class="text-center max-w-4xl mx-auto mb-12">
-        <h2 class="font-display font-bold text-5xl md:text-6xl uppercase tracking-tight mb-8 text-white">Gruppträning</h2>
+        <span class="inline-block px-4 py-2 rounded-full bg-on-surface/10 text-on-surface mb-6 text-sm font-bold tracking-widest uppercase">
+          Gruppträning
+        </span>
+        <h2 class="font-display font-bold text-4xl md:text-5xl lg:text-6xl uppercase tracking-tight mb-8 text-on-surface">Träna tillsammans</h2>
 
         <!-- M3 Hero Carousel with infinite scroll -->
         <div class="carousel-container mb-8">
@@ -221,97 +220,82 @@ onMounted(() => {
           </div>
         </div>
 
-        <p class="text-2xl md:text-3xl text-white/70 leading-relaxed tracking-tight font-medium">
-          Från lugn yoga till svettiga HIIT-pass — allt ingår i medlemskapet. Bara att boka och dyka upp.
+        <p class="text-xl md:text-2xl text-on-surface-dim leading-relaxed font-medium max-w-2xl mx-auto">
+          Från lugn yoga till svettiga HIIT-pass — allt ingår i medlemskapet.
         </p>
       </div>
 
-      <!-- Upcoming classes in card -->
-      <div class="-mx-3 sm:mx-0 sm:max-w-2xl sm:mx-auto">
-        <div class="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl md:rounded-3xl p-4 sm:p-6 md:p-8">
+      <!-- Upcoming classes -->
+      <div class="max-w-2xl mx-auto">
+        <div v-if="loading" class="text-center py-12">
+          <div class="w-6 h-6 border-2 border-on-surface border-t-transparent rounded-full animate-spin mx-auto" />
+        </div>
 
-          <div v-if="loading" class="text-center py-12">
-            <div class="w-6 h-6 border-2 border-brand border-t-transparent rounded-full animate-spin mx-auto" />
+        <div v-else class="space-y-2">
+
+          <!-- LIVE: Class happening now -->
+          <div v-if="liveClass" class="p-4 rounded-2xl bg-green-500/10 border border-green-500/20">
+            <div class="flex items-center gap-4">
+              <div class="flex-shrink-0">
+                <span class="inline-flex items-center gap-2 px-3 py-1.5 bg-green-500 text-white text-xs font-semibold uppercase rounded-full">
+                  <span class="w-2 h-2 bg-white rounded-full animate-pulse" />
+                  Pågår nu
+                </span>
+              </div>
+              <div class="flex-1 min-w-0">
+                <h3 class="font-display font-bold text-lg text-on-surface uppercase tracking-tight">{{ liveClass.name }}</h3>
+                <p class="text-sm text-on-surface-dim">{{ liveClass.instructor }}</p>
+              </div>
+            </div>
           </div>
 
-          <div v-else class="space-y-3">
-
-            <!-- LIVE: Class happening now -->
-            <div v-if="liveClass" class="p-4 rounded-2xl border-2 border-brand bg-brand/10">
+          <!-- Next 3 classes -->
+          <template v-if="nextThreeClasses.length > 0">
+            <div
+              v-for="cls in nextThreeClasses"
+              :key="cls.id"
+              class="p-4 bg-surface rounded-2xl"
+            >
               <div class="flex items-center gap-4">
-                <div class="flex-shrink-0">
-                  <span class="inline-flex items-center gap-2 px-3 py-1.5 bg-brand text-white text-xs font-semibold uppercase rounded-full">
-                    <span class="w-2 h-2 bg-white rounded-full animate-pulse" />
-                    Pågår nu
-                  </span>
+                <!-- Time -->
+                <div class="flex-shrink-0 w-16">
+                  <span class="font-display text-2xl font-black tracking-tight text-on-surface">{{ cls.time }}</span>
                 </div>
+
+                <!-- Class info -->
                 <div class="flex-1 min-w-0">
-                  <h3 class="font-display font-bold text-lg text-white uppercase tracking-tight">{{ liveClass.name }}</h3>
-                  <p class="text-sm text-white/60">{{ liveClass.instructor }}</p>
+                  <div class="flex items-center gap-2 mb-0.5">
+                    <span
+                      v-if="cls.isToday"
+                      class="inline-flex px-2 py-0.5 bg-on-surface text-white text-[10px] font-bold uppercase tracking-wider rounded-full"
+                    >Idag</span>
+                    <span
+                      v-else
+                      class="text-xs font-bold text-on-surface-dim uppercase tracking-wide"
+                    >{{ cls.dayName }}</span>
+                  </div>
+                  <h3 class="font-display font-bold text-lg uppercase tracking-tight truncate text-on-surface">{{ cls.name }}</h3>
+                  <p class="text-sm text-on-surface-dim truncate">{{ cls.instructor }}</p>
                 </div>
               </div>
             </div>
+          </template>
 
-            <!-- Next 3 classes -->
-            <template v-if="nextThreeClasses.length > 0">
-              <NuxtLink
-                v-for="cls in nextThreeClasses"
-                :key="cls.id"
-                :to="`/schema?site=${siteId}&pass=${cls.id}`"
-                class="block p-4 bg-white/5 hover:bg-white/10 rounded-2xl transition-colors group"
-              >
-                <div class="flex items-center gap-4">
-                  <!-- Time -->
-                  <div class="flex-shrink-0">
-                    <span class="font-display text-xl md:text-2xl font-black tracking-tight text-white">{{ cls.time }}</span>
-                  </div>
-
-                  <!-- Color dot -->
-                  <span class="w-3 h-3 rounded-full flex-shrink-0" :class="getClassColor(cls.name)" />
-
-                  <!-- Class info -->
-                  <div class="flex-1 min-w-0">
-                    <div class="flex items-center gap-2 mb-1">
-                      <span
-                        v-if="cls.isToday"
-                        class="inline-flex px-2.5 py-0.5 bg-white/10 border border-white/20 text-white text-[10px] font-bold uppercase tracking-wider rounded-full"
-                      >Idag</span>
-                      <span
-                        v-else
-                        class="text-xs font-bold text-white/50 uppercase tracking-wide"
-                      >{{ cls.dayName }}</span>
-                    </div>
-                    <h3 class="font-display font-bold text-xl md:text-2xl uppercase tracking-tight truncate text-white group-hover:text-brand transition-colors">{{ cls.name }}</h3>
-                    <p class="text-sm text-white/50 truncate mt-0.5">{{ cls.instructor }}</p>
-                  </div>
-
-                  <!-- Arrow -->
-                  <svg class="w-5 h-5 text-white/30 flex-shrink-0 hidden sm:block group-hover:text-brand group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                  </svg>
-                </div>
-              </NuxtLink>
-            </template>
-
-            <!-- No classes -->
-            <div v-else class="text-center py-8 text-white/50">
-              <p>Inga schemalagda pass just nu</p>
-            </div>
-
-            <!-- Button -->
-            <div class="pt-4">
-              <NuxtLink
-                :to="`/schema?site=${siteId}`"
-                class="btn w-full justify-center bg-white text-on-surface hover:bg-white/90"
-              >
-                Se hela schemat
-                <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                </svg>
-              </NuxtLink>
-            </div>
-
+          <!-- No classes -->
+          <div v-else class="text-center py-8 text-on-surface-dim">
+            <p>Inga schemalagda pass just nu</p>
           </div>
+
+          <!-- Button -->
+          <div class="pt-6">
+            <NuxtLink
+              :to="`/schema?site=${siteId}`"
+              class="flex items-center justify-center w-full px-8 py-5 bg-on-surface text-white text-lg font-display font-bold uppercase tracking-wide rounded-full shadow-md hover:bg-black hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300"
+            >
+              Se schema
+            </NuxtLink>
+          </div>
+
         </div>
       </div>
     </div>
@@ -320,27 +304,35 @@ onMounted(() => {
 
 <style scoped>
 .carousel-container {
-  --item-size: 140px;
-  --item-gap: -35px;
+  --item-size: 110px;
+  --item-gap: 8px;
   position: relative;
   margin-left: -1.5rem;
   margin-right: -1.5rem;
-  perspective: 800px;
+  perspective: 600px;
 }
 
 @media (min-width: 768px) {
   .carousel-container {
-    --item-size: 240px;
-    --item-gap: -60px;
+    --item-size: 160px;
+    --item-gap: 12px;
     margin-left: -3rem;
     margin-right: -3rem;
-    perspective: 1200px;
+    perspective: 900px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .carousel-container {
+    --item-size: 180px;
+    --item-gap: 14px;
+    perspective: 1000px;
   }
 }
 
 .carousel-track {
   display: flex;
-  gap: 0;
+  gap: var(--item-gap);
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   scrollbar-width: none;
@@ -358,11 +350,10 @@ onMounted(() => {
   flex-shrink: 0;
   width: var(--item-size);
   height: var(--item-size);
-  margin-right: var(--item-gap);
   scroll-snap-align: center;
   border-radius: 1rem;
   overflow: hidden;
-  box-shadow: 0 8px 32px -8px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 8px 32px -8px rgba(0, 0, 0, 0.5);
   position: relative;
   will-change: transform, opacity;
   transform-style: preserve-3d;
@@ -371,10 +362,6 @@ onMounted(() => {
   animation: carousel3d linear;
   animation-timeline: view(inline);
   animation-range: entry 0% exit 100%;
-}
-
-.carousel-item:last-child {
-  margin-right: 0;
 }
 
 @media (min-width: 768px) {
@@ -389,24 +376,24 @@ onMounted(() => {
   object-fit: cover;
 }
 
-/* 3D Carousel effect - like rotating on a cylinder */
+/* 3D Carousel effect - arc/curve with more visible items */
 @keyframes carousel3d {
   0% {
-    transform: rotateY(45deg) scale(0.6) translateZ(-100px);
-    opacity: 0.3;
-    filter: brightness(0.4);
+    transform: rotateY(35deg) scale(0.7) translateZ(-60px);
+    opacity: 0.5;
+    filter: brightness(0.6);
     z-index: 1;
   }
   15% {
-    transform: rotateY(30deg) scale(0.7) translateZ(-60px);
-    opacity: 0.5;
-    filter: brightness(0.5);
+    transform: rotateY(25deg) scale(0.78) translateZ(-45px);
+    opacity: 0.65;
+    filter: brightness(0.7);
     z-index: 2;
   }
   30% {
-    transform: rotateY(15deg) scale(0.85) translateZ(-30px);
-    opacity: 0.75;
-    filter: brightness(0.7);
+    transform: rotateY(12deg) scale(0.88) translateZ(-25px);
+    opacity: 0.85;
+    filter: brightness(0.85);
     z-index: 3;
   }
   50% {
@@ -416,21 +403,21 @@ onMounted(() => {
     z-index: 5;
   }
   70% {
-    transform: rotateY(-15deg) scale(0.85) translateZ(-30px);
-    opacity: 0.75;
-    filter: brightness(0.7);
+    transform: rotateY(-12deg) scale(0.88) translateZ(-25px);
+    opacity: 0.85;
+    filter: brightness(0.85);
     z-index: 3;
   }
   85% {
-    transform: rotateY(-30deg) scale(0.7) translateZ(-60px);
-    opacity: 0.5;
-    filter: brightness(0.5);
+    transform: rotateY(-25deg) scale(0.78) translateZ(-45px);
+    opacity: 0.65;
+    filter: brightness(0.7);
     z-index: 2;
   }
   100% {
-    transform: rotateY(-45deg) scale(0.6) translateZ(-100px);
-    opacity: 0.3;
-    filter: brightness(0.4);
+    transform: rotateY(-35deg) scale(0.7) translateZ(-60px);
+    opacity: 0.5;
+    filter: brightness(0.6);
     z-index: 1;
   }
 }

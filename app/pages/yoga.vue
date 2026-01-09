@@ -247,8 +247,8 @@ onMounted(async () => {
         </div>
 
         <div class="text-center mt-12">
-          <NuxtLink to="/schema" class="btn bg-surface-dim hover:bg-surface-container text-on-surface border-none px-10 py-5 h-auto text-lg rounded-full font-bold">
-            Se hela schemat
+          <NuxtLink to="/schema" class="btn btn-tonal btn-lg">
+            Se schema
           </NuxtLink>
         </div>
       </div>

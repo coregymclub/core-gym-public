@@ -4,7 +4,7 @@ import ReviewsSection from '~/components/ReviewsSection.vue'
 useHead({
   title: 'Core Gym Club - Kom som du är',
   meta: [
-    { name: 'description', content: 'Fyra gym i Haninge. Öppet alla dagar. Inga pekpinnar, bara träning som passar dig.' }
+    { name: 'description', content: 'Fyra gym i Haninge. Öppet alla dagar. Träning utan trösklar, bara träning som passar dig.' }
   ]
 })
 
@@ -13,428 +13,619 @@ const gyms = [
     name: 'Tungelsta',
     tag: 'Originalet',
     href: '/tungelsta',
-    image: '/images/gyms/tungelsta.webp',
-    description: 'Där allt började. Varmt, personligt och familjärt.'
+    image: '/images/gyms/tungelsta-gym-new.webp',
+    description: 'Där allt började. Varmt, personligt och familjärt.',
+    established: 2012
   },
   {
     name: 'Västerhaninge',
     tag: 'Klassiskt',
     href: '/vasterhaninge',
-    image: '/images/gyms/vasterhaninge.webp',
-    description: 'Mitt i centrum. Effektiv träning nära vardagen.'
+    image: '/images/gyms/vasterhaninge-gym-new-2.webp',
+    description: 'Mitt i centrum. Effektiv träning nära vardagen.',
+    established: 2016
   },
   {
     name: 'Vegastaden',
     tag: 'Störst',
     href: '/vegastaden',
-    image: '/images/gyms/vegastaden-roof.webp',
-    description: '2 900 kvm möjligheter. Padel, yoga och takterrass.'
+    image: '/images/gyms/vegastaden-new.avif',
+    description: '2 900 kvm möjligheter. Padel, yoga och takterrass.',
+    established: 2022
   },
   {
     name: 'EGYM',
     tag: 'Framtidens träning',
     href: '/egym',
-    image: '/images/egym-section.webp',
-    description: 'Maskinerna ställer in sig efter dig. Träna hela kroppen på 15 min.'
+    image: '/images/egym-per.avif',
+    description: 'Maskinerna ställer in sig efter dig. Träna hela kroppen på 15 min.',
+    established: 2025
   },
   {
     name: 'Ösmo',
     tag: 'Hösten 2026',
     href: '/osmo',
     image: '/images/osmo-per.webp',
-    description: 'Vårt fjärde gym är på väg. Skriv upp dig för att bli först att veta mer.',
-    comingSoon: true
+    description: 'Vårt fjärde gym är på väg.',
+    comingSoon: true,
+    established: 2026
   },
 ]
 
-const features = [
-  'Alla dagar 03:55–00:05',
-  'Inga bindningstider',
-  '3 gym (snart 4!)',
-  'Ingen startavgift',
+// Group training carousel
+const carouselImages = [
+  { src: '/images/yoga-class-group.webp', alt: 'Yoga' },
+  { src: '/images/bodypump.webp', alt: 'Bodypump' },
+  { src: '/images/mikaela-lauren-box.webp', alt: 'Boxning' },
+  { src: '/images/classes/cycling.jpg', alt: 'Cykel' },
+  { src: '/images/denise-biking.webp', alt: 'Spinning' },
+  { src: '/images/yoga-class.webp', alt: 'Yoga' },
 ]
+
+const carouselRef = ref<HTMLElement | null>(null)
+const isScrolling = ref(false)
+const infiniteImages = computed(() => [...carouselImages, ...carouselImages, ...carouselImages])
+
+const getItemWidth = () => {
+  if (typeof window === 'undefined') return 105
+  return window.innerWidth >= 768 ? 180 : 105
+}
+
+const onCarouselScroll = () => {
+  if (!carouselRef.value || isScrolling.value) return
+  const container = carouselRef.value
+  const itemWidth = getItemWidth()
+  const singleSetWidth = carouselImages.length * itemWidth
+  const scrollLeft = container.scrollLeft
+
+  if (scrollLeft >= singleSetWidth * 2 - container.clientWidth / 2) {
+    isScrolling.value = true
+    container.scrollLeft = scrollLeft - singleSetWidth
+    requestAnimationFrame(() => { isScrolling.value = false })
+  } else if (scrollLeft <= singleSetWidth / 2) {
+    isScrolling.value = true
+    container.scrollLeft = scrollLeft + singleSetWidth
+    requestAnimationFrame(() => { isScrolling.value = false })
+  }
+}
+
+const scrollToCenter = () => {
+  if (!carouselRef.value) return
+  const container = carouselRef.value
+  const itemWidth = getItemWidth()
+  const centerPosition = carouselImages.length * itemWidth + (carouselImages.length / 2) * itemWidth
+  container.scrollTo({ left: centerPosition, behavior: 'instant' })
+}
+
+onMounted(() => {
+  setTimeout(scrollToCenter, 100)
+})
+
+
 
 useThemeColor('#1a1a1a')
 </script>
 
 <template>
-  <div class="grain relative">
-    <!-- Hero -->
-    <section class="min-h-[100vh] flex flex-col justify-end items-center px-6 pb-12 md:pb-20 relative overflow-hidden bg-surface-bright">
-      <!-- Background Image -->
+  <div>
+    <!-- ==================== MOBILE HERO (up to lg) ==================== -->
+    <div class="lg:hidden relative overflow-hidden">
+      <!-- Background Image (covers both hero and USP sections) -->
       <div class="absolute inset-0 z-0">
         <img
-          src="/images/denise-hero.webp"
+          src="/images/pt/denise-hero.avif"
           alt="Core Gym Club"
-          class="w-full h-full object-cover object-top opacity-90 scale-105 animate-[scale-in_1.5s_ease-out_forwards]"
+          class="w-full h-full object-cover object-top"
         />
-        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+        <div class="absolute inset-0 bg-gradient-to-b from-black/20 via-black/40 to-black/80" />
       </div>
 
-      <div class="relative z-10 max-w-6xl mx-auto text-center">
-        <h1 class="font-display font-bold text-5xl md:text-8xl lg:text-[7rem] leading-[0.9] text-white mb-6 md:mb-8 animate-slide-up uppercase tracking-tighter" style="animation-delay: 0.1s">
-          Kom som du är
-        </h1>
-        <p class="text-2xl md:text-3xl text-white/90 mb-8 md:mb-10 max-w-2xl mx-auto font-medium animate-slide-up leading-tight tracking-tight" style="animation-delay: 0.2s">
-          Fyra gym i Haninge. Inga pekpinnar. <br class="hidden md:inline" />
-          Bara träning som passar dig.
-        </p>
-        <div class="animate-slide-up" style="animation-delay: 0.3s">
-          <NuxtLink to="/bli-medlem" class="btn btn-primary text-lg md:text-xl px-12 md:px-16 py-4 md:py-5 h-auto rounded-full shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all">
-            Bli medlem
-          </NuxtLink>
-        </div>
-      </div>
-    </section>
-
-    <!-- USP Grid -->
-    <section class="py-10 md:py-16 bg-surface">
-      <div class="container">
-        <div class="flex flex-wrap justify-center gap-3 md:gap-5 lg:gap-6">
-          <div v-for="feature in features" :key="feature" class="px-5 py-3 md:px-8 md:py-5 lg:px-10 lg:py-6 bg-transparent rounded-full border-2 md:border-3 border-brand">
-            <span class="font-display font-bold text-base md:text-2xl lg:text-3xl text-brand">{{ feature }}</span>
+      <!-- Hero -->
+      <section class="min-h-[100svh] flex flex-col justify-end items-center px-6 pb-12 relative">
+        <div class="relative z-10 max-w-6xl mx-auto text-center">
+          <h1 class="font-display font-bold text-5xl md:text-7xl leading-[0.9] text-white mb-6 animate-slide-up uppercase tracking-tighter" style="animation-delay: 0.1s">
+            Kom som du är
+          </h1>
+          <p class="text-2xl md:text-3xl text-white/90 mb-8 max-w-2xl mx-auto font-medium animate-slide-up leading-tight tracking-tight" style="animation-delay: 0.2s">
+            Fyra gym i Haninge. Inga pekpinnar.<br />
+            Bara träning som passar dig.
+          </p>
+          <div class="flex flex-col items-center gap-3 animate-slide-up w-full max-w-[280px] mx-auto" style="animation-delay: 0.3s">
+            <NuxtLink to="/bli-medlem" class="btn btn-primary btn-lg w-full">
+              Bli medlem
+            </NuxtLink>
+            <NuxtLink to="/logga-in" class="btn btn-ghost-light btn-lg w-full">
+              Logga in
+            </NuxtLink>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- Introduction -->
-    <section class="section bg-on-surface relative overflow-hidden">
-      <!-- Collage Background -->
-      <div class="absolute inset-0 z-0 opacity-20">
-        <img src="/images/hero-red.webp" alt="Gemenskap" class="w-full h-full object-cover grayscale" />
-      </div>
-      <div class="absolute inset-0 bg-gradient-to-b from-on-surface via-on-surface/90 to-on-surface z-0" />
+      <!-- USP + Introduction (Mobile) -->
+      <section class="py-16 relative">
+        <div class="container relative z-10">
+          <!-- USP Grid -->
+          <div class="grid grid-cols-2 gap-8 max-w-md mx-auto mb-16">
+            <div class="text-center">
+              <div class="w-14 h-14 mx-auto mb-5">
+                <img src="/png-icons/open-hours.png" alt="" class="w-full h-full object-contain brightness-0 invert" />
+              </div>
+              <p class="font-display font-bold text-lg text-white">Öppet alla dagar</p>
+              <p class="font-display font-bold text-lg text-white/60">03:55–00:05</p>
+            </div>
+            <div class="text-center">
+              <div class="w-14 h-14 mx-auto mb-5">
+                <img src="/png-icons/ingen-bindningstid.png" alt="" class="w-full h-full object-contain brightness-0 invert" />
+              </div>
+              <p class="font-display font-bold text-lg text-white">Ingen bindning</p>
+            </div>
+            <div class="text-center">
+              <div class="w-14 h-14 mx-auto mb-5">
+                <img src="/png-icons/location.png" alt="" class="w-full h-full object-contain brightness-0 invert" />
+              </div>
+              <p class="font-display font-bold text-lg text-white">4 gym i Haninge</p>
+              <p class="font-display font-bold text-lg text-white/60">(snart 5!)</p>
+            </div>
+            <div class="text-center">
+              <div class="w-14 h-14 mx-auto mb-5">
+                <img src="/png-icons/no-starting-fee.png" alt="" class="w-full h-full object-contain brightness-0 invert" />
+              </div>
+              <p class="font-display font-bold text-lg text-white">Ingen startavgift</p>
+              <p class="font-display font-bold text-lg text-white/60">(börja direkt)</p>
+            </div>
+          </div>
 
-      <div class="container text-center max-w-5xl relative z-10">
-        <h2 class="font-display font-bold text-5xl md:text-6xl mb-10 text-white uppercase tracking-tight">Styrka börjar här</h2>
-        <p class="text-2xl md:text-3xl text-white/80 leading-relaxed tracking-tight font-medium max-w-4xl mx-auto">
-          Vi startade 2012 i Tungelsta. Idag driver vi fyra gym i Haninge — men känslan är densamma. 
-          Här ska alla känna sig hemma, oavsett om du aldrig satt foten på ett gym eller tränat i 20 år.
-        </p>
-      </div>
-    </section>
+          <!-- Divider -->
+          <div class="w-16 h-1 bg-white/30 mx-auto mb-16 rounded-full" />
+
+          <!-- Introduction text -->
+          <div class="text-center max-w-xl mx-auto">
+            <h2 class="font-display font-bold text-4xl mb-8 text-white uppercase tracking-tight">Styrka börjar här</h2>
+            <p class="text-xl text-white/70 leading-relaxed font-medium">
+              Vi startade 2012 i Tungelsta. Idag driver vi fyra gym i Haninge — men känslan är densamma.
+              Här ska alla känna sig hemma, oavsett om du aldrig satt foten på ett gym eller tränat i 20 år.
+            </p>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- ==================== DESKTOP HERO (lg and up) - VIDEO CENTERED ==================== -->
+    <div class="hidden lg:block">
+      <section class="min-h-screen relative overflow-hidden">
+        <!-- Background Video -->
+        <div class="absolute inset-0 z-0">
+          <video
+            autoplay
+            muted
+            loop
+            playsinline
+            class="w-full h-full object-cover"
+          >
+            <source src="/videos/hero_video_compressed.mp4" type="video/mp4" />
+          </video>
+          <div class="absolute inset-0 bg-gradient-to-b from-black/30 via-black/40 to-black/70" />
+        </div>
+
+        <!-- Centered Content -->
+        <div class="relative z-10 min-h-screen flex flex-col justify-center items-center px-8 py-20">
+          <div class="max-w-4xl mx-auto text-center">
+            <!-- Logo -->
+            <div class="mb-10 animate-slide-up" style="animation-delay: 0.05s">
+              <img src="/images/logo.svg" alt="Core Gym Club" class="h-16 xl:h-20 mx-auto" />
+            </div>
+
+            <h1 class="font-display font-bold text-7xl xl:text-8xl 2xl:text-9xl leading-[0.85] text-white mb-8 animate-slide-up uppercase tracking-tighter" style="animation-delay: 0.1s">
+              Kom som du är
+            </h1>
+
+            <p class="text-2xl xl:text-3xl text-white/80 mb-12 font-medium animate-slide-up leading-relaxed max-w-2xl mx-auto" style="animation-delay: 0.2s">
+              Inga pekpinnar. Bara träning som passar dig.
+            </p>
+
+            <!-- CTAs -->
+            <div class="flex flex-row gap-4 justify-center animate-slide-up mb-20" style="animation-delay: 0.3s">
+              <NuxtLink to="/bli-medlem" class="btn btn-primary btn-lg px-10">
+                Bli medlem
+              </NuxtLink>
+              <NuxtLink to="/logga-in" class="btn btn-ghost-light btn-lg px-10">
+                Logga in
+              </NuxtLink>
+            </div>
+
+            <!-- USP Row -->
+            <div class="grid grid-cols-4 gap-8 pt-10 border-t border-white/20 animate-slide-up max-w-4xl mx-auto" style="animation-delay: 0.4s">
+              <div class="text-center">
+                <div class="w-12 h-12 mx-auto mb-3">
+                  <img src="/png-icons/open-hours.png" alt="" class="w-full h-full object-contain brightness-0 invert" />
+                </div>
+                <p class="font-display font-bold text-base text-white">Öppet alla dagar</p>
+                <p class="text-sm text-white/50">03:55–00:05</p>
+              </div>
+              <div class="text-center">
+                <div class="w-12 h-12 mx-auto mb-3">
+                  <img src="/png-icons/ingen-bindningstid.png" alt="" class="w-full h-full object-contain brightness-0 invert" />
+                </div>
+                <p class="font-display font-bold text-base text-white">Ingen bindning</p>
+                <p class="text-sm text-white/50">Avsluta när du vill</p>
+              </div>
+              <div class="text-center">
+                <div class="w-12 h-12 mx-auto mb-3">
+                  <img src="/png-icons/location.png" alt="" class="w-full h-full object-contain brightness-0 invert" />
+                </div>
+                <p class="font-display font-bold text-base text-white">4 gym i Haninge</p>
+                <p class="text-sm text-white/50">(snart 5!)</p>
+              </div>
+              <div class="text-center">
+                <div class="w-12 h-12 mx-auto mb-3">
+                  <img src="/png-icons/no-starting-fee.png" alt="" class="w-full h-full object-contain brightness-0 invert" />
+                </div>
+                <p class="font-display font-bold text-base text-white">Ingen startavgift</p>
+                <p class="text-sm text-white/50">Börja direkt</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Introduction section (Desktop) -->
+      <section class="py-20 xl:py-24 bg-on-surface">
+        <div class="container">
+          <div class="text-center max-w-4xl mx-auto">
+            <h2 class="font-display font-bold text-4xl xl:text-5xl 2xl:text-6xl mb-6 xl:mb-8 text-white uppercase tracking-tight">Styrka börjar här</h2>
+            <p class="text-lg xl:text-xl 2xl:text-2xl text-white/60 leading-relaxed font-medium">
+              Vi startade 2012 i Tungelsta. Idag driver vi fyra gym i Haninge — men känslan är densamma.
+              Här ska alla känna sig hemma, oavsett om du aldrig satt foten på ett gym eller tränat i 20 år.
+            </p>
+          </div>
+        </div>
+      </section>
+    </div>
 
     <!-- Gyms -->
-    <section class="section bg-surface-container overflow-hidden rounded-t-[4rem]">
+    <section class="py-24 md:py-32 bg-[#f5f5f7]">
       <div class="container">
-        <div class="text-center mb-24 max-w-4xl mx-auto">
-          <h2 class="font-display font-bold text-5xl md:text-6xl text-on-surface uppercase tracking-tight">Våra gym</h2>
-        </div>
+        <div class="max-w-5xl mx-auto">
+          <h2 class="font-display font-bold text-4xl md:text-5xl text-[#1d1d1f] mb-10 md:mb-12 text-center">Våra gym</h2>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
-          <NuxtLink
-            v-for="(gym, index) in gyms"
-            :key="gym.name"
-            :to="gym.href"
-            class="group flex flex-col bg-white rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-lg"
-            style="box-shadow: 0px 1px 2px 0px rgb(0 0 0 / 30%), 0px 1px 3px 1px rgb(0 0 0 / 15%);"
-          >
-            <!-- Media - full width, rounded corners -->
-            <div class="relative aspect-video overflow-hidden rounded-b-lg">
-              <img
-                :src="gym.image"
-                :alt="gym.name"
-                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-              />
-              <!-- Dynamic dark overlay -->
-              <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
-              <div class="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-black/30"></div>
-              <!-- Number - large, dynamic placement -->
-              <div class="absolute -top-4 -right-4 font-display font-bold text-[8rem] md:text-[10rem] text-white/20 leading-none select-none" style="-webkit-text-stroke: 1px rgba(255,255,255,0.3);">
-                0{{ index + 1 }}
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <NuxtLink
+              v-for="(gym, index) in gyms"
+              :key="gym.name"
+              :to="gym.href"
+              class="group block rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-shadow duration-300"
+            >
+              <!-- Image section - 2:1 aspect ratio -->
+              <div class="aspect-[2/1] overflow-hidden relative">
+                <img
+                  :src="gym.image"
+                  :alt="gym.name"
+                  class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+                <!-- Corner gradient for number visibility -->
+                <div class="absolute inset-0 bg-gradient-to-tl from-black/30 via-transparent to-transparent" />
+                <!-- Tag chip - liquid glass -->
+                <span class="absolute bottom-3 left-3 px-4 py-2 bg-white/20 backdrop-blur-xl rounded-full text-sm font-medium text-white border border-white/30 shadow-lg">
+                  {{ gym.tag }}
+                </span>
+                <!-- Number + Established year -->
+                <div class="absolute bottom-3 right-4 text-right">
+                  <span class="block font-display font-bold text-6xl md:text-7xl text-white/40 leading-none">
+                    {{ String(index + 1).padStart(2, '0') }}
+                  </span>
+                  <span class="block font-display font-medium text-xs md:text-sm text-white/50 tracking-widest mt-1">
+                    EST. {{ gym.established }}
+                  </span>
+                </div>
               </div>
-              <!-- Tag badge - top left -->
-              <div class="absolute top-3 left-3">
-                <span :class="[
-                  'px-3 py-1 rounded-full text-xs font-medium',
-                  gym.comingSoon
-                    ? 'bg-brand text-white'
-                    : 'bg-white/90 backdrop-blur-sm text-on-surface'
-                ]">{{ gym.tag }}</span>
+              <!-- Text section - light background -->
+              <div class="bg-white p-6 md:p-8 text-center">
+                <h3 class="font-display font-bold text-xl md:text-2xl text-[#1d1d1f] mb-2">{{ gym.name }}</h3>
+                <p class="text-[#6e6e73] text-base md:text-lg leading-relaxed">{{ gym.description }}</p>
               </div>
-              <!-- Oversized name overlay -->
-              <div class="absolute inset-0 flex items-end p-4">
-                <h3 class="font-display font-bold text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-white uppercase tracking-tighter leading-[0.85] drop-shadow-lg" style="margin-bottom: -0.15em;">
-                  {{ gym.name }}
-                </h3>
-              </div>
-            </div>
-
-            <!-- Content area -->
-            <div class="flex flex-col flex-1 p-5">
-              <p class="text-xl md:text-2xl text-on-surface-dim leading-snug group-hover:text-brand transition-colors duration-300 flex items-center gap-2">
-                {{ gym.description }}
-                <svg class="w-5 h-5 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                </svg>
-              </p>
-            </div>
-          </NuxtLink>
-        </div>
-      </div>
-    </section>
-
-    <!-- Services / Group Training -->
-    <section class="py-16 md:py-32 bg-surface overflow-hidden">
-      <div class="container">
-        <!-- Centered Header for Group Training -->
-        <div class="text-center max-w-4xl mx-auto mb-16 md:mb-24">
-          <span class="inline-block px-4 py-2 rounded-full border border-on-surface/10 bg-surface-container text-on-surface-dim mb-6 text-sm font-bold tracking-widest uppercase">
-            Tillsammans är vi starkare
-          </span>
-          <h2 class="font-display font-bold text-5xl md:text-6xl mb-6 text-on-surface uppercase tracking-tight">
-            Träna tillsammans
-          </h2>
-          <p class="text-xl md:text-2xl text-on-surface-dim leading-relaxed font-medium">
-            Från lugn yoga till svettiga HIIT-pass. Välj det som får dig att må bra.
-          </p>
-        </div>
-
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 items-center">
-          <!-- Image - hidden on mobile, shown on desktop -->
-          <div class="hidden lg:block order-2 lg:order-1 relative">
-            <div class="aspect-[4/5] rounded-[3rem] overflow-hidden shadow-2xl rotate-2 hover:rotate-0 transition-transform duration-700 border border-outline relative z-10 bg-surface-dim">
-              <img src="/images/classes/strength.webp" alt="Gruppträning" class="w-full h-full object-cover" />
-            </div>
-            <div class="absolute -top-12 -left-12 w-64 h-64 bg-brand rounded-full mix-blend-multiply opacity-10 blur-3xl animate-pulse" />
-          </div>
-
-          <div class="order-1 lg:order-2">
-            <!-- Compact list on mobile -->
-            <div class="flex flex-wrap gap-3 mb-8 md:hidden">
-              <span class="px-4 py-2 bg-surface-container rounded-full text-sm font-medium text-on-surface">50+ klasser/vecka</span>
-              <span class="px-4 py-2 bg-surface-container rounded-full text-sm font-medium text-on-surface">Seniorpass</span>
-              <span class="px-4 py-2 bg-surface-container rounded-full text-sm font-medium text-on-surface">Mammaträning</span>
-              <span class="px-4 py-2 bg-surface-container rounded-full text-sm font-medium text-on-surface">Yoga</span>
-            </div>
-
-            <!-- Full list on desktop -->
-            <ul class="hidden md:block space-y-12 mb-16">
-              <li class="flex items-start gap-8 group">
-                <div class="w-16 h-16 rounded-full bg-surface-container flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
-                  <div class="w-4 h-4 rounded-full bg-on-surface" />
-                </div>
-                <div>
-                  <h4 class="font-display font-bold text-2xl mb-2 text-on-surface">Över 50 klasser i veckan</h4>
-                  <p class="text-xl text-on-surface-dim leading-relaxed">Varierad träning för alla nivåer.</p>
-                </div>
-              </li>
-              <li class="flex items-start gap-8 group">
-                <div class="w-16 h-16 rounded-full bg-surface-container flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
-                  <div class="w-4 h-4 rounded-full bg-on-surface" />
-                </div>
-                <div>
-                  <h4 class="font-display font-bold text-2xl mb-2 text-on-surface">Seniorpass med fika</h4>
-                  <p class="text-xl text-on-surface-dim leading-relaxed">Gemenskap är lika viktigt som träning.</p>
-                </div>
-              </li>
-              <li class="flex items-start gap-8 group">
-                <div class="w-16 h-16 rounded-full bg-surface-container flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
-                  <div class="w-4 h-4 rounded-full bg-on-surface" />
-                </div>
-                <div>
-                  <h4 class="font-display font-bold text-2xl mb-2 text-on-surface">Mammaträning</h4>
-                  <p class="text-xl text-on-surface-dim leading-relaxed">Ta med bebis och träna tryggt.</p>
-                </div>
-              </li>
-            </ul>
-            <NuxtLink to="/schema" class="btn btn-primary px-12 md:px-16 py-4 md:py-6 h-auto text-lg md:text-xl rounded-full shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all">
-              Se schemat
             </NuxtLink>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Personal Training -->
-    <section class="py-24 md:py-40 bg-surface-dim overflow-hidden">
-      <div class="container">
-        <!-- Centered Layout -->
-        <div class="text-center max-w-5xl mx-auto mb-16 md:mb-20">
-          <span class="inline-block px-4 py-2 rounded-full border border-on-surface/10 bg-surface text-on-surface-dim mb-8 text-sm font-bold tracking-widest uppercase">
-            Din investering i dig själv
-          </span>
-          <h2 class="font-display font-bold text-5xl md:text-6xl mb-6 md:mb-10 text-on-surface uppercase tracking-tight">
-            Personlig Träning
-          </h2>
-          <p class="text-2xl md:text-3xl text-on-surface-dim mb-12 md:mb-16 leading-relaxed font-medium max-w-4xl mx-auto">
-            Ibland behöver man en knuff i rätt riktning. Våra PT:s hjälper dig att hitta din väg, oavsett om du är nybörjare eller elitidrottare.
-          </p>
-          
-          <NuxtLink to="/pt" class="btn btn-primary px-14 py-5 text-xl rounded-full shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all">
-            Läs mer om PT
-          </NuxtLink>
-        </div>
+    <!-- News -->
+    <NewsSection title="Senaste nytt" :limit="4" />
 
-        <!-- Full width visual element -->
-        <div class="relative w-full max-w-6xl mx-auto aspect-[16/9] md:aspect-[21/9] rounded-[3rem] overflow-hidden shadow-2xl group">
-          <img 
-            src="/images/lifting-eleiko-nike-dark.webp" 
-            alt="Personlig Träning" 
-            class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 scale-105 group-hover:scale-100" 
-          />
-          <!-- Gradient overlay for depth -->
-          <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-60"></div>
-          
-          <!-- Optional floating badge on image -->
-          <div class="absolute bottom-8 left-8 md:bottom-12 md:left-12 bg-white/10 backdrop-blur-md border border-white/20 px-6 py-3 rounded-full hidden md:block">
-            <span class="text-white font-bold tracking-wide uppercase text-sm">Individuellt upplägg</span>
+    <!-- Group Training -->
+    <section class="pt-16 md:pt-20 pb-24 md:pb-32 bg-on-surface text-white">
+      <div class="container max-w-4xl mx-auto text-center">
+        <div class="mb-12">
+          <StickySectionChip label="Gruppträning" dark />
+        </div>
+        <h2 class="font-display font-bold text-4xl md:text-6xl mb-5 uppercase tracking-tight">
+          Bättre tillsammans
+        </h2>
+        <p class="text-xl md:text-2xl text-white/70 mb-10 leading-relaxed max-w-2xl mx-auto">
+          Från lugn yoga till svettiga pass. Välj det som får dig att må bra.
+        </p>
+      </div>
+
+      <!-- Carousel -->
+      <div class="group-carousel-container mb-12">
+        <div ref="carouselRef" class="group-carousel-track" @scroll="onCarouselScroll">
+          <div
+            v-for="(image, index) in infiniteImages"
+            :key="index"
+            class="group-carousel-item"
+          >
+            <img :src="image.src" :alt="image.alt" />
+          </div>
+        </div>
+      </div>
+
+      <div class="container text-center">
+        <NuxtLink to="/schema" class="btn btn-light btn-lg">
+          Se schemat
+        </NuxtLink>
+      </div>
+    </section>
+
+    <!-- Personal Training -->
+    <section class="pt-16 md:pt-20 pb-24 md:pb-32 bg-surface">
+      <div class="container">
+        <div class="max-w-5xl mx-auto">
+          <!-- Centered text intro -->
+          <div class="text-center mb-10 md:mb-12">
+            <div class="mb-12">
+              <StickySectionChip label="Personlig träning" />
+            </div>
+            <h2 class="font-display font-bold text-4xl md:text-6xl mb-5 text-on-surface uppercase tracking-tight">
+              En knuff i rätt riktning
+            </h2>
+            <p class="text-xl md:text-2xl text-on-surface-dim leading-relaxed max-w-2xl mx-auto">
+              Våra PT:s hjälper dig hitta din väg — oavsett om målet är styrka, kondition eller att bara komma igång.
+            </p>
+          </div>
+
+          <!-- Image -->
+          <div class="aspect-[16/9] rounded-3xl overflow-hidden mb-12">
+            <img src="/images/filip-pt-landscape.webp" alt="Filip tränar en klient på Core Gym" class="w-full h-full object-cover" />
+          </div>
+
+          <!-- Centered features -->
+          <div class="flex flex-wrap justify-center gap-4 md:gap-6 mb-10">
+            <span class="px-5 py-3 rounded-full border border-on-surface/20 text-on-surface font-medium">
+              Individuellt upplägg
+            </span>
+            <span class="px-5 py-3 rounded-full border border-on-surface/20 text-on-surface font-medium">
+              Kostråd och träningsprogram
+            </span>
+            <span class="px-5 py-3 rounded-full border border-on-surface/20 text-on-surface font-medium">
+              Certifierade tränare
+            </span>
+          </div>
+
+          <div class="text-center">
+            <NuxtLink to="/pt" class="btn btn-dark btn-lg">
+              Utforska PT
+            </NuxtLink>
           </div>
         </div>
       </div>
     </section>
 
     <!-- Yoga Section -->
-    <section class="py-24 md:py-40 bg-[#0c0c0c] text-white relative overflow-hidden">
-      <!-- Subtle pattern background -->
-      <div class="absolute inset-0 z-0">
-        <div class="absolute inset-0 opacity-[0.04]"
-             style="background-image: radial-gradient(#fff 1px, transparent 1px); background-size: 32px 32px;">
-        </div>
-      </div>
-
-      <div class="container relative z-10">
-        <!-- Centered header -->
-        <div class="text-center max-w-3xl mx-auto mb-12">
-          <span class="inline-block px-4 py-2 rounded-full bg-teal-500/20 border border-teal-500/30 text-teal-300 mb-10 text-sm font-bold tracking-widest uppercase">
-            Ingår i medlemskapet
-          </span>
-          <h2 class="font-display font-bold text-5xl md:text-6xl mb-4 uppercase tracking-tight">Yoga</h2>
-          <p class="text-lg md:text-xl text-teal-400/80 mb-6 font-medium">Yoga i Haninge — på två av våra gym</p>
-          <p class="text-xl md:text-2xl text-white/70 leading-relaxed font-medium">
-            Hitta balans och bygg styrka inifrån. I Vegastaden har vi en dedikerad yoga shala — ett eget rum bara för yoga och mindfulness. I Tungelsta bygger vi ut med ännu fler klasser.
-          </p>
-        </div>
-
-        <!-- Image -->
-        <div class="max-w-2xl mx-auto mb-12 relative">
-          <div class="aspect-video rounded-3xl overflow-hidden shadow-2xl">
-            <img src="/images/denise-hero.webp" alt="Yoga i Haninge" class="w-full h-full object-cover" />
-          </div>
-          <!-- Decorative glow -->
-          <div class="absolute -bottom-12 -right-12 w-64 h-64 bg-teal-500 rounded-full mix-blend-screen opacity-20 blur-3xl" />
-        </div>
-
-        <!-- Tags and CTA centered -->
-        <div class="text-center">
-          <div class="flex flex-wrap justify-center gap-3 mb-8">
-            <span class="px-4 py-2 bg-white/5 border border-white/10 rounded-full text-sm font-medium text-white/80">Hatha</span>
-            <span class="px-4 py-2 bg-white/5 border border-white/10 rounded-full text-sm font-medium text-white/80">Vinyasa</span>
-            <span class="px-4 py-2 bg-white/5 border border-white/10 rounded-full text-sm font-medium text-white/80">Yin</span>
-            <span class="px-4 py-2 bg-white/5 border border-white/10 rounded-full text-sm font-medium text-white/80">Power Yoga</span>
+    <section class="pt-16 md:pt-20 pb-24 md:pb-32 bg-[#f4f7f5]">
+      <div class="container">
+        <div class="max-w-5xl mx-auto">
+          <!-- Centered text intro -->
+          <div class="text-center mb-10 md:mb-12">
+            <div class="mb-12">
+              <StickySectionChip label="Yoga" color="green" />
+            </div>
+            <h2 class="font-display font-bold text-4xl md:text-6xl text-[#1d1d1f] uppercase tracking-tight mb-5">
+              Hitta din inre balans
+            </h2>
+            <p class="text-xl md:text-2xl text-[#6e6e73] leading-relaxed max-w-2xl mx-auto">
+              Andas ut vardagen. Våra yogaklasser passar alla nivåer — från nybörjare till erfarna. Bygg styrka, förbättra rörlighet och hitta lugnet.
+            </p>
           </div>
 
-          <div class="flex flex-wrap justify-center gap-6 text-sm text-white/50 mb-10">
-            <span class="flex items-center gap-2">
-              <span class="w-2 h-2 rounded-full bg-teal-500"></span>
-              Vegastaden
-            </span>
-            <span class="flex items-center gap-2">
-              <span class="w-2 h-2 rounded-full bg-teal-500"></span>
-              Tungelsta
-            </span>
+          <!-- Image -->
+          <div class="aspect-[16/9] rounded-3xl overflow-hidden mb-12">
+            <img
+              src="/images/yoga-class.webp"
+              alt="Yoga på Core Gym"
+              class="w-full h-full object-cover"
+            />
           </div>
 
-          <NuxtLink to="/yoga" class="btn bg-teal-500 hover:bg-teal-400 text-white border-none px-10 py-5 text-lg rounded-full">
-            Läs mer om yoga
-          </NuxtLink>
+          <!-- Location tags + CTA -->
+          <div class="text-center">
+            <div class="flex flex-wrap justify-center gap-3 mb-8">
+              <span class="px-4 py-2 rounded-full border border-[#1d1d1f]/15 text-[#1d1d1f] font-medium">Vegastaden</span>
+              <span class="px-4 py-2 rounded-full border border-[#1d1d1f]/15 text-[#1d1d1f] font-medium">Tungelsta</span>
+            </div>
+            <NuxtLink to="/yoga" class="btn btn-dark btn-lg">
+              Yoga
+            </NuxtLink>
+          </div>
         </div>
       </div>
     </section>
 
     <!-- Mammaträning Section -->
-    <section class="py-24 md:py-40 bg-surface overflow-hidden">
+    <section class="pt-16 md:pt-20 pb-24 md:pb-32 bg-[#fdf6f7]">
       <div class="container">
-        <!-- Centered header -->
-        <div class="text-center max-w-3xl mx-auto mb-12">
-          <span class="inline-block px-4 py-2 rounded-full bg-rose-500/10 border border-rose-500/20 text-rose-600 mb-10 text-sm font-bold tracking-widest uppercase">
-            För nyblivna mammor
-          </span>
-          <h2 class="font-display font-bold text-5xl md:text-6xl mb-4 text-on-surface uppercase tracking-tight">Mammaträning</h2>
-          <p class="text-lg md:text-xl text-rose-600/80 mb-6 font-medium">Träning med bebis i Haninge</p>
-          <p class="text-xl md:text-2xl text-on-surface-dim leading-relaxed font-medium">
-            Ta med bebis och träna tryggt tillsammans med andra mammor. Anpassade övningar som stärker kroppen efter graviditet — och lite välbehövlig gemenskap.
-          </p>
-        </div>
-
-        <!-- Image -->
-        <div class="max-w-2xl mx-auto mb-12 relative">
-          <div class="aspect-video rounded-3xl overflow-hidden shadow-2xl">
-            <img src="/images/hero-red.webp" alt="Mammaträning i Haninge" class="w-full h-full object-cover" />
-          </div>
-          <div class="absolute -bottom-12 -left-12 w-64 h-64 bg-rose-500 rounded-full mix-blend-multiply opacity-10 blur-3xl" />
-        </div>
-
-        <!-- Info and CTA centered -->
-        <div class="text-center">
-          <div class="inline-flex flex-wrap justify-center gap-6 text-sm text-on-surface-dim mb-10">
-            <span class="flex items-center gap-2">
-              <span class="w-2 h-2 rounded-full bg-rose-500"></span>
-              Vegastaden: 2 dagar/vecka
-            </span>
-            <span class="flex items-center gap-2">
-              <span class="w-2 h-2 rounded-full bg-rose-500"></span>
-              Tungelsta: 2 dagar/vecka
-            </span>
+        <div class="max-w-5xl mx-auto">
+          <!-- Centered text intro -->
+          <div class="text-center mb-10 md:mb-12">
+            <div class="mb-12">
+              <StickySectionChip label="Mammaträning" color="rose" />
+            </div>
+            <h2 class="font-display font-bold text-4xl md:text-6xl text-[#1d1d1f] uppercase tracking-tight mb-5">
+              Träna med bebis
+            </h2>
+            <p class="text-xl md:text-2xl text-[#6e6e73] leading-relaxed max-w-2xl mx-auto">
+              Kom igång efter förlossningen tillsammans med andra mammor. Anpassade pass där bebis är välkommen — och en chans att träffa andra i samma situation.
+            </p>
           </div>
 
-          <NuxtLink to="/mammatraning" class="btn btn-primary px-10 py-5 text-lg rounded-full">
-            Läs mer om mammaträning
-          </NuxtLink>
+          <!-- Image -->
+          <div class="aspect-[16/9] rounded-3xl overflow-hidden mb-12">
+            <img
+              src="/images/mamma-training.webp"
+              alt="Mammaträning på Core Gym"
+              class="w-full h-full object-cover"
+            />
+          </div>
+
+          <!-- Location tags + CTA -->
+          <div class="text-center">
+            <div class="flex flex-wrap justify-center gap-3 mb-8">
+              <span class="px-4 py-2 rounded-full border border-[#1d1d1f]/15 text-[#1d1d1f] font-medium">Vegastaden</span>
+              <span class="px-4 py-2 rounded-full border border-[#1d1d1f]/15 text-[#1d1d1f] font-medium">Tungelsta</span>
+            </div>
+            <NuxtLink to="/mammatraning" class="btn btn-dark btn-lg">
+              Mammaträning
+            </NuxtLink>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- Founder Bio -->
-    <section class="py-12 md:py-32 bg-surface-container">
-      <div class="container px-4 md:px-8">
-        <div class="bg-surface rounded-2xl md:rounded-[3rem] p-6 md:p-16 lg:p-24 shadow-elevated border border-white/50 flex flex-col lg:flex-row gap-6 md:gap-12 lg:gap-20 items-center">
-          <div class="w-32 h-32 md:w-64 md:h-64 lg:w-80 lg:h-80 flex-shrink-0 rounded-full overflow-hidden border-4 md:border-8 border-surface shadow-2xl grayscale contrast-125 relative">
+    <!-- Founder -->
+    <section class="py-24 md:py-32 bg-surface">
+      <div class="container">
+        <div class="max-w-3xl mx-auto text-center">
+          <div class="w-32 h-32 md:w-40 md:h-40 mx-auto rounded-full overflow-hidden grayscale mb-8">
             <img
               src="/images/founder-per.webp"
               alt="Per Karlsson"
               class="w-full h-full object-cover scale-110"
             />
           </div>
-          <div class="text-center lg:text-left flex-1">
-            <h3 class="font-display font-bold text-2xl md:text-4xl lg:text-5xl mb-4 md:mb-8 leading-tight text-on-surface uppercase tracking-tight">"Jag tröttnade på att kämpa i motvind"</h3>
-            <p class="text-base md:text-xl lg:text-2xl text-on-surface-dim mb-6 md:mb-12 leading-relaxed max-w-3xl font-medium">
-              Per Karlsson, grundare. Idrottslärare i 25 år som ville skapa något eget.
-              Core Gym Club startade 2012 med en enkel idé: träning ska vara okomplicerat och tillgängligt för alla.
-            </p>
-            <div>
-              <p class="text-lg md:text-xl font-bold text-brand mb-1 md:mb-2 uppercase tracking-wide">Per Karlsson</p>
-              <p class="text-xs md:text-sm uppercase tracking-widest text-on-surface-dim font-bold">Grundare & Ägare</p>
-            </div>
-          </div>
+          <blockquote class="font-display font-bold text-3xl md:text-4xl mb-6 text-on-surface leading-tight">
+            "Efter 25 år som idrottslärare visste jag vad som saknades. Ett gym där man får vara sig själv."
+          </blockquote>
+          <p class="text-lg text-on-surface-dim mb-4 max-w-xl mx-auto">
+            Per Karlsson, grundare. En Haninge-profil som bytte gympasalen mot gymmet för att skapa en plats utan krångel och prestige.
+          </p>
+          <p class="text-sm font-bold text-on-surface uppercase tracking-wide">Per Karlsson, Grundare</p>
         </div>
       </div>
     </section>
 
     <!-- Reviews -->
-    <ReviewsSection title="Vad säger våra medlemmar?" :limit="3" />
+    <ReviewsSection />
 
     <!-- CTA -->
-    <section class="py-48 bg-brand relative overflow-hidden">
-      <!-- Decorational circles -->
-      <div class="absolute top-0 left-0 w-[1000px] h-[1000px] bg-white/10 rounded-full -translate-x-1/3 -translate-y-1/3 blur-3xl" />
-      <div class="absolute bottom-0 right-0 w-[800px] h-[800px] bg-black/20 rounded-full translate-x-1/3 translate-y-1/3 blur-3xl" />
-      
-      <div class="container text-center text-white relative z-10 max-w-5xl mx-auto">
-        <h2 class="font-display font-bold text-4xl sm:text-5xl md:text-6xl lg:text-7xl mb-12 uppercase tracking-tighter">Redo att komma igång?</h2>
-        <p class="text-2xl md:text-3xl text-white/90 mb-20 leading-relaxed font-medium max-w-3xl mx-auto">
-          Inga bindningstider. Provträning ingår inte — men vi lovar att ta hand om dig när du väl är här.
-        </p>
-        <div class="flex flex-col sm:flex-row justify-center gap-8">
-          <NuxtLink to="/bli-medlem" class="btn bg-white text-brand hover:bg-surface-dim border-none px-14 py-7 h-auto text-2xl shadow-2xl hover:shadow-[0_20px_50px_rgba(0,0,0,0.3)] hover:-translate-y-1 transition-all rounded-full">
-            Se våra medlemskap
-          </NuxtLink>
-          <NuxtLink to="/kontakt" class="btn border-2 border-white/30 hover:bg-white/10 text-white bg-transparent px-14 py-7 h-auto text-2xl backdrop-blur-sm rounded-full">
-            Kontakta oss
-          </NuxtLink>
+    <section class="py-16 md:py-24 lg:py-32 bg-surface">
+      <div class="container">
+        <div class="relative overflow-hidden rounded-3xl lg:rounded-[2.5rem] bg-brand">
+          <!-- Background image with red duotone effect (desktop) -->
+          <div class="hidden lg:block absolute inset-0">
+            <img
+              src="/images/cta-bg.webp"
+              alt=""
+              class="absolute inset-0 w-full h-full object-cover grayscale"
+            />
+            <!-- Red overlay for duotone effect -->
+            <div class="absolute inset-0 bg-brand/95 mix-blend-multiply" />
+            <!-- Dark overlay for text readability -->
+            <div class="absolute inset-0 bg-black/10" />
+          </div>
+          
+          <!-- Decorative blurs (mobile only) -->
+          <div class="lg:hidden absolute top-0 left-0 w-[800px] h-[800px] bg-white/10 rounded-full -translate-x-1/2 -translate-y-1/2 blur-3xl" />
+          <div class="lg:hidden absolute bottom-0 right-0 w-[600px] h-[600px] bg-black/20 rounded-full translate-x-1/2 translate-y-1/2 blur-3xl" />
+
+          <div class="py-24 md:py-32 lg:py-40 px-6 md:px-12 text-center text-white relative z-10 max-w-4xl mx-auto">
+            <h2 class="font-display font-bold text-4xl md:text-6xl mb-8 uppercase tracking-tight">Redo att börja?</h2>
+            <p class="text-xl md:text-2xl text-white/80 mb-12 leading-relaxed">
+              Frihet att välja. Enkelt att börja.
+            </p>
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+              <NuxtLink to="/bli-medlem" class="btn btn-light btn-xl">
+                Se medlemskap
+              </NuxtLink>
+              <NuxtLink to="/kontakt" class="btn btn-ghost-light btn-xl">
+                Kontakta oss
+              </NuxtLink>
+            </div>
+          </div>
         </div>
       </div>
     </section>
   </div>
 </template>
+
+<style scoped>
+.group-carousel-container {
+  --item-size: 140px;
+  --item-gap: -30px;
+  width: 100%;
+  perspective: 800px;
+}
+
+@media (min-width: 768px) {
+  .group-carousel-container {
+    --item-size: 200px;
+    --item-gap: -50px;
+    perspective: 1200px;
+  }
+}
+
+.group-carousel-track {
+  display: flex;
+  gap: 0;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding: 2rem calc(50% - var(--item-size) / 2);
+  scroll-behavior: auto;
+  transform-style: preserve-3d;
+}
+
+.group-carousel-track::-webkit-scrollbar {
+  display: none;
+}
+
+.group-carousel-item {
+  flex-shrink: 0;
+  width: var(--item-size);
+  height: var(--item-size);
+  margin-right: var(--item-gap);
+  scroll-snap-align: center;
+  border-radius: 1rem;
+  overflow: hidden;
+  box-shadow: 0 8px 32px -8px rgba(0, 0, 0, 0.6);
+  position: relative;
+  will-change: transform, opacity;
+  transform-style: preserve-3d;
+  animation: carousel-item-scroll linear;
+  animation-timeline: view(inline);
+}
+
+.group-carousel-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+@keyframes carousel-item-scroll {
+  0% {
+    transform: translateZ(-100px) rotateY(25deg);
+    opacity: 0.4;
+  }
+  45% {
+    transform: translateZ(0) rotateY(0deg);
+    opacity: 1;
+  }
+  55% {
+    transform: translateZ(0) rotateY(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateZ(-100px) rotateY(-25deg);
+    opacity: 0.4;
+  }
+}
+</style>

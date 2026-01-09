@@ -51,64 +51,72 @@ async function handleSubmit() {
 
 <template>
   <div>
-    <!-- Hero -->
-    <section class="min-h-screen flex items-center justify-center bg-on-surface text-white px-6 relative overflow-hidden">
-      <!-- Background Abstract -->
+    <!-- Hero - fullscreen med form -->
+    <section class="min-h-screen flex flex-col justify-center px-6 relative overflow-hidden">
+      <!-- Background Image -->
       <div class="absolute inset-0 z-0">
-        <div class="absolute top-0 right-0 w-[800px] h-[800px] bg-brand/10 rounded-full translate-x-1/2 -translate-y-1/2 blur-3xl" />
-        <div class="absolute bottom-0 left-0 w-[600px] h-[600px] bg-brand/5 rounded-full -translate-x-1/2 translate-y-1/2 blur-3xl" />
-        <div class="absolute inset-0 bg-gradient-to-t from-on-surface via-transparent to-transparent" />
+        <img
+          src="/images/cta-bg.webp"
+          alt=""
+          class="w-full h-full object-cover"
+        />
+        <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70" />
       </div>
 
-      <div class="text-center relative z-10 max-w-xl mx-auto mt-20">
-        <span class="inline-block px-4 py-2 rounded-full border border-white/20 bg-white/10 backdrop-blur mb-8 text-sm font-bold tracking-widest uppercase animate-fade">
-          Kommer hösten 2026
-        </span>
-        <h1 class="font-display font-bold text-5xl md:text-7xl lg:text-display-lg text-white mb-8 animate-slide-up uppercase tracking-tighter">Ösmo</h1>
-        <p class="text-xl md:text-2xl lg:text-3xl text-white/90 mb-12 animate-slide-up leading-tight font-medium" style="animation-delay: 0.1s">
-          Vårt fjärde gym. 700 kvm träningsglädje. <br class="hidden md:inline" />
-          Anmäl intresse så håller vi dig uppdaterad.
-        </p>
+      <div class="relative z-10 max-w-lg mx-auto w-full pt-32 pb-16">
+        <!-- Header -->
+        <div class="text-center mb-8">
+          <h1 class="font-display font-bold text-5xl md:text-6xl text-white mb-4 animate-slide-up uppercase tracking-tighter">Ösmo</h1>
+          <p class="text-lg text-white/80 animate-slide-up" style="animation-delay: 0.1s">
+            Vårt fjärde gym öppnar hösten 2026
+          </p>
+        </div>
 
         <!-- Form -->
-        <div v-if="!isSuccess" class="bg-surface/5 backdrop-blur-sm border border-white/10 p-8 rounded-3xl animate-slide-up" style="animation-delay: 0.2s">
-          <form @submit.prevent="handleSubmit" class="space-y-4">
-            <div class="grid grid-cols-2 gap-4">
-              <input
-                v-model="form.name"
-                type="text"
-                placeholder="Namn *"
-                required
-                class="w-full px-6 py-4 bg-white/5 border border-white/10 rounded-2xl text-white placeholder-white/40 focus:outline-none focus:border-brand focus:bg-white/10 transition-all"
-              />
-              <input
-                v-model="form.phone"
-                type="tel"
-                placeholder="Telefon"
-                class="w-full px-6 py-4 bg-white/5 border border-white/10 rounded-2xl text-white placeholder-white/40 focus:outline-none focus:border-brand focus:bg-white/10 transition-all"
-              />
-            </div>
+        <div v-if="!isSuccess" class="animate-slide-up" style="animation-delay: 0.15s">
+          <!-- Heading -->
+          <h2 class="text-2xl font-bold text-white text-center mb-2">Gör en intresseanmälan</h2>
+          <!-- Compelling message -->
+          <div class="text-center mb-6">
+            <p class="text-white/70 text-sm">
+              Bli först med ett exklusivt erbjudande vid öppning
+            </p>
+          </div>
+
+          <form @submit.prevent="handleSubmit" class="space-y-3">
+            <input
+              v-model="form.name"
+              type="text"
+              placeholder="Namn"
+              required
+              class="w-full px-5 py-4 bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl text-white placeholder-white/50 focus:outline-none focus:border-white/50 focus:bg-white/15 transition-all"
+            />
             <input
               v-model="form.email"
               type="email"
-              placeholder="E-post *"
+              placeholder="E-post"
               required
-              class="w-full px-6 py-4 bg-white/5 border border-white/10 rounded-2xl text-white placeholder-white/40 focus:outline-none focus:border-brand focus:bg-white/10 transition-all"
+              class="w-full px-5 py-4 bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl text-white placeholder-white/50 focus:outline-none focus:border-white/50 focus:bg-white/15 transition-all"
             />
-            
+            <input
+              v-model="form.phone"
+              type="tel"
+              placeholder="Telefon (valfritt)"
+              class="w-full px-5 py-4 bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl text-white placeholder-white/50 focus:outline-none focus:border-white/50 focus:bg-white/15 transition-all"
+            />
             <textarea
               v-model="form.message"
-              rows="3"
-              placeholder="Något särskilt du önskar dig? Eller bara ett hejarop?"
-              class="w-full px-6 py-4 bg-white/5 border border-white/10 rounded-2xl text-white placeholder-white/40 focus:outline-none focus:border-brand focus:bg-white/10 transition-all resize-none"
+              rows="2"
+              placeholder="Vad vill du se på gymmet? Tips välkomnas!"
+              class="w-full px-5 py-4 bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl text-white placeholder-white/50 focus:outline-none focus:border-white/50 focus:bg-white/15 transition-all resize-none"
             ></textarea>
 
-            <div v-if="error" class="text-red-400 text-sm font-medium">{{ error }}</div>
+            <div v-if="error" class="text-red-400 text-sm font-medium text-center">{{ error }}</div>
 
             <button
               type="submit"
               :disabled="isSubmitting"
-              class="btn btn-primary w-full py-4 text-lg"
+              class="w-full py-4 bg-brand hover:bg-brand/90 text-white font-bold rounded-full text-lg transition-all active:scale-98"
             >
               {{ isSubmitting ? 'Skickar...' : 'Anmäl intresse' }}
             </button>
@@ -116,14 +124,14 @@ async function handleSubmit() {
         </div>
 
         <!-- Success -->
-        <div v-else class="p-12 bg-green-500/10 border border-green-500/20 rounded-3xl backdrop-blur-md animate-scale-in">
-          <div class="w-20 h-20 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
-            <svg class="w-10 h-10 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div v-else class="p-10 bg-white/10 backdrop-blur-md border border-white/20 rounded-3xl animate-scale-in text-center">
+          <div class="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-5">
+            <svg class="w-8 h-8 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
             </svg>
           </div>
-          <h3 class="text-title text-white mb-4">Tack för ditt intresse!</h3>
-          <p class="text-body-lg text-white/70">Vi hör av oss så fort vi har nyheter om öppningen.</p>
+          <h3 class="text-2xl font-bold text-white mb-3">Tack!</h3>
+          <p class="text-white/70">Du är nu med på listan. Vi hör av oss med ditt exklusiva erbjudande.</p>
         </div>
       </div>
     </section>
@@ -153,26 +161,76 @@ async function handleSubmit() {
       </div>
     </section>
 
-    <!-- Info -->
-    <section class="section bg-surface">
-      <div class="container">
-        <h2 class="font-display font-bold text-4xl md:text-5xl text-center mb-16 uppercase tracking-tight">Vad vi vet</h2>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto">
-          <div class="bg-surface-bright p-8 rounded-3xl border border-outline text-center">
-            <h3 class="text-title mb-2 text-brand">Läge</h3>
-            <p class="text-body-lg text-on-surface-dim">Gamla Priskrossaren</p>
+    <!-- Vad vi vet -->
+    <section class="py-16 bg-surface">
+      <div class="container max-w-3xl">
+        <h2 class="font-display font-bold text-3xl md:text-4xl text-center mb-12 uppercase tracking-tight">Vad vi vet</h2>
+
+        <div class="space-y-4">
+          <!-- Öppettider -->
+          <div class="flex items-start gap-4 p-5 bg-surface-container rounded-2xl">
+            <div class="w-10 h-10 rounded-full bg-brand/10 flex items-center justify-center flex-shrink-0">
+              <svg class="w-5 h-5 text-brand" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <div>
+              <h3 class="font-bold text-on-surface mb-1">Öppet 03:55–00:05</h3>
+              <p class="text-sm text-on-surface-dim">Samma öppettider som våra andra gym. Ja, tiderna är lite udda – men du glömmer dem aldrig.</p>
+            </div>
           </div>
-          <div class="bg-surface-bright p-8 rounded-3xl border border-outline text-center">
-            <h3 class="text-title mb-2 text-brand">Storlek</h3>
-            <p class="text-body-lg text-on-surface-dim">700 kvm</p>
+
+          <!-- Ingen bindning -->
+          <div class="flex items-start gap-4 p-5 bg-surface-container rounded-2xl">
+            <div class="w-10 h-10 rounded-full bg-brand/10 flex items-center justify-center flex-shrink-0">
+              <svg class="w-5 h-5 text-brand" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <div>
+              <h3 class="font-bold text-on-surface mb-1">Ingen bindningstid</h3>
+              <p class="text-sm text-on-surface-dim">Du tränar så länge du vill. Uppsägning med två månaders varsel, som alltid.</p>
+            </div>
           </div>
-          <div class="bg-surface-bright p-8 rounded-3xl border border-outline text-center">
-            <h3 class="text-title mb-2 text-brand">Öppnar</h3>
-            <p class="text-body-lg text-on-surface-dim">Hösten 2026</p>
+
+          <!-- Storlek & läge -->
+          <div class="flex items-start gap-4 p-5 bg-surface-container rounded-2xl">
+            <div class="w-10 h-10 rounded-full bg-brand/10 flex items-center justify-center flex-shrink-0">
+              <svg class="w-5 h-5 text-brand" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+            </div>
+            <div>
+              <h3 class="font-bold text-on-surface mb-1">700 kvm i gamla Priskrossaren</h3>
+              <p class="text-sm text-on-surface-dim">Perfekt läge mitt i Ösmo. Gott om plats för både fria vikter och maskiner.</p>
+            </div>
           </div>
-          <div class="bg-surface-bright p-8 rounded-3xl border border-outline text-center">
-            <h3 class="text-title mb-2 text-brand">Utrustning</h3>
-            <p class="text-body-lg text-on-surface-dim">Toppklass</p>
+
+          <!-- Utrustning -->
+          <div class="flex items-start gap-4 p-5 bg-surface-container rounded-2xl">
+            <div class="w-10 h-10 rounded-full bg-brand/10 flex items-center justify-center flex-shrink-0">
+              <svg class="w-5 h-5 text-brand" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+            </div>
+            <div>
+              <h3 class="font-bold text-on-surface mb-1">Utrustning i toppklass</h3>
+              <p class="text-sm text-on-surface-dim">Vi vet inte exakt vad än – men det blir bra. Har du önskemål? Skriv i formuläret ovan!</p>
+            </div>
+          </div>
+
+          <!-- Filosofi -->
+          <div class="flex items-start gap-4 p-5 bg-surface-container rounded-2xl">
+            <div class="w-10 h-10 rounded-full bg-brand/10 flex items-center justify-center flex-shrink-0">
+              <svg class="w-5 h-5 text-brand" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+              </svg>
+            </div>
+            <div>
+              <h3 class="font-bold text-on-surface mb-1">Inget strul, bara riktigt bra träning</h3>
+              <p class="text-sm text-on-surface-dim">Samma filosofi som på våra andra gym. Fokus på det som faktiskt spelar roll.</p>
+            </div>
           </div>
         </div>
       </div>

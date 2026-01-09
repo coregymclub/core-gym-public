@@ -1,89 +1,100 @@
 <script setup lang="ts">
 const hours = [
-  { hour: 4, label: '', value: 5 },
-  { hour: 5, label: '05', value: 10 },
-  { hour: 6, label: '', value: 15 },
-  { hour: 7, label: '', value: 25 },
+  { hour: 5, value: 10 },
+  { hour: 6, value: 15 },
+  { hour: 7, value: 25 },
   { hour: 8, label: '08', value: 35 },
-  { hour: 9, label: '', value: 30 },
-  { hour: 10, label: '', value: 35 },
-  { hour: 11, label: '11', value: 40 },
-  { hour: 12, label: '', value: 45 },
-  { hour: 13, label: '', value: 40 },
-  { hour: 14, label: '14', value: 35 },
-  { hour: 15, label: '', value: 45 },
-  { hour: 16, label: '', value: 65 },
-  { hour: 17, label: '17', value: 95 }, // Peak
-  { hour: 18, label: '', value: 85 },
-  { hour: 19, label: '', value: 75 },
+  { hour: 9, value: 30 },
+  { hour: 10, value: 35 },
+  { hour: 11, value: 40 },
+  { hour: 12, label: '12', value: 45 },
+  { hour: 13, value: 40 },
+  { hour: 14, value: 35 },
+  { hour: 15, value: 45 },
+  { hour: 16, label: '16', value: 65 },
+  { hour: 17, value: 95 },
+  { hour: 18, value: 85 },
+  { hour: 19, value: 75 },
   { hour: 20, label: '20', value: 60 },
-  { hour: 21, label: '', value: 45 },
-  { hour: 22, label: '', value: 30 },
-  { hour: 23, label: '23', value: 20 },
-  { hour: 0, label: '', value: 10 },
+  { hour: 21, value: 45 },
+  { hour: 22, value: 30 },
+  { hour: 23, value: 20 },
 ]
 
 const currentHour = new Date().getHours()
 
-// Helper to determine bar color based on status
 function getBarColor(hour: number) {
-  // If it's the current hour, highlight it
-  if (hour === currentHour) return 'bg-brand'
-  return 'bg-surface-dim'
+  if (hour === currentHour) return 'bg-on-surface'
+  return 'bg-on-surface/20'
+}
+
+function getBarHeight(value: number) {
+  return `${Math.max(value, 8)}%`
+}
+
+function isCurrentHour(hour: number) {
+  return hour === currentHour
 }
 </script>
 
 <template>
-  <section class="py-12 bg-surface-dim">
-    <div class="container max-w-4xl">
-      <div class="card bg-surface p-8 md:p-12">
-        <div class="text-center mb-10">
-          <h2 class="text-title mb-2">Populära tider</h2>
-          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-green-100 text-green-700 text-sm font-medium">
-            <span class="relative flex h-2 w-2">
-              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-              <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
-            </span>
-            Lugnt just nu
-          </div>
-        </div>
+  <section class="pb-12 md:pb-16 bg-surface-dim">
+    <div class="container max-w-2xl">
+      <!-- iOS Widget Style Card - connected to info sheet above -->
+      <div class="rounded-b-[2rem] md:rounded-b-[2.5rem] p-5 md:p-6 pt-0 shadow-sm border border-outline/10 border-t-0 relative overflow-hidden bg-gradient-to-b from-surface via-surface to-surface-dim/30">
 
-        <!-- Chart container -->
-        <div class="relative h-48 flex items-end justify-between gap-1 mb-8 px-2 md:px-8">
-          <!-- Bars -->
-          <div 
-            v-for="h in hours" 
-            :key="h.hour" 
-            class="flex flex-col items-center justify-end h-full flex-1 group"
-          >
-            <!-- Bar -->
-            <div 
-              class="w-full rounded-t-sm transition-all duration-500 hover:bg-brand/60 relative min-h-[4px]"
-              :class="getBarColor(h.hour)"
-              :style="{ height: `${Math.max(h.value, 5)}%` }"
+        <!-- Dashed connector to info sheet above -->
+        <div class="border-t border-dashed border-outline/30 -mx-5 md:-mx-6 mb-5" />
+
+        <!-- Grid background pattern -->
+        <div class="absolute inset-0 opacity-[0.05] pointer-events-none"
+             style="background-image: linear-gradient(to right, currentColor 1px, transparent 1px), linear-gradient(to bottom, currentColor 1px, transparent 1px); background-size: 24px 24px;" />
+
+        <div class="relative z-10">
+          <!-- Header -->
+          <div class="flex items-center justify-between mb-5">
+            <div class="flex items-center gap-3">
+              <img src="/images/icons/pulsen.png" alt="" class="w-5 h-5" />
+              <h3 class="font-display font-bold text-on-surface text-base uppercase tracking-tight">Pulsen</h3>
+            </div>
+
+          </div>
+
+          <!-- Chart -->
+          <div class="relative h-28 md:h-32 flex items-end gap-[3px] md:gap-1">
+            <div
+              v-for="h in hours"
+              :key="h.hour"
+              class="relative flex flex-col items-center justify-end h-full flex-1"
             >
-               <!-- Tooltip (simple) -->
-               <div class="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-on-surface text-surface text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none shadow-sm z-10 font-medium">
-                 kl {{ h.hour.toString().padStart(2, '0') }}:00
-               </div>
-            </div>
-            
-            <!-- Label (only for specific hours) -->
-            <div class="h-6 mt-3 flex items-center justify-center">
-              <span v-if="h.label" class="text-xs text-on-surface-dim font-medium">{{ h.label }}</span>
-            </div>
-          </div>
-        </div>
+              <!-- Bar -->
+              <div
+                class="w-full rounded-full transition-all duration-300"
+                :class="getBarColor(h.hour)"
+                :style="{ height: getBarHeight(h.value) }"
+              />
 
-        <!-- Footer info -->
-        <div class="flex flex-col md:flex-row items-center justify-between pt-8 border-t border-outline/50 gap-6 text-center md:text-left">
-          <div>
-            <span class="block text-brand font-bold mb-1">Mest folk kl 17:00</span>
-            <span class="text-sm text-on-surface-dim">Vanligtvis lite väntetid</span>
+              <!-- Hour label -->
+              <span
+                v-if="h.label"
+                class="absolute -bottom-5 text-[10px] font-bold tabular-nums"
+                :class="isCurrentHour(h.hour) ? 'text-on-surface' : 'text-on-surface-dim/50'"
+              >
+                {{ h.label }}
+              </span>
+            </div>
           </div>
-          <div class="text-right">
-            <span class="block font-medium mb-1 text-on-surface">03:55 – 00:05</span>
-            <span class="text-sm text-on-surface-dim">Öppet varje dag</span>
+
+          <!-- Footer hint -->
+          <div class="mt-8 flex items-center justify-center gap-4 text-xs text-on-surface-dim">
+            <span class="flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-on-surface/20" />
+              Vanligt
+            </span>
+            <span class="flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-on-surface" />
+              Nu
+            </span>
           </div>
         </div>
       </div>

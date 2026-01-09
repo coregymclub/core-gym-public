@@ -6,7 +6,12 @@ useHead({
   ]
 })
 
-useThemeColor('#0c0c0e')
+onMounted(() => {
+  const meta = document.querySelector('meta[name="theme-color"]')
+  if (meta) {
+    meta.setAttribute('content', '#0c0c0e')
+  }
+})
 
 const features = [
   {
@@ -90,6 +95,65 @@ const steps = [
             </div>
             <h3 class="font-display font-bold text-2xl text-white mb-3 uppercase tracking-tight">{{ feature.title }}</h3>
             <p class="text-lg text-white/60 leading-relaxed">{{ feature.desc }}</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Personal Guidance Section -->
+    <section class="py-20 bg-[#0c0c0e] relative overflow-hidden">
+      <div class="container">
+        <div class="grid md:grid-cols-2 gap-8 lg:gap-12 items-center max-w-6xl mx-auto">
+          <!-- Images -->
+          <div class="relative">
+            <div class="grid grid-cols-2 gap-4">
+              <div class="aspect-[3/4] rounded-2xl overflow-hidden">
+                <img src="/images/egym-section.avif" alt="EGYM Studio" class="w-full h-full object-cover" />
+              </div>
+              <div class="aspect-[3/4] rounded-2xl overflow-hidden mt-8">
+                <img src="/images/egym-per.avif" alt="Per hjälper kund med EGYM" class="w-full h-full object-cover" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Text -->
+          <div class="text-white">
+            <h2 class="font-display font-bold text-3xl md:text-4xl lg:text-5xl uppercase tracking-tight mb-6">
+              Personlig introduktion
+            </h2>
+            <p class="text-lg md:text-xl text-white/70 leading-relaxed mb-8">
+              Vår ägare Per guidar dig genom din första EGYM-upplevelse. Du får en skräddarsydd introduktion där vi ställer in alla maskiner efter just din kropp och gör ett styrketest för att hitta rätt nivå.
+            </p>
+            <ul class="space-y-4 text-white/80 mb-10">
+              <li class="flex items-center gap-3">
+                <span class="w-2 h-2 bg-[#c75300] rounded-full flex-shrink-0" />
+                <span>30 minuters personlig genomgång</span>
+              </li>
+              <li class="flex items-center gap-3">
+                <span class="w-2 h-2 bg-[#c75300] rounded-full flex-shrink-0" />
+                <span>Alla maskiner anpassas efter dig</span>
+              </li>
+              <li class="flex items-center gap-3">
+                <span class="w-2 h-2 bg-[#c75300] rounded-full flex-shrink-0" />
+                <span>Styrketest för optimal träningsnivå</span>
+              </li>
+            </ul>
+
+            <!-- Onboarding times -->
+            <div class="p-6 rounded-2xl bg-white/5 border border-white/10">
+              <h3 class="font-bold text-lg text-white mb-4">Drop-in för introduktion</h3>
+              <div class="space-y-2 text-white/70">
+                <div class="flex justify-between">
+                  <span>Tisdagar</span>
+                  <span class="text-white font-medium">15:00–18:00</span>
+                </div>
+                <div class="flex justify-between">
+                  <span>Fredagar</span>
+                  <span class="text-white font-medium">10:30–12:30</span>
+                </div>
+              </div>
+              <p class="text-sm text-white/50 mt-4">Kom förbi under dessa tider — ingen bokning krävs.</p>
+            </div>
           </div>
         </div>
       </div>

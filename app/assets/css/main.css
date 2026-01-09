@@ -45,12 +45,16 @@
 
 @layer base {
   html {
+    overflow-x: hidden;
+    overflow-y: scroll; /* Always show scrollbar to prevent layout shift */
     scroll-behavior: smooth;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    @apply bg-surface-bright;
   }
 
   body {
+    overflow-x: hidden;
     @apply font-body text-on-surface antialiased;
     @apply bg-surface-bright;
     @apply selection:bg-brand/20 selection:text-brand-dark;
@@ -108,7 +112,7 @@
   }
 
   /* ===========================================
-     4. BUTTONS - Large, friendly, clear
+     4. BUTTONS - M3 Expressive: Soft, pill-shaped, springy
      =========================================== */
 
   .btn {
@@ -116,35 +120,49 @@
     @apply px-8 py-4 text-base; /* Default size - M3 generous touch targets */
     @apply relative overflow-hidden;
     @apply rounded-full font-display font-bold uppercase tracking-wide;
-    @apply transition-all duration-500 ease-smooth;
-    @apply active:scale-98 active:duration-150;
+    @apply transition-all duration-300 ease-expressive;
+    @apply active:scale-[0.97] active:duration-100;
     @apply disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none;
+    /* M3 Expressive: Minimum touch target */
+    min-height: 48px;
   }
 
-  /* State Layer Effect (M3) */
-  .btn::after {
+  /* State Layer Effect (M3 Expressive) */
+  .btn::before {
     content: '';
-    @apply absolute inset-0 bg-white opacity-0;
-    @apply transition-opacity duration-300 pointer-events-none;
+    @apply absolute inset-0 rounded-full opacity-0;
+    @apply transition-all duration-300 ease-expressive pointer-events-none;
+    background: radial-gradient(circle at center, currentColor 0%, transparent 70%);
   }
-  .btn:hover:not(:disabled)::after {
-    @apply opacity-20;
+  .btn:hover:not(:disabled)::before {
+    @apply opacity-[0.08];
+  }
+  .btn:active:not(:disabled)::before {
+    @apply opacity-[0.12];
   }
 
-  /* Primary Button */
+  /* Primary Button - Filled */
   .btn-primary {
     @apply bg-brand text-white;
-    @apply shadow-lg shadow-brand/20;
-    @apply hover:shadow-xl hover:shadow-brand/30;
+    @apply shadow-md;
+    @apply hover:shadow-lg hover:shadow-brand/25;
     @apply hover:-translate-y-0.5;
   }
+  .btn-primary::before {
+    background: radial-gradient(circle at center, white 0%, transparent 70%);
+  }
 
-  /* Secondary Button */
+  /* Secondary Button - Outlined */
   .btn-secondary {
     @apply bg-white text-on-surface;
-    @apply border border-outline shadow-sm;
-    @apply hover:border-outline-focus hover:shadow-md;
-    @apply hover:-translate-y-0.5;
+    @apply border-2 border-outline;
+    @apply hover:border-on-surface/30 hover:bg-surface-dim;
+  }
+
+  /* Tonal Button (M3 Expressive) - Soft filled */
+  .btn-tonal {
+    @apply bg-surface-container text-on-surface;
+    @apply hover:bg-surface-container-high;
   }
 
   /* Ghost Button */
@@ -152,11 +170,12 @@
     @apply bg-transparent text-on-surface;
     @apply hover:bg-surface-container;
   }
-  .btn-ghost::after {
-    @apply bg-on-surface;
-  }
-  .btn-ghost:hover::after {
-    @apply opacity-5;
+
+  /* Ghost Light Button (for dark backgrounds) */
+  .btn-ghost-light {
+    @apply bg-transparent text-white;
+    @apply border-2 border-white/30;
+    @apply hover:bg-white/10 hover:border-white/40;
   }
 
   /* Outline Button */
@@ -169,32 +188,56 @@
   /* Dark Button (inverted) */
   .btn-dark {
     @apply bg-on-surface text-white;
-    @apply shadow-lg;
-    @apply hover:bg-black hover:shadow-xl;
+    @apply shadow-md;
+    @apply hover:bg-black hover:shadow-lg;
     @apply hover:-translate-y-0.5;
   }
+  .btn-dark::before {
+    background: radial-gradient(circle at center, white 0%, transparent 70%);
+  }
 
-  /* Button Sizes */
+  /* Light Button (for dark/colored backgrounds) */
+  .btn-light {
+    @apply bg-white text-on-surface;
+    @apply shadow-md;
+    @apply hover:bg-surface-bright hover:shadow-lg;
+    @apply hover:-translate-y-0.5;
+  }
+  .btn-light::before {
+    background: radial-gradient(circle at center, currentColor 0%, transparent 70%);
+  }
+
+  /* Button Sizes - M3 Expressive scale */
+  .btn-xs {
+    @apply px-4 py-2 text-xs rounded-full;
+    min-height: 32px;
+  }
+
   .btn-sm {
-    @apply px-5 py-2.5 text-sm;
+    @apply px-5 py-2.5 text-sm rounded-full;
+    min-height: 40px;
   }
 
   .btn-md {
-    @apply px-6 py-3 text-base;
+    @apply px-6 py-3 text-base rounded-full;
+    min-height: 48px;
   }
 
   .btn-lg {
-    @apply px-10 py-5 text-lg;
+    @apply px-10 py-5 text-lg rounded-full;
+    min-height: 56px;
   }
 
   .btn-xl {
-    @apply px-12 py-6 text-xl;
+    @apply px-12 py-6 text-xl rounded-full;
+    min-height: 64px;
   }
 
   /* Icon Button */
   .btn-icon {
     @apply w-12 h-12 p-0 rounded-full;
     @apply flex items-center justify-center;
+    min-height: auto;
   }
 
   .btn-icon-sm {
@@ -205,33 +248,83 @@
     @apply w-14 h-14;
   }
 
+  /* FAB - Floating Action Button (M3 Expressive) */
+  .fab {
+    @apply w-14 h-14 rounded-2xl;
+    @apply flex items-center justify-center;
+    @apply bg-brand text-white;
+    @apply shadow-lg shadow-brand/30;
+    @apply transition-all duration-300 ease-spring;
+    @apply hover:shadow-xl hover:shadow-brand/40 hover:scale-105;
+    @apply active:scale-95;
+  }
+
+  .fab-sm {
+    @apply w-10 h-10 rounded-xl;
+  }
+
+  .fab-lg {
+    @apply w-24 h-14 rounded-2xl px-6 gap-2;
+  }
+
+  .fab-extended {
+    @apply h-14 px-6 rounded-2xl gap-3;
+    width: auto;
+  }
+
   /* ===========================================
-     5. CARDS - Generous, elevated
+     5. CARDS - M3 Expressive: Soft, generous, elevated
      =========================================== */
 
   .card {
-    @apply bg-surface rounded-3xl p-10;
-    @apply shadow-elevated border border-white/50;
-    @apply transition-all duration-500 ease-smooth;
+    @apply bg-surface p-8 md:p-10;
+    @apply shadow-elevated border border-outline/20;
+    @apply transition-all duration-300 ease-expressive;
+    border-radius: 28px; /* M3 Expressive large radius */
   }
 
   .card-hover {
     @apply hover:shadow-elevated-lg hover:-translate-y-1;
-    @apply hover:bg-white;
+    @apply hover:border-outline/30;
   }
 
   .card-sm {
-    @apply p-6 rounded-2xl;
+    @apply p-5 md:p-6;
+    border-radius: 20px;
   }
 
   .card-lg {
-    @apply p-12 md:p-16 rounded-3xl;
+    @apply p-10 md:p-14;
+    border-radius: 32px;
+  }
+
+  .card-xl {
+    @apply p-12 md:p-16;
+    border-radius: 40px;
   }
 
   /* Interactive Card (link/button) */
   .card-interactive {
     @apply card card-hover cursor-pointer;
-    @apply active:scale-98 active:duration-150;
+    @apply active:scale-[0.98] active:duration-100;
+  }
+
+  /* Elevated Card (M3 Expressive) */
+  .card-elevated {
+    @apply card;
+    @apply shadow-lg border-0;
+  }
+
+  /* Filled Card (M3 Expressive) */
+  .card-filled {
+    @apply card;
+    @apply bg-surface-container shadow-none border-0;
+  }
+
+  /* Outlined Card (M3 Expressive) */
+  .card-outlined {
+    @apply card;
+    @apply bg-surface shadow-none border-2 border-outline;
   }
 
   /* Glass Card */
@@ -239,66 +332,260 @@
     @apply bg-white/80 backdrop-blur-xl;
     @apply border border-white/60;
     @apply shadow-float;
+    border-radius: 28px;
   }
 
   /* Dark Card */
   .card-dark {
     @apply bg-on-surface text-white;
     @apply border-white/10;
+    border-radius: 28px;
+  }
+
+  /* Card with image (M3 style) */
+  .card-media {
+    @apply card p-0 overflow-hidden;
+  }
+
+  .card-media-image {
+    @apply w-full aspect-video object-cover;
+  }
+
+  .card-media-content {
+    @apply p-6 md:p-8;
   }
 
   /* ===========================================
-     6. FORMS
+     5.5 CHIPS - M3 Expressive: Pill-shaped selections
      =========================================== */
 
-  .form-input {
-    @apply w-full px-5 py-4;
-    @apply bg-surface border border-outline rounded-xl;
-    @apply text-on-surface placeholder:text-on-surface-dim;
-    @apply transition-all duration-300;
-    @apply focus:border-on-surface focus:ring-2 focus:ring-on-surface/10;
+  .chip {
+    @apply inline-flex items-center justify-center gap-2;
+    @apply px-4 py-2 h-8;
+    @apply rounded-full;
+    @apply text-sm font-medium;
+    @apply transition-all duration-200 ease-expressive;
+    @apply cursor-pointer select-none;
+    @apply active:scale-95;
+  }
+
+  /* Assist Chip - Outlined */
+  .chip-assist {
+    @apply chip;
+    @apply bg-transparent border border-outline text-on-surface;
+    @apply hover:bg-surface-container;
+  }
+
+  /* Filter Chip - Toggleable */
+  .chip-filter {
+    @apply chip;
+    @apply bg-surface-container text-on-surface border border-transparent;
+    @apply hover:bg-surface-container-high;
+  }
+
+  .chip-filter[aria-selected="true"],
+  .chip-filter.is-selected {
+    @apply bg-on-surface text-white border-on-surface;
+  }
+
+  /* Input Chip - With close button */
+  .chip-input {
+    @apply chip;
+    @apply bg-surface-container text-on-surface;
+    @apply pr-2;
+  }
+
+  .chip-input .chip-close {
+    @apply w-5 h-5 rounded-full;
+    @apply flex items-center justify-center;
+    @apply hover:bg-on-surface/10;
+    @apply transition-colors duration-150;
+  }
+
+  /* Suggestion Chip */
+  .chip-suggestion {
+    @apply chip;
+    @apply bg-transparent border border-outline text-on-surface;
+    @apply hover:bg-surface-container hover:border-transparent;
+  }
+
+  /* Chip Sizes */
+  .chip-sm {
+    @apply px-3 py-1.5 h-7 text-xs;
+  }
+
+  .chip-lg {
+    @apply px-5 py-2.5 h-10 text-base;
+  }
+
+  /* Chip Group - Scrollable row */
+  .chip-group {
+    @apply flex flex-wrap gap-2;
+  }
+  
+  /* Scrollable variant for when you want horizontal scroll */
+  .chip-group-scroll {
+    @apply flex flex-nowrap gap-2 overflow-x-auto pb-2;
+    @apply scrollbar-hide;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* ===========================================
+     6. FORMS - M3 Expressive: Soft, rounded, clear
+     =========================================== */
+
+  /* Base Input - Filled style (M3 default) */
+  .input {
+    @apply w-full px-4 py-4;
+    @apply bg-surface-container border-0 border-b-2 border-outline;
+    @apply rounded-t-2xl rounded-b-none;
+    @apply text-on-surface placeholder:text-on-surface-dim/60;
+    @apply transition-all duration-200 ease-expressive;
+    @apply focus:border-on-surface focus:bg-surface-container-high;
+    @apply focus:outline-none;
     @apply disabled:bg-surface-dim disabled:text-on-surface-dim disabled:cursor-not-allowed;
+    font-size: 16px; /* Prevents iOS zoom */
+    min-height: 56px;
   }
 
-  .form-input-error {
-    @apply border-error focus:border-error focus:ring-error/20;
+  /* Outlined Input (M3 alternative) */
+  .input-outlined {
+    @apply w-full px-4 py-4;
+    @apply bg-transparent border-2 border-outline;
+    @apply rounded-2xl;
+    @apply text-on-surface placeholder:text-on-surface-dim/60;
+    @apply transition-all duration-200 ease-expressive;
+    @apply focus:border-on-surface focus:ring-0;
+    @apply focus:outline-none;
+    @apply disabled:bg-surface-dim disabled:text-on-surface-dim disabled:cursor-not-allowed;
+    font-size: 16px;
+    min-height: 56px;
   }
 
-  .form-label {
+  /* Legacy support */
+  .form-input {
+    @apply input-outlined;
+  }
+
+  .form-input-error,
+  .input-error {
+    @apply border-error focus:border-error;
+  }
+
+  .form-label,
+  .label {
     @apply block text-label font-bold text-on-surface mb-2;
     @apply uppercase tracking-wide;
   }
 
-  .form-hint {
+  .form-hint,
+  .hint {
     @apply text-label-sm text-on-surface-dim mt-2;
   }
 
-  .form-error {
+  .form-error,
+  .error-text {
     @apply text-label-sm text-error mt-2;
   }
 
-  /* Select */
+  /* Floating Label Field (M3 Expressive) */
+  .field {
+    @apply relative;
+  }
+
+  .field-input {
+    @apply input;
+    @apply pt-6 pb-2;
+  }
+
+  .field-input:placeholder-shown + .field-label {
+    @apply top-1/2 -translate-y-1/2 text-base;
+  }
+
+  .field-input:focus + .field-label,
+  .field-input:not(:placeholder-shown) + .field-label {
+    @apply top-2 translate-y-0 text-xs text-on-surface;
+  }
+
+  .field-label {
+    @apply absolute left-4 top-2;
+    @apply text-xs font-medium text-on-surface-dim;
+    @apply transition-all duration-200 ease-expressive;
+    @apply pointer-events-none;
+  }
+
+  /* Textarea with floating label */
+  .field-textarea {
+    @apply resize-none;
+    min-height: 120px;
+    padding-top: 1.75rem;
+  }
+
+  .field-textarea:placeholder-shown + .field-label {
+    @apply top-4 -translate-y-0;
+  }
+
+  /* Select - M3 Style */
+  .select,
   .form-select {
-    @apply form-input appearance-none cursor-pointer;
-    @apply bg-no-repeat bg-right;
+    @apply input-outlined appearance-none cursor-pointer;
+    @apply bg-no-repeat;
     padding-right: 3rem;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%23666666' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
     background-position: right 1rem center;
   }
 
   /* Textarea */
+  .textarea,
   .form-textarea {
-    @apply form-input resize-none;
+    @apply input-outlined resize-none;
     min-height: 120px;
+    border-radius: 1rem;
   }
 
-  /* Checkbox */
+  /* Checkbox - M3 Style */
+  .checkbox,
   .form-checkbox {
     @apply w-5 h-5 rounded-md border-2 border-outline;
-    @apply text-on-surface bg-surface;
-    @apply transition-all duration-200;
+    @apply text-on-surface bg-surface cursor-pointer;
+    @apply transition-all duration-200 ease-expressive;
     @apply checked:bg-on-surface checked:border-on-surface;
-    @apply focus:ring-2 focus:ring-on-surface/20;
+    @apply focus:ring-2 focus:ring-on-surface/20 focus:ring-offset-2;
+  }
+
+  /* Switch (M3 Expressive) */
+  .switch {
+    @apply relative w-14 h-8 rounded-full cursor-pointer;
+    @apply bg-surface-container border-2 border-outline;
+    @apply transition-all duration-300 ease-spring;
+  }
+
+  .switch::after {
+    content: '';
+    @apply absolute top-1 left-1 w-5 h-5 rounded-full;
+    @apply bg-outline;
+    @apply transition-all duration-300 ease-spring;
+  }
+
+  .switch:checked {
+    @apply bg-on-surface border-on-surface;
+  }
+
+  .switch:checked::after {
+    @apply left-7 bg-white;
+  }
+
+  /* Radio - M3 Style */
+  .radio {
+    @apply w-5 h-5 rounded-full border-2 border-outline;
+    @apply text-on-surface bg-surface cursor-pointer;
+    @apply transition-all duration-200 ease-expressive;
+    @apply checked:border-on-surface;
+    @apply focus:ring-2 focus:ring-on-surface/20 focus:ring-offset-2;
+  }
+
+  .radio:checked {
+    border-width: 6px;
   }
 
   /* ===========================================
@@ -318,7 +605,7 @@
   /* Section heading (like "Styrka börjar här") */
   .text-section {
     @apply font-display font-bold uppercase;
-    @apply text-4xl md:text-5xl lg:text-display-sm;
+    @apply text-4xl md:text-5xl lg:text-6xl;
     @apply leading-tight tracking-tight;
     @apply text-center;
     @apply break-words;
@@ -499,6 +786,27 @@
   .safe-area-top {
     padding-top: env(safe-area-inset-top, 0);
   }
+
+  .pt-safe {
+    padding-top: env(safe-area-inset-top, 0);
+  }
+
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom, 0);
+  }
+
+  .px-safe {
+    padding-left: env(safe-area-inset-left, 0);
+    padding-right: env(safe-area-inset-right, 0);
+  }
+
+  /* Hero full bleed - extends into safe area */
+  .hero-full-bleed {
+    /* Pull up into safe area */
+    margin-top: calc(-1 * env(safe-area-inset-top, 0));
+    /* Add padding to compensate for content */
+    padding-top: calc(env(safe-area-inset-top, 0) + 2rem);
+  }
 }
 
 /* ===========================================
@@ -532,4 +840,134 @@
 
 .animate-fill-both {
   animation-fill-mode: both;
+}
+
+/* ===========================================
+   M3 EXPRESSIVE EXTRAS
+   =========================================== */
+
+/* State Layer - Hover/Press overlay for interactive elements */
+.state-layer {
+  position: relative;
+}
+
+.state-layer::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+  background: currentColor;
+}
+
+.state-layer:hover::before {
+  opacity: 0.08;
+}
+
+.state-layer:active::before {
+  opacity: 0.12;
+}
+
+/* Ripple Effect (M3) */
+.ripple {
+  position: relative;
+  overflow: hidden;
+}
+
+.ripple::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  padding-bottom: 100%;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0;
+  transform: scale(0);
+  pointer-events: none;
+  left: var(--ripple-x, 50%);
+  top: var(--ripple-y, 50%);
+  translate: -50% -50%;
+}
+
+.ripple:active::after {
+  animation: ripple 0.6s ease-out;
+}
+
+@keyframes ripple {
+  0% {
+    transform: scale(0);
+    opacity: 0.2;
+  }
+  100% {
+    transform: scale(2.5);
+    opacity: 0;
+  }
+}
+
+/* M3 Expressive Shadow Levels */
+.shadow-level-0 {
+  box-shadow: none;
+}
+
+.shadow-level-1 {
+  box-shadow: 0 1px 2px rgba(0,0,0,0.1), 0 1px 3px rgba(0,0,0,0.08);
+}
+
+.shadow-level-2 {
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1), 0 4px 8px rgba(0,0,0,0.06);
+}
+
+.shadow-level-3 {
+  box-shadow: 0 4px 8px rgba(0,0,0,0.08), 0 8px 16px rgba(0,0,0,0.06);
+}
+
+.shadow-level-4 {
+  box-shadow: 0 8px 16px rgba(0,0,0,0.08), 0 16px 32px rgba(0,0,0,0.06);
+}
+
+.shadow-level-5 {
+  box-shadow: 0 12px 24px rgba(0,0,0,0.1), 0 24px 48px rgba(0,0,0,0.08);
+}
+
+/* Container Shapes (M3 Expressive) */
+.shape-xs { border-radius: 8px; }
+.shape-sm { border-radius: 12px; }
+.shape-md { border-radius: 16px; }
+.shape-lg { border-radius: 20px; }
+.shape-xl { border-radius: 28px; }
+.shape-2xl { border-radius: 32px; }
+.shape-full { border-radius: 9999px; }
+
+/* Interactive surface (M3) */
+.surface-interactive {
+  @apply transition-all duration-200 ease-expressive cursor-pointer;
+  @apply hover:bg-surface-container active:bg-surface-container-high;
+  @apply active:scale-[0.99];
+}
+
+/* Emphasized surface (M3) */
+.surface-emphasis {
+  @apply bg-gradient-to-br from-surface-container to-surface-dim;
+}
+
+/* Touch target helper - ensures minimum 48px touch target */
+.touch-target {
+  position: relative;
+}
+
+.touch-target::after {
+  content: '';
+  position: absolute;
+  inset: 50%;
+  transform: translate(-50%, -50%);
+  min-width: 48px;
+  min-height: 48px;
+}
+
+/* Focus ring (M3 style) */
+.focus-ring {
+  @apply focus-visible:outline-none;
+  @apply focus-visible:ring-2 focus-visible:ring-on-surface/30 focus-visible:ring-offset-2;
 }

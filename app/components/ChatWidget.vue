@@ -1,395 +1,231 @@
 <script setup lang="ts">
-// Besökschatt-widget för Core Gym
-// Ansluter till visitor-chat worker
+// Besökschatt-widget för Core Gym (Desktop Only)
+// På mobil hanteras chatten via mobilmenyn (MobileLogoMenu.vue)
 
-const CHAT_API = 'https://visitor-chat.gustav-brydner.workers.dev'
-
-// State
+// State for visibility logic (kept here to control the FAB)
 const isOpen = ref(false)
 const isVisible = ref(false) // Delay visibility
-const isLoading = ref(false)
-const visitorId = ref<string | null>(null)
-const messages = ref<Array<{
-  id: string
-  text: string
-  from: 'visitor' | 'staff'
-  staffName?: string
-  timestamp: string
-}>>([])
-const newMessage = ref('')
-const status = ref<'active' | 'waiting' | 'closed'>('active')
 const hasUnread = ref(false)
-const wasManuallyDismissed = ref(false) // Track if user dismissed
+const wasManuallyDismissed = ref(false)
 
-// Refs
-const messagesContainer = ref<HTMLElement | null>(null)
-
-// Route for conditional display
+// Route for conditional display and context
 const route = useRoute()
+
+// Dölj helt på dessa sidor (har egen chat eller irrelevant)
 const shouldHide = computed(() => {
-  // Hide on provträning, contact forms, etc.
-  const hiddenPaths = ['/provtrana', '/kontakt', '/osmo']
+  const hiddenPaths = ['/kontakt', '/osmo', '/integritetspolicy', '/villkor', '/logga-in']
   return hiddenPaths.some(p => route.path.startsWith(p))
 })
 
-// Ladda visitor ID och visa med delay
+// Sidtyp för att bestämma visningsstrategi
+const pageType = computed(() => {
+  const path = route.path
+  if (path === '/bli-medlem' || path.startsWith('/pt')) return 'high-intent'
+  if (path.startsWith('/tungelsta') || path.startsWith('/vasterhaninge') ||
+      path.startsWith('/vegastaden') || path === '/schema' || path === '/om-oss') return 'informational'
+  if (path.startsWith('/yoga') || path.startsWith('/mammatraning') ||
+      path.startsWith('/barndans') || path.startsWith('/ungdomstraning')) return 'activity'
+  return 'default'
+})
+
+// Scroll tracking
+const scrollProgress = ref(0)
+const hasScrolledEnough = ref(false)
+
 onMounted(() => {
   if (import.meta.server) return
 
-  const stored = localStorage.getItem('cgc_visitor_id')
-  if (stored) {
-    visitorId.value = stored
-    checkForUnread()
+  const handleScroll = () => {
+    const scrollTop = window.scrollY
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight
+    scrollProgress.value = docHeight > 0 ? scrollTop / docHeight : 0
+
+    if (scrollProgress.value > 0.2) {
+      hasScrolledEnough.value = true
+    }
   }
 
-  // Check if manually dismissed this session
+  window.addEventListener('scroll', handleScroll, { passive: true })
+  onUnmounted(() => window.removeEventListener('scroll', handleScroll))
+})
+
+// Dynamisk delay
+const showDelay = computed(() => {
+  switch (pageType.value) {
+    case 'high-intent': return 2000
+    case 'informational': return 0
+    case 'activity': return 0
+    default: return 4000
+  }
+})
+
+const requiresScroll = computed(() => {
+  return pageType.value === 'informational' || pageType.value === 'activity'
+})
+
+// CTA text
+const ctaText = computed(() => {
+  const path = route.path
+  if (path === '/bli-medlem') return 'Hjälp mig välja'
+  if (path.startsWith('/pt')) return 'Boka konsultation'
+  if (path === '/schema') return 'Fråga om pass'
+  if (path.startsWith('/tungelsta') || path.startsWith('/vasterhaninge') || path.startsWith('/vegastaden')) return 'Ställ en fråga'
+  return 'Frågor?'
+})
+
+// Visibility logic
+onMounted(() => {
+  if (import.meta.server) return
+
   const dismissed = sessionStorage.getItem('cgc_chat_dismissed')
   if (dismissed === 'true') {
     wasManuallyDismissed.value = true
   }
 
-  // Show chat tab after delay (5 seconds)
-  setTimeout(() => {
-    isVisible.value = true
-  }, 5000)
+  if (requiresScroll.value) {
+    const checkScroll = setInterval(() => {
+      if (hasScrolledEnough.value) {
+        isVisible.value = true
+        clearInterval(checkScroll)
+      }
+    }, 100)
+    setTimeout(() => {
+      clearInterval(checkScroll)
+      isVisible.value = true
+    }, 10000)
+  } else {
+    setTimeout(() => {
+      isVisible.value = true
+    }, showDelay.value)
+  }
 })
 
-// Kolla efter olästa meddelanden i bakgrunden
-async function checkForUnread() {
-  if (!visitorId.value) return
-
-  try {
-    const res = await fetch(`${CHAT_API}/api/messages?visitorId=${visitorId.value}`)
-    const data = await res.json()
-
-    if (data.messages) {
-      const staffMessages = data.messages.filter((m: any) => m.from === 'staff')
-      const lastSeen = localStorage.getItem('cgc_last_seen') || '0'
-      const unreadCount = staffMessages.filter((m: any) => new Date(m.timestamp) > new Date(lastSeen)).length
-
-      if (unreadCount > 0) {
-        hasUnread.value = true
-        // If unread, show immediately and override dismiss
-        isVisible.value = true
-        wasManuallyDismissed.value = false
-      }
-    }
-  } catch (e) {
-    console.error('Failed to check for unread:', e)
-  }
-}
-
-// Starta eller återuppta konversation
-async function startConversation() {
-  try {
-    const res = await fetch(`${CHAT_API}/api/start`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ visitorId: visitorId.value })
-    })
-    const data = await res.json()
-
-    visitorId.value = data.visitorId
-    localStorage.setItem('cgc_visitor_id', data.visitorId)
-    messages.value = data.messages || []
-    status.value = data.status || 'active'
-  } catch (e) {
-    console.error('Failed to start conversation:', e)
-  }
-}
-
-// Ladda befintlig konversation
-async function loadConversation() {
-  if (!visitorId.value) return
-
-  try {
-    const res = await fetch(`${CHAT_API}/api/messages?visitorId=${visitorId.value}`)
-    const data = await res.json()
-
-    if (data.messages) {
-      messages.value = data.messages
-      status.value = data.status || 'active'
-      localStorage.setItem('cgc_last_seen', new Date().toISOString())
-      hasUnread.value = false
-    }
-  } catch (e) {
-    console.error('Failed to load conversation:', e)
-  }
-}
-
-// Skicka meddelande
-async function sendMessage() {
-  if (!newMessage.value.trim() || isLoading.value) return
-
-  if (!visitorId.value) {
-    await startConversation()
-  }
-
-  isLoading.value = true
-  const text = newMessage.value.trim()
-  newMessage.value = ''
-
-  try {
-    const res = await fetch(`${CHAT_API}/api/message`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        visitorId: visitorId.value,
-        text
-      })
-    })
-    const data = await res.json()
-
-    if (data.success && data.message) {
-      messages.value.push(data.message)
-      status.value = data.status || 'waiting'
-      scrollToBottom()
-    }
-  } catch (e) {
-    console.error('Failed to send message:', e)
-    newMessage.value = text
-  } finally {
-    isLoading.value = false
-  }
-}
-
-// Close chat and remember
 function closeChat() {
   isOpen.value = false
   wasManuallyDismissed.value = true
   sessionStorage.setItem('cgc_chat_dismissed', 'true')
 }
 
-// Poll för nya meddelanden
-let pollInterval: ReturnType<typeof setInterval> | null = null
-
-watch(isOpen, (open) => {
-  if (open) {
-    hasUnread.value = false
-    localStorage.setItem('cgc_last_seen', new Date().toISOString())
-
-    if (!visitorId.value) {
-      startConversation()
-    } else {
-      loadConversation()
-    }
-    pollInterval = setInterval(pollForMessages, 3000)
-  } else {
-    if (pollInterval) {
-      clearInterval(pollInterval)
-      pollInterval = null
-    }
-  }
-})
-
-async function pollForMessages() {
-  if (!visitorId.value || !isOpen.value) return
-
-  try {
-    const lastTimestamp = messages.value.length > 0
-      ? messages.value[messages.value.length - 1].timestamp
-      : ''
-
-    const res = await fetch(`${CHAT_API}/api/messages?visitorId=${visitorId.value}&since=${lastTimestamp}`)
-    const data = await res.json()
-
-    if (data.messages && data.messages.length > 0) {
-      for (const msg of data.messages) {
-        if (!messages.value.find(m => m.id === msg.id)) {
-          messages.value.push(msg)
-          if (msg.from === 'staff' && !isOpen.value) {
-            hasUnread.value = true
-          }
-        }
-      }
-      scrollToBottom()
-    }
-    status.value = data.status || status.value
-  } catch (e) {
-    console.error('Poll error:', e)
-  }
-}
-
-function scrollToBottom() {
-  nextTick(() => {
-    if (messagesContainer.value) {
-      messagesContainer.value.scrollTop = messagesContainer.value.scrollHeight
-    }
-  })
-}
-
-function formatTime(timestamp: string) {
-  const date = new Date(timestamp)
-  return date.toLocaleTimeString('sv-SE', { hour: '2-digit', minute: '2-digit' })
-}
-
-onUnmounted(() => {
-  if (pollInterval) {
-    clearInterval(pollInterval)
-  }
-})
+// NOTE: We don't poll for unread messages here in the wrapper anymore to keep it simple,
+// but ChatInterface handles polling when mounted. 
+// Ideally we would share state, but this is acceptable for now.
 </script>
 
 <template>
-  <!-- Chat Widget - Right side, centered vertically -->
+  <!-- Chat Widget - Desktop Only (hidden on touch devices/small screens) -->
+  <!-- Using lg:block to show only on large screens, hidden by default -->
   <div
     v-if="!shouldHide"
-    class="fixed top-1/2 -translate-y-1/2 right-0 z-50 font-sans"
+    class="hidden lg:block fixed bottom-[24px] right-[24px] z-50 font-sans"
   >
-    <!-- Side tab - shows after delay unless dismissed -->
+    <!-- Floating liquid glass button -->
     <Transition name="slide-in">
       <button
-        v-if="isVisible && !isOpen && (!wasManuallyDismissed || hasUnread)"
+        v-if="isVisible && !isOpen && !wasManuallyDismissed"
         @click="isOpen = true"
-        class="absolute right-0 top-1/2 -translate-y-1/2 bg-core-dark text-white py-3 px-2 rounded-l-lg shadow-lg hover:bg-core-dark/90 transition-all flex flex-col items-center gap-1.5"
+        class="chat-fab group relative flex items-center gap-3 px-6 py-4 rounded-full"
       >
-        <!-- Unread indicator -->
-        <span
-          v-if="hasUnread"
-          class="absolute -top-1 -left-1 w-3 h-3 bg-green-500 rounded-full border-2 border-white animate-pulse"
-        />
-
         <!-- Icon -->
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-        </svg>
-        <span class="text-xs font-medium writing-vertical">Frågor?</span>
+        <span class="w-9 h-9 rounded-full bg-on-surface/10 flex items-center justify-center group-hover:bg-on-surface/15 transition-colors">
+          <svg class="w-5 h-5 text-on-surface" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+          </svg>
+        </span>
+
+        <!-- Text -->
+        <span class="font-medium text-sm text-on-surface">{{ ctaText }}</span>
       </button>
     </Transition>
 
-    <!-- Chat Panel - slides in from right -->
+    <!-- Chat Panel -->
     <Transition name="slide-panel">
       <div
         v-if="isOpen"
-        class="w-80 sm:w-96 h-[480px] max-h-[80vh] bg-white rounded-l-2xl shadow-2xl overflow-hidden border border-gray-200 flex flex-col"
+        class="chat-panel absolute bottom-0 right-0 w-96 h-[500px] max-h-[85vh] rounded-2xl overflow-hidden shadow-2xl"
       >
-        <!-- Header -->
-        <div class="bg-core-dark text-white px-4 py-3 flex items-center justify-between flex-shrink-0">
-          <div class="flex items-center gap-3">
-            <img
-              src="https://cdn.coregymclub.se/icons/logo-round.png"
-              alt="Core Gym"
-              class="w-8 h-8 rounded-full"
-            />
-            <div>
-              <h3 class="font-semibold text-sm">Core Gym Club</h3>
-              <p class="text-xs text-white/70">
-                {{ status === 'waiting' ? 'Väntar på svar...' : 'Vi svarar så snart vi kan' }}
-              </p>
-            </div>
-          </div>
-          <button
-            @click="closeChat"
-            class="w-8 h-8 rounded-full hover:bg-white/10 flex items-center justify-center transition-colors"
-          >
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
-        </div>
-
-        <!-- Messages -->
-        <div
-          ref="messagesContainer"
-          class="flex-1 overflow-y-auto p-4 space-y-3 bg-gray-50"
-        >
-          <!-- Welcome message -->
-          <div v-if="messages.length === 0" class="text-center py-8">
-            <div class="w-12 h-12 bg-core-red/10 rounded-full flex items-center justify-center mx-auto mb-3">
-              <svg class="w-6 h-6 text-core-red" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-              </svg>
-            </div>
-            <p class="text-gray-600 text-sm">
-              Hej! Skriv ett meddelande så svarar vi så snart vi kan.
-            </p>
-          </div>
-
-          <!-- Message bubbles -->
-          <div
-            v-for="msg in messages"
-            :key="msg.id"
-            class="flex"
-            :class="msg.from === 'visitor' ? 'justify-end' : 'justify-start'"
-          >
-            <div
-              class="max-w-[80%] px-4 py-2 rounded-2xl"
-              :class="msg.from === 'visitor'
-                ? 'bg-core-dark text-white rounded-br-sm'
-                : 'bg-white text-gray-800 rounded-bl-sm shadow-sm border border-gray-100'"
-            >
-              <p v-if="msg.from === 'staff' && msg.staffName" class="text-xs text-gray-500 mb-1">
-                {{ msg.staffName }}
-              </p>
-              <p class="text-sm whitespace-pre-wrap">{{ msg.text }}</p>
-              <p class="text-xs mt-1" :class="msg.from === 'visitor' ? 'text-white/50' : 'text-gray-400'">
-                {{ formatTime(msg.timestamp) }}
-              </p>
-            </div>
-          </div>
-
-          <!-- Waiting indicator -->
-          <div v-if="status === 'waiting' && messages.length > 0" class="flex justify-start">
-            <div class="bg-white px-4 py-2 rounded-2xl rounded-bl-sm shadow-sm border border-gray-100">
-              <div class="flex gap-1">
-                <span class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0ms" />
-                <span class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 150ms" />
-                <span class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 300ms" />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Input -->
-        <div class="p-3 bg-white border-t border-gray-200 flex-shrink-0">
-          <form @submit.prevent="sendMessage" class="flex gap-2">
-            <input
-              v-model="newMessage"
-              type="text"
-              placeholder="Skriv ett meddelande..."
-              class="flex-1 px-4 py-2 bg-gray-100 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-core-red/50"
-              :disabled="isLoading"
-            />
-            <button
-              type="submit"
-              :disabled="!newMessage.trim() || isLoading"
-              class="w-10 h-10 bg-core-red text-white rounded-full flex items-center justify-center hover:bg-core-red/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0"
-            >
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-              </svg>
-            </button>
-          </form>
-        </div>
+        <!-- Reusable Interface -->
+        <ChatInterface @close="closeChat" />
       </div>
     </Transition>
   </div>
 </template>
 
 <style scoped>
-.writing-vertical {
-  writing-mode: vertical-rl;
-  text-orientation: mixed;
+/* ===== LIQUID GLASS CHAT FAB ===== */
+.chat-fab {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.5) 0%,
+    rgba(255, 255, 255, 0.15) 50%,
+    rgba(255, 255, 255, 0.3) 100%
+  );
+  backdrop-filter: blur(40px) saturate(200%) brightness(1.1);
+  -webkit-backdrop-filter: blur(40px) saturate(200%) brightness(1.1);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.12),
+    0 2px 8px rgba(0, 0, 0, 0.06),
+    inset 0 1px 1px rgba(255, 255, 255, 0.7),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.04);
+
+  cursor: pointer;
+  will-change: transform, opacity;
+  transition:
+    transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.3s ease,
+    background 0.3s ease;
 }
 
-.slide-in-enter-active,
+.chat-fab:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow:
+    0 14px 44px rgba(0, 0, 0, 0.16),
+    0 4px 12px rgba(0, 0, 0, 0.08),
+    inset 0 1px 1px rgba(255, 255, 255, 0.8);
+}
+
+.chat-fab:active {
+  transform: translateY(2px) scale(0.95);
+  transition: transform 0.08s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ===== CHAT PANEL CONTAINER ===== */
+.chat-panel {
+  background: white; /* ChatInterface has its own background, but this is a safe fallback */
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow:
+    0 25px 80px rgba(0, 0, 0, 0.15),
+    0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+/* ===== ANIMATIONS ===== */
+.slide-in-enter-active {
+  transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
 .slide-in-leave-active {
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 1, 1);
 }
-
-.slide-in-enter-from,
+.slide-in-enter-from {
+  opacity: 0;
+  transform: translateY(30px) scale(0.8);
+}
 .slide-in-leave-to {
   opacity: 0;
-  transform: translateX(100%);
+  transform: translateY(20px) scale(0.9);
 }
 
-.slide-panel-enter-active,
+.slide-panel-enter-active {
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
 .slide-panel-leave-active {
-  transition: all 0.3s ease;
+  transition: all 0.25s cubic-bezier(0.4, 0, 1, 1);
 }
-
-.slide-panel-enter-from,
+.slide-panel-enter-from {
+  transform: translateY(20px) scale(0.95);
+  opacity: 0;
+}
 .slide-panel-leave-to {
-  transform: translateX(100%);
+  transform: translateY(10px) scale(0.98);
+  opacity: 0;
 }
 </style>
