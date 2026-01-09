@@ -60,7 +60,7 @@ const materials = [
   {
     category: 'Bilder',
     items: [
-      { name: 'Pingstkyrkan Yoga', file: '/zeydance-material/pingstkyrkan-yoga.jpg', desc: 'Yogaklass i pingstkyrkan, Tungelsta' },
+      { name: 'Annexet (lokalen)', file: '/zeydance-material/annexet-lokal.jpg', desc: 'Danslokalen i Tungelsta' },
     ]
   }
 ]
