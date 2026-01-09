@@ -43,24 +43,25 @@ const materials = [
   {
     category: 'QR-koder',
     items: [
-      { name: 'QR-kod Modern (gradient)', file: '/zeydance-material/qr-modern.png', desc: 'Lila-cyan gradient på mörk bakgrund' },
-      { name: 'QR-kod Transparent', file: '/zeydance-material/qr-transparent.png', desc: 'Transparent bakgrund, passar överallt' },
-      { name: 'QR-kod Enkel', file: '/zeydance-material/qr-simple.png', desc: 'Klassisk svart/vit' },
+      { name: 'Gradient', file: '/zeydance-material/qr-modern.png', desc: 'Mörk bakgrund' },
+      { name: 'Mörk', file: '/zeydance-material/qr-transparent.png', desc: 'Transparent' },
+      { name: 'Vit', file: '/zeydance-material/qr-white.png', desc: 'Transparent' },
+      { name: 'Enkel', file: '/zeydance-material/qr-simple.png', desc: 'Vit bakgrund' },
     ]
   },
   {
     category: 'Logotyper',
     items: [
-      { name: 'Zey Dance Club (PNG)', file: '/zeydance-material/zey-dance-club-logo.png', desc: 'Hög upplösning, transparent bakgrund' },
-      { name: 'Core Gym Club (vit)', file: '/images/logo.svg', desc: 'Vit logotyp för mörka bakgrunder' },
-      { name: 'Core Gym Club (mörk)', file: '/images/logo-dark.svg', desc: 'Mörk logotyp för ljusa bakgrunder' },
-      { name: 'Zey Dance Club (SVG)', file: '/images/zey-dance-club.svg', desc: 'Vektorformat, skalbar' },
+      { name: 'Zey Dance Club', file: '/zeydance-material/zey-dance-club-logo.png', desc: 'PNG' },
+      { name: 'Zey Dance Club', file: '/images/zey-dance-club.svg', desc: 'SVG' },
+      { name: 'Core Gym Club', file: '/images/logo.svg', desc: 'Vit' },
+      { name: 'Core Gym Club', file: '/images/logo-dark.svg', desc: 'Mörk' },
     ]
   },
   {
     category: 'Bilder',
     items: [
-      { name: 'Annexet (lokalen)', file: '/zeydance-material/annexet-lokal.jpg', desc: 'Danslokalen i Tungelsta' },
+      { name: 'Lokalen', file: '/zeydance-material/annexet-lokal.jpg', desc: 'Tungelsta' },
     ]
   }
 ]
