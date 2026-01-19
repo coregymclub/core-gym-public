@@ -25,14 +25,16 @@ interface Slide {
   text?: string
   url?: string
   caption?: string
+  logo?: string
 }
 
 // Default slides following the speech structure
 const defaultSlides: Slide[] = [
   {
     type: 'title',
-    title: 'CORE GYM CLUB',
-    subtitle: 'Per Karlsson'
+    title: '',
+    subtitle: 'Per Karlsson',
+    logo: 'https://coregym.club/images/logo-dark.svg'
   },
   {
     type: 'text',
@@ -466,7 +468,8 @@ const currentSection = computed(() => sections.value[currentSlideIndex.value])
             <div class="slide-preview-box">
               <!-- Title slide preview -->
               <div v-if="slide.type === 'title'" class="preview-title">
-                <span class="preview-main">{{ slide.title || 'Titel' }}</span>
+                <img v-if="slide.logo" :src="slide.logo" class="preview-logo" />
+                <span v-if="slide.title" class="preview-main">{{ slide.title }}</span>
                 <span class="preview-sub">{{ slide.subtitle || '' }}</span>
               </div>
               <!-- Text slide preview -->
@@ -507,6 +510,14 @@ const currentSection = computed(() => sections.value[currentSlideIndex.value])
                 @input="updateSlide(i, 'subtitle', ($event.target as HTMLInputElement).value)"
                 placeholder="Underrubrik (t.ex. Per Karlsson)"
                 class="slide-subtitle-input"
+              />
+
+              <input
+                v-if="slide.type === 'title'"
+                :value="slide.logo || ''"
+                @input="updateSlide(i, 'logo', ($event.target as HTMLInputElement).value)"
+                placeholder="Logo-URL (valfritt)"
+                class="slide-url-input"
               />
 
               <input
@@ -563,7 +574,8 @@ const currentSection = computed(() => sections.value[currentSlideIndex.value])
         <div class="slideshow-content" v-if="currentSlide">
           <!-- Title Slide -->
           <div v-if="currentSlide.type === 'title'" class="show-title">
-            <div class="show-title-main">{{ currentSlide.title }}</div>
+            <img v-if="currentSlide.logo" :src="currentSlide.logo" alt="Logo" class="show-title-logo" />
+            <div v-if="currentSlide.title" class="show-title-main">{{ currentSlide.title }}</div>
             <div v-if="currentSlide.subtitle" class="show-title-sub">{{ currentSlide.subtitle }}</div>
           </div>
 
@@ -1002,6 +1014,13 @@ const currentSection = computed(() => sections.value[currentSlideIndex.value])
   width: 100%;
 }
 
+.preview-logo {
+  max-width: 80px;
+  max-height: 25px;
+  display: block;
+  margin: 0 auto 0.2rem;
+}
+
 .preview-main {
   display: block;
   font-size: 0.7rem;
@@ -1192,6 +1211,12 @@ const currentSection = computed(() => sections.value[currentSlideIndex.value])
 /* Title Slide */
 .show-title {
   text-align: center;
+}
+
+.show-title-logo {
+  max-width: 500px;
+  max-height: 200px;
+  margin-bottom: 2rem;
 }
 
 .show-title-main {
