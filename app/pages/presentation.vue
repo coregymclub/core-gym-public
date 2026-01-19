@@ -15,26 +15,92 @@ const mode = ref<'edit' | 'present' | 'tips' | 'slides' | 'slideshow'>('edit')
 const currentSlideIndex = ref(0)
 const currentImageIndex = ref(0)
 
-// Default slides with images from Core Gym's journey
-const defaultSlides = [
+// Slide types: 'title', 'text', 'image', 'video'
+type SlideType = 'title' | 'text' | 'image' | 'video'
+
+interface Slide {
+  type: SlideType
+  title: string
+  subtitle?: string
+  text?: string
+  url?: string
+  caption?: string
+}
+
+// Default slides following the speech structure
+const defaultSlides: Slide[] = [
   {
-    url: 'https://images.ctfassets.net/yg0jporv2qfl/2wDfEJALHq2kWIuqYeymCk/7e35d8b6ecc8e5c5e07add889c9c8c3a/core-gym-tungelsta.jpg',
+    type: 'title',
+    title: 'CORE GYM CLUB',
+    subtitle: 'Per Karlsson'
+  },
+  {
+    type: 'text',
+    title: 'Vår resa',
+    text: 'Från en idé i Tungelsta till fem gym i Haninge'
+  },
+  {
+    type: 'text',
+    title: '25 år som idrottslärare',
+    text: 'Alla kan röra på sig. Alla.'
+  },
+  {
+    type: 'image',
     title: 'Tungelsta 2012',
-    caption: 'Har det borjade - vara forsta gym'
+    caption: 'Där det började',
+    url: ''
   },
   {
-    url: 'https://images.ctfassets.net/yg0jporv2qfl/4jKqDr5WqcwiAKcSQs8yOw/a5c5e4d0a46c4c3c8c1e2e5e9e8e7e6e/core-gym-vasterhaninge.jpg',
-    title: 'Vasterhaninge 2016',
-    caption: 'Mitt i centrum'
+    type: 'text',
+    title: 'Born and Based',
+    text: 'i Haninge'
   },
   {
-    url: 'https://images.ctfassets.net/yg0jporv2qfl/vegastaden-hero/hero-image/core-gym-vegastaden.jpg',
+    type: 'image',
+    title: 'Västerhaninge 2016',
+    caption: 'Mitt i centrum',
+    url: ''
+  },
+  {
+    type: 'image',
     title: 'Vegastaden 2022',
-    caption: '2900 kvm - One of a kind'
+    caption: '2900 kvm • Takterrass • Padel',
+    url: ''
+  },
+  {
+    type: 'text',
+    title: 'Ösmo 2026',
+    text: 'Femte gymmet'
+  },
+  {
+    type: 'text',
+    title: 'Vår största konkurrent?',
+    text: 'Soffan.'
+  },
+  {
+    type: 'text',
+    title: 'Kom som du är',
+    text: 'Ett hej kostar inget'
+  },
+  {
+    type: 'video',
+    title: 'Core Gym i action',
+    caption: 'Highlights från Instagram',
+    url: ''
+  },
+  {
+    type: 'text',
+    title: 'Haninges gym',
+    text: 'Era gym'
+  },
+  {
+    type: 'title',
+    title: 'Tack!',
+    subtitle: 'coregym.club'
   }
 ]
 
-const slides = ref<{ url: string; title: string; caption: string }[]>([])
+const slides = ref<Slide[]>([])
 
 const defaultSections = [
   {
@@ -230,20 +296,29 @@ function saveSlides() {
   localStorage.setItem('presentation-slides', JSON.stringify(slides.value))
 }
 
-function addSlide() {
-  slides.value.push({ url: '', title: 'Ny bild', caption: '' })
+function addSlide(type: SlideType = 'text') {
+  const newSlide: Slide = { type, title: 'Ny slide' }
+  if (type === 'text') newSlide.text = 'Text här...'
+  if (type === 'title') newSlide.subtitle = 'Underrubrik'
+  if (type === 'image' || type === 'video') newSlide.url = ''
+  slides.value.push(newSlide)
   saveSlides()
 }
 
 function deleteSlide(index: number) {
-  if (confirm('Ta bort denna bild?')) {
+  if (confirm('Ta bort denna slide?')) {
     slides.value.splice(index, 1)
     saveSlides()
   }
 }
 
-function updateSlide(index: number, field: 'url' | 'title' | 'caption', value: string) {
-  slides.value[index][field] = value
+function updateSlide(index: number, field: keyof Slide, value: string) {
+  (slides.value[index] as any)[field] = value
+  saveSlides()
+}
+
+function changeSlideType(index: number, newType: SlideType) {
+  slides.value[index].type = newType
   saveSlides()
 }
 
@@ -377,39 +452,96 @@ const currentSection = computed(() => sections.value[currentSlideIndex.value])
       <!-- Slides Editor Mode -->
       <div v-if="mode === 'slides'" class="slides-mode">
         <div class="slides-header">
-          <h2>Bildspel</h2>
+          <h2>Slides</h2>
           <button class="start-slideshow-btn" @click="setMode('slideshow')" :disabled="slides.length === 0">
-            Starta bildspel
+            Starta presentation
           </button>
         </div>
-        <p class="slides-info">Lagg till bilder som visas under presentationen. Anvand bild-URL:er fran er bildbank.</p>
+        <p class="slides-info">Skapa slides som visas under talet. Blanda text, bilder och video.</p>
 
         <div class="slides-list">
-          <div v-for="(slide, i) in slides" :key="i" class="slide-item">
-            <div class="slide-preview">
-              <img v-if="slide.url" :src="slide.url" :alt="slide.title" @error="($event.target as HTMLImageElement).src = 'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect fill=%22%23333%22 width=%22100%22 height=%22100%22/><text x=%2250%22 y=%2255%22 text-anchor=%22middle%22 fill=%22%23888%22 font-size=%2212%22>Ingen bild</text></svg>'" />
-              <div v-else class="no-image">Ingen bild</div>
+          <div v-for="(slide, i) in slides" :key="i" class="slide-item" :class="'slide-type-' + slide.type">
+            <div class="slide-number">{{ i + 1 }}</div>
+
+            <div class="slide-preview-box">
+              <!-- Title slide preview -->
+              <div v-if="slide.type === 'title'" class="preview-title">
+                <span class="preview-main">{{ slide.title || 'Titel' }}</span>
+                <span class="preview-sub">{{ slide.subtitle || '' }}</span>
+              </div>
+              <!-- Text slide preview -->
+              <div v-else-if="slide.type === 'text'" class="preview-text">
+                <span class="preview-heading">{{ slide.title || 'Rubrik' }}</span>
+                <span class="preview-body">{{ slide.text || '' }}</span>
+              </div>
+              <!-- Image slide preview -->
+              <div v-else-if="slide.type === 'image'" class="preview-image">
+                <img v-if="slide.url" :src="slide.url" :alt="slide.title" />
+                <div v-else class="no-media">Bild</div>
+              </div>
+              <!-- Video slide preview -->
+              <div v-else-if="slide.type === 'video'" class="preview-video">
+                <div class="video-icon">▶</div>
+                <span>Video</span>
+              </div>
             </div>
+
             <div class="slide-fields">
+              <div class="slide-type-selector">
+                <button :class="{ active: slide.type === 'title' }" @click="changeSlideType(i, 'title')">Titel</button>
+                <button :class="{ active: slide.type === 'text' }" @click="changeSlideType(i, 'text')">Text</button>
+                <button :class="{ active: slide.type === 'image' }" @click="changeSlideType(i, 'image')">Bild</button>
+                <button :class="{ active: slide.type === 'video' }" @click="changeSlideType(i, 'video')">Video</button>
+              </div>
+
               <input
                 :value="slide.title"
                 @input="updateSlide(i, 'title', ($event.target as HTMLInputElement).value)"
-                placeholder="Titel (t.ex. Tungelsta 2012)"
+                :placeholder="slide.type === 'title' ? 'Huvudrubrik' : 'Rubrik'"
                 class="slide-title-input"
               />
+
               <input
-                :value="slide.url"
+                v-if="slide.type === 'title'"
+                :value="slide.subtitle || ''"
+                @input="updateSlide(i, 'subtitle', ($event.target as HTMLInputElement).value)"
+                placeholder="Underrubrik (t.ex. Per Karlsson)"
+                class="slide-subtitle-input"
+              />
+
+              <input
+                v-if="slide.type === 'text'"
+                :value="slide.text || ''"
+                @input="updateSlide(i, 'text', ($event.target as HTMLInputElement).value)"
+                placeholder="Stor text (t.ex. Born and Based i Haninge)"
+                class="slide-text-input"
+              />
+
+              <input
+                v-if="slide.type === 'image'"
+                :value="slide.url || ''"
                 @input="updateSlide(i, 'url', ($event.target as HTMLInputElement).value)"
                 placeholder="Bild-URL (https://...)"
                 class="slide-url-input"
               />
+
               <input
-                :value="slide.caption"
+                v-if="slide.type === 'video'"
+                :value="slide.url || ''"
+                @input="updateSlide(i, 'url', ($event.target as HTMLInputElement).value)"
+                placeholder="Video-URL (MP4, YouTube, Vimeo...)"
+                class="slide-url-input"
+              />
+
+              <input
+                v-if="slide.type === 'image' || slide.type === 'video'"
+                :value="slide.caption || ''"
                 @input="updateSlide(i, 'caption', ($event.target as HTMLInputElement).value)"
                 placeholder="Bildtext (valfritt)"
                 class="slide-caption-input"
               />
             </div>
+
             <div class="slide-actions">
               <button @click="moveSlide(i, 'up')" :disabled="i === 0" title="Flytta upp">↑</button>
               <button @click="moveSlide(i, 'down')" :disabled="i === slides.length - 1" title="Flytta ner">↓</button>
@@ -418,16 +550,63 @@ const currentSection = computed(() => sections.value[currentSlideIndex.value])
           </div>
         </div>
 
-        <button class="add-slide-btn" @click="addSlide">+ Lagg till bild</button>
+        <div class="add-slide-buttons">
+          <button class="add-slide-btn" @click="addSlide('title')">+ Titel</button>
+          <button class="add-slide-btn" @click="addSlide('text')">+ Text</button>
+          <button class="add-slide-btn" @click="addSlide('image')">+ Bild</button>
+          <button class="add-slide-btn" @click="addSlide('video')">+ Video</button>
+        </div>
       </div>
 
       <!-- Slideshow Mode (fullscreen) -->
       <div v-if="mode === 'slideshow'" class="slideshow-mode">
-        <div class="slideshow-image" v-if="currentSlide">
-          <img :src="currentSlide.url" :alt="currentSlide.title" />
-          <div class="slideshow-overlay">
-            <div class="slideshow-title">{{ currentSlide.title }}</div>
-            <div v-if="currentSlide.caption" class="slideshow-caption">{{ currentSlide.caption }}</div>
+        <div class="slideshow-content" v-if="currentSlide">
+          <!-- Title Slide -->
+          <div v-if="currentSlide.type === 'title'" class="show-title">
+            <div class="show-title-main">{{ currentSlide.title }}</div>
+            <div v-if="currentSlide.subtitle" class="show-title-sub">{{ currentSlide.subtitle }}</div>
+          </div>
+
+          <!-- Text Slide -->
+          <div v-else-if="currentSlide.type === 'text'" class="show-text">
+            <div class="show-text-heading">{{ currentSlide.title }}</div>
+            <div class="show-text-body">{{ currentSlide.text }}</div>
+          </div>
+
+          <!-- Image Slide -->
+          <div v-else-if="currentSlide.type === 'image'" class="show-image">
+            <img v-if="currentSlide.url" :src="currentSlide.url" :alt="currentSlide.title" />
+            <div v-else class="show-placeholder">
+              <div class="placeholder-title">{{ currentSlide.title }}</div>
+              <div class="placeholder-hint">Ingen bild tillagd</div>
+            </div>
+            <div v-if="currentSlide.title || currentSlide.caption" class="show-image-overlay">
+              <div class="show-image-title">{{ currentSlide.title }}</div>
+              <div v-if="currentSlide.caption" class="show-image-caption">{{ currentSlide.caption }}</div>
+            </div>
+          </div>
+
+          <!-- Video Slide -->
+          <div v-else-if="currentSlide.type === 'video'" class="show-video">
+            <video v-if="currentSlide.url && !currentSlide.url.includes('youtube') && !currentSlide.url.includes('vimeo')"
+                   :src="currentSlide.url"
+                   controls
+                   autoplay
+                   class="video-player">
+            </video>
+            <iframe v-else-if="currentSlide.url && currentSlide.url.includes('youtube')"
+                    :src="currentSlide.url.replace('watch?v=', 'embed/').replace('youtu.be/', 'youtube.com/embed/')"
+                    frameborder="0"
+                    allow="autoplay; encrypted-media"
+                    allowfullscreen
+                    class="video-iframe">
+            </iframe>
+            <div v-else class="show-placeholder">
+              <div class="placeholder-icon">▶</div>
+              <div class="placeholder-title">{{ currentSlide.title }}</div>
+              <div class="placeholder-hint">Ingen video tillagd</div>
+            </div>
+            <div v-if="currentSlide.caption" class="show-video-caption">{{ currentSlide.caption }}</div>
           </div>
         </div>
         <div class="slideshow-nav">
@@ -437,7 +616,7 @@ const currentSection = computed(() => sections.value[currentSlideIndex.value])
             <span class="slideshow-progress">{{ currentImageIndex + 1 }} / {{ slides.length }}</span>
             <button :disabled="currentImageIndex === slides.length - 1" @click="nextImage">→</button>
           </div>
-          <div class="slideshow-hint">Piltangenter eller mellanslag for att navigera • ESC for att avsluta</div>
+          <div class="slideshow-hint">Piltangenter for att navigera • ESC for att avsluta</div>
         </div>
       </div>
     </div>
@@ -733,7 +912,7 @@ const currentSection = computed(() => sections.value[currentSlideIndex.value])
 /* Slides Editor Mode */
 .slides-mode {
   padding: 5rem 1rem 2rem;
-  max-width: 800px;
+  max-width: 900px;
   margin: 0 auto;
 }
 
@@ -773,7 +952,7 @@ const currentSection = computed(() => sections.value[currentSlideIndex.value])
 .slides-list {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 0.75rem;
 }
 
 .slide-item {
@@ -783,29 +962,97 @@ const currentSection = computed(() => sections.value[currentSlideIndex.value])
   display: flex;
   gap: 1rem;
   align-items: flex-start;
+  border-left: 3px solid var(--border);
 }
 
-.slide-preview {
-  width: 120px;
+.slide-type-title { border-left-color: #f59e0b; }
+.slide-type-text { border-left-color: #3b82f6; }
+.slide-type-image { border-left-color: #10b981; }
+.slide-type-video { border-left-color: #8b5cf6; }
+
+.slide-number {
+  width: 28px;
+  height: 28px;
+  background: var(--border);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--dim);
+  flex-shrink: 0;
+}
+
+.slide-preview-box {
+  width: 140px;
   height: 80px;
   border-radius: 0.5rem;
   overflow: hidden;
   flex-shrink: 0;
-  background: var(--border);
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.slide-preview img {
+.preview-title, .preview-text {
+  text-align: center;
+  padding: 0.5rem;
+  width: 100%;
+}
+
+.preview-main {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.preview-sub {
+  display: block;
+  font-size: 0.55rem;
+  color: var(--dim);
+  margin-top: 0.2rem;
+}
+
+.preview-heading {
+  display: block;
+  font-size: 0.55rem;
+  color: var(--accent);
+  text-transform: uppercase;
+}
+
+.preview-body {
+  display: block;
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-top: 0.2rem;
+}
+
+.preview-image {
+  width: 100%;
+  height: 100%;
+}
+
+.preview-image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.no-image {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.preview-video {
+  text-align: center;
+  color: var(--dim);
+}
+
+.video-icon {
+  font-size: 1.5rem;
+  color: #8b5cf6;
+}
+
+.no-media {
   color: var(--dim);
   font-size: 0.75rem;
 }
@@ -815,6 +1062,27 @@ const currentSection = computed(() => sections.value[currentSlideIndex.value])
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+}
+
+.slide-type-selector {
+  display: flex;
+  gap: 0.25rem;
+  margin-bottom: 0.25rem;
+}
+
+.slide-type-selector button {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.7rem;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 0.25rem;
+  color: var(--dim);
+  cursor: pointer;
+}
+
+.slide-type-selector button.active {
+  background: var(--border);
+  color: var(--text);
 }
 
 .slide-fields input {
@@ -829,6 +1097,10 @@ const currentSection = computed(() => sections.value[currentSlideIndex.value])
 
 .slide-title-input {
   font-weight: 600;
+}
+
+.slide-text-input {
+  font-size: 1rem !important;
 }
 
 .slide-url-input {
@@ -847,14 +1119,14 @@ const currentSection = computed(() => sections.value[currentSlideIndex.value])
 }
 
 .slide-actions button {
-  width: 32px;
-  height: 32px;
+  width: 28px;
+  height: 28px;
   border: 1px solid var(--border);
   border-radius: 0.375rem;
   background: transparent;
   color: var(--dim);
   cursor: pointer;
-  font-size: 1rem;
+  font-size: 0.9rem;
 }
 
 .slide-actions button:hover:not(:disabled) {
@@ -873,16 +1145,21 @@ const currentSection = computed(() => sections.value[currentSlideIndex.value])
   color: white;
 }
 
+.add-slide-buttons {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
 .add-slide-btn {
-  width: 100%;
-  padding: 1rem;
+  flex: 1;
+  padding: 0.75rem;
   background: var(--surface);
   border: 2px dashed var(--border);
-  border-radius: 0.75rem;
+  border-radius: 0.5rem;
   color: var(--dim);
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   cursor: pointer;
-  margin-top: 1rem;
 }
 
 .add-slide-btn:hover {
@@ -897,56 +1174,154 @@ const currentSection = computed(() => sections.value[currentSlideIndex.value])
   left: 0;
   right: 0;
   bottom: 0;
-  background: #000;
+  background: #0a0a0a;
   z-index: 1000;
   display: flex;
   flex-direction: column;
 }
 
-.slideshow-image {
+.slideshow-content {
   flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  position: relative;
-  overflow: hidden;
+  padding: 2rem;
+  padding-bottom: 5rem;
 }
 
-.slideshow-image img {
+/* Title Slide */
+.show-title {
+  text-align: center;
+}
+
+.show-title-main {
+  font-size: 5rem;
+  font-weight: 800;
+  color: white;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.show-title-sub {
+  font-size: 2rem;
+  color: var(--dim);
+  margin-top: 1rem;
+  font-weight: 400;
+}
+
+/* Text Slide */
+.show-text {
+  text-align: center;
+  max-width: 900px;
+}
+
+.show-text-heading {
+  font-size: 1.5rem;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+}
+
+.show-text-body {
+  font-size: 4rem;
+  font-weight: 700;
+  color: white;
+  line-height: 1.2;
+}
+
+/* Image Slide */
+.show-image {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.show-image img {
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;
+  border-radius: 0.5rem;
 }
 
-.slideshow-overlay {
+.show-image-overlay {
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
-  background: linear-gradient(transparent, rgba(0,0,0,0.8));
-  padding: 3rem 2rem 6rem;
+  background: linear-gradient(transparent, rgba(0,0,0,0.9));
+  padding: 4rem 2rem 2rem;
   text-align: center;
 }
 
-.slideshow-title {
-  font-size: 2rem;
+.show-image-title {
+  font-size: 2.5rem;
   font-weight: 700;
   color: white;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
 }
 
-.slideshow-caption {
-  font-size: 1.2rem;
-  color: rgba(255,255,255,0.8);
+.show-image-caption {
+  font-size: 1.3rem;
+  color: rgba(255,255,255,0.7);
   margin-top: 0.5rem;
 }
 
+/* Video Slide */
+.show-video {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.video-player, .video-iframe {
+  max-width: 100%;
+  max-height: calc(100% - 3rem);
+  width: 100%;
+  height: 100%;
+  border-radius: 0.5rem;
+}
+
+.show-video-caption {
+  margin-top: 1rem;
+  font-size: 1.2rem;
+  color: var(--dim);
+}
+
+/* Placeholder */
+.show-placeholder {
+  text-align: center;
+  color: var(--dim);
+}
+
+.placeholder-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+}
+
+.placeholder-title {
+  font-size: 2rem;
+  color: var(--text);
+  margin-bottom: 0.5rem;
+}
+
+.placeholder-hint {
+  font-size: 1rem;
+}
+
+/* Navigation */
 .slideshow-nav {
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
-  background: rgba(0,0,0,0.9);
+  background: rgba(0,0,0,0.95);
   padding: 1rem;
   display: flex;
   align-items: center;
@@ -1000,10 +1375,15 @@ const currentSection = computed(() => sections.value[currentSlideIndex.value])
   .slide-content { font-size: 1.4rem; }
   .header h1 { font-size: 0.85rem; }
   .btn { padding: 0.4rem 0.75rem; font-size: 0.8rem; }
-  .slide-item { flex-direction: column; }
-  .slide-preview { width: 100%; height: 150px; }
+  .slide-item { flex-wrap: wrap; }
+  .slide-preview-box { width: 100px; height: 60px; }
   .slide-actions { flex-direction: row; }
-  .slideshow-title { font-size: 1.5rem; }
   .slideshow-hint { display: none; }
+  .show-title-main { font-size: 3rem; }
+  .show-title-sub { font-size: 1.3rem; }
+  .show-text-body { font-size: 2.5rem; }
+  .show-image-title { font-size: 1.5rem; }
+  .add-slide-buttons { flex-wrap: wrap; }
+  .add-slide-btn { flex: 1 1 45%; }
 }
 </style>
