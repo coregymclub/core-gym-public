@@ -1,8 +1,18 @@
 <script setup lang="ts">
 useHead({
   title: 'Ösmo - Kommer 2026 - Core Gym Club',
-  meta: [{ name: 'description', content: 'Core Gym Ösmo öppnar 2026 i Priskrossarens gamla lokaler. 700 kvm träning. Anmäl ditt intresse!' }]
+  meta: [
+    { name: 'description', content: 'Core Gym Ösmo öppnar 2026 i Priskrossarens gamla lokaler. 700 kvm träning. Anmäl ditt intresse!' },
+    { property: 'og:title', content: 'Core Gym Ösmo - Hösten 2026' },
+    { property: 'og:description', content: 'Vårt femte gym öppnar i Ösmo hösten 2026. Prima träning i Priskrossarens gamla lokaler!' },
+    { property: 'og:image', content: 'https://coregym.club/images/og-osmo.png' },
+    { property: 'og:image:width', content: '1200' },
+    { property: 'og:image:height', content: '630' },
+    { property: 'og:type', content: 'website' }
+  ]
 })
+
+useThemeColor('#b91c1c')
 
 const form = ref({ name: '', email: '', phone: '', message: '' })
 const isSubmitting = ref(false)
@@ -38,6 +48,20 @@ async function handleSubmit() {
 
     if (response.ok) {
       isSuccess.value = true
+
+      // Posta till Osmo-rummet i teamchatten
+      try {
+        await fetch('https://teamchat.coregym.club/api/terminal/post', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            room: 'osmo',
+            message: `📩 **Ny intresseanmalan - Osmo**\n\n👤 **Namn:** ${form.value.name}\n📧 ${form.value.email}${form.value.phone ? '\n📞 ' + form.value.phone : ''}${form.value.message ? '\n💬 ' + form.value.message.substring(0, 150) : ''}`
+          })
+        })
+      } catch (chatErr) {
+        console.error('Kunde inte posta till teamchat:', chatErr)
+      }
     } else {
       throw new Error('Kunde inte skicka')
     }
@@ -53,11 +77,20 @@ async function handleSubmit() {
   <div>
     <!-- Hero - fullscreen med form -->
     <section class="min-h-screen flex flex-col justify-center px-6 relative overflow-hidden">
-      <!-- Background Image -->
-      <div class="absolute inset-0 z-0">
+      <!-- Background Image - Mobile -->
+      <div class="absolute inset-0 z-0 md:hidden">
         <img
-          src="/images/cta-bg.webp"
-          alt=""
+          src="/images/osmo-hero-mobile.avif"
+          alt="Core Gym Ösmo"
+          class="w-full h-full object-cover"
+        />
+        <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70" />
+      </div>
+      <!-- Background Image - Desktop -->
+      <div class="absolute inset-0 z-0 hidden md:block">
+        <img
+          src="/images/osmo-hero-desktop.avif"
+          alt="Core Gym Ösmo"
           class="w-full h-full object-cover"
         />
         <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70" />
@@ -68,7 +101,7 @@ async function handleSubmit() {
         <div class="text-center mb-8">
           <h1 class="font-display font-bold text-5xl md:text-6xl text-white mb-4 animate-slide-up uppercase tracking-tighter">Ösmo</h1>
           <p class="text-lg text-white/80 animate-slide-up" style="animation-delay: 0.1s">
-            Vårt fjärde gym öppnar hösten 2026
+            Grattis Ösmo. Prima träning från hösten 2026.
           </p>
         </div>
 
@@ -141,16 +174,16 @@ async function handleSubmit() {
       <div class="container">
         <div class="bg-surface rounded-[3rem] p-10 md:p-16 shadow-elevated border border-white/50 flex flex-col md:flex-row gap-12 items-center max-w-5xl mx-auto">
           <div class="w-64 h-64 flex-shrink-0 rounded-full overflow-hidden border-4 border-surface shadow-xl grayscale contrast-125 relative">
-            <img 
-              src="/images/founder-per.webp" 
-              alt="Per Karlsson" 
-              class="w-full h-full object-cover scale-110"
+            <img
+              src="/images/per-portrait.avif"
+              alt="Per Karlsson"
+              class="w-full h-full object-cover"
             />
           </div>
           <div class="text-center md:text-left">
-            <h3 class="font-display font-bold text-3xl md:text-4xl mb-6 leading-tight text-on-surface uppercase tracking-tight">"Vi tror på Ösmo"</h3>
+            <h3 class="font-display font-bold text-3xl md:text-4xl mb-6 leading-tight text-on-surface uppercase tracking-tight">"Folk har frågat länge"</h3>
             <p class="text-xl text-on-surface-dim mb-8 leading-relaxed font-medium">
-              "Det har länge funnits en efterfrågan på ett riktigt bra gym här. När vi fick chansen att ta över de gamla lokalerna för Priskrossaren kändes det helt rätt. Vi vill skapa en mötesplats där du känner dig hemma från första stund."
+              "Nu händer det. Priskrossarens gamla lokaler blir gym."
             </p>
             <div>
               <p class="text-lg font-bold text-brand mb-1 uppercase tracking-wide">Per Karlsson</p>
@@ -164,7 +197,7 @@ async function handleSubmit() {
     <!-- Vad vi vet -->
     <section class="py-16 bg-surface">
       <div class="container max-w-3xl">
-        <h2 class="font-display font-bold text-3xl md:text-4xl text-center mb-12 uppercase tracking-tight">Vad vi vet</h2>
+        <h2 class="font-display font-bold text-3xl md:text-4xl text-center mb-12 uppercase tracking-tight">Vad vi kan lova</h2>
 
         <div class="space-y-4">
           <!-- Öppettider -->
@@ -175,7 +208,7 @@ async function handleSubmit() {
               </svg>
             </div>
             <div>
-              <h3 class="font-bold text-on-surface mb-1">Öppet 03:55–00:05</h3>
+              <h3 class="font-bold text-on-surface mb-1">Öppet 03:55–24:00</h3>
               <p class="text-sm text-on-surface-dim">Samma öppettider som våra andra gym. Ja, tiderna är lite udda – men du glömmer dem aldrig.</p>
             </div>
           </div>
@@ -249,7 +282,7 @@ async function handleSubmit() {
               <p>Öppnar hösten 2026</p>
             </div>
           </div>
-          <div class="h-[400px] rounded-[2rem] overflow-hidden shadow-elevated">
+          <div class="aspect-square md:aspect-[16/9] rounded-[2rem] overflow-hidden shadow-elevated">
             <ClientOnly>
               <AppleMap
                 :single-gym="{ name: 'Ösmo', address: 'Öppnar hösten 2026', lat: 59.0347, lng: 17.9542, href: '/osmo', comingSoon: true }"
@@ -263,8 +296,8 @@ async function handleSubmit() {
     <!-- Other gyms -->
     <section class="section bg-surface-dim border-t border-outline">
       <div class="container">
-        <h2 class="font-display font-bold text-4xl md:text-5xl text-center mb-4 uppercase tracking-tight">Träna redan idag</h2>
-        <p class="text-lead text-center mb-16">Vi finns på tre platser redan nu</p>
+        <h2 class="font-display font-bold text-4xl md:text-5xl text-center mb-4 uppercase tracking-tight">Kan du inte vänta?</h2>
+        <p class="text-lead text-center mb-16">Vi har fyra gym redan.</p>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
           <NuxtLink to="/tungelsta" class="card group text-center hover:border-brand/50">
