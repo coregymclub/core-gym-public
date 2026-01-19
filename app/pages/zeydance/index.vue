@@ -134,7 +134,7 @@ async function handleContactSubmit() {
       try {
         await fetch('https://teamchat.coregym.club/api/terminal/post', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 'Content-Type': 'application/json', 'X-API-Key': 'cgc-notify-2025' },
           body: JSON.stringify({
             room: 'barndans',
             message: `❓ **Fraga - ZeyDance**\n\n👤 **Fran:** ${contactForm.value.name}\n📧 ${contactForm.value.email}\n\n💬 ${contactForm.value.message.substring(0, 200)}${contactForm.value.message.length > 200 ? '...' : ''}`
@@ -192,7 +192,7 @@ async function handleZeySubmit() {
       try {
         await fetch('https://teamchat.coregym.club/api/terminal/post', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 'Content-Type': 'application/json', 'X-API-Key': 'cgc-notify-2025' },
           body: JSON.stringify({
             room: 'barndans',
             message: `📩 **Ny anmalan - ZeyDance**\n\n💃 **Dansare:** ${zeyForm.value.childName} (${zeyForm.value.childAge})\n🎯 **Grupp:** ${zeyForm.value.group}\n👤 **Vardnadshavare:** ${zeyForm.value.parentName}\n📞 ${zeyForm.value.phone}\n📧 ${zeyForm.value.email}`

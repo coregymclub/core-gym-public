@@ -97,10 +97,10 @@ async function handleRorelseSubmit() {
       try {
         await fetch('https://teamchat.coregym.club/api/terminal/post', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 'Content-Type': 'application/json', 'X-API-Key': 'cgc-notify-2025' },
           body: JSON.stringify({
             room: 'barndans',
-            message: `📩 **Ny anmälan - Rörelseglädje 3-4 år**\n\n👶 **Barn:** ${rorelseForm.value.childName} (${rorelseForm.value.childAge})\n👤 **Vårdnadshavare:** ${rorelseForm.value.parentName}\n📞 ${rorelseForm.value.phone}\n📧 ${rorelseForm.value.email}`
+            message: `📩 **Ny anmalan - Rorelseglaedje 3-4 ar**\n\n👶 **Barn:** ${rorelseForm.value.childName} (${rorelseForm.value.childAge})\n👤 **Vardnadshavare:** ${rorelseForm.value.parentName}\n📞 ${rorelseForm.value.phone}\n📧 ${rorelseForm.value.email}`
           })
         })
       } catch (chatErr) {
