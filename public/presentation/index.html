@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Pers Tal - Core Gym</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0a0a;
+      --surface: #1a1a1a;
+      --text: #f5f5f5;
+      --dim: #888;
+      --accent: #dc2626;
+      --border: #333;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    /* Password Screen */
+    .password-screen {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .password-box {
+      background: var(--surface);
+      padding: 3rem;
+      border-radius: 1rem;
+      text-align: center;
+      max-width: 320px;
+      width: 100%;
+    }
+
+    .password-box h1 {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .password-box p {
+      color: var(--dim);
+      margin-bottom: 2rem;
+      font-size: 0.9rem;
+    }
+
+    .password-box input {
+      width: 100%;
+      padding: 1rem;
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 1rem;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
+    .password-box button {
+      width: 100%;
+      padding: 1rem;
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 0.5rem;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .password-error {
+      color: var(--accent);
+      margin-top: 1rem;
+      font-size: 0.9rem;
+    }
+
+    /* Main App */
+    .app { display: none; min-height: 100vh; }
+    .app.active { display: block; }
+
+    /* Header */
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      z-index: 100;
+    }
+
+    .header h1 {
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .btn {
+      padding: 0.5rem 1rem;
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      background: transparent;
+      color: var(--text);
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn:hover { background: var(--border); }
+    .btn.active { background: var(--accent); border-color: var(--accent); }
+
+    /* Edit Mode */
+    .edit-mode {
+      display: none;
+      padding: 5rem 1rem 2rem;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .edit-mode.active { display: block; }
+
+    .edit-section {
+      background: var(--surface);
+      border-radius: 0.75rem;
+      margin-bottom: 1rem;
+      overflow: hidden;
+    }
+
+    .edit-section-header {
+      background: var(--border);
+      padding: 0.75rem 1rem;
+      font-weight: 600;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .edit-section-header input {
+      background: transparent;
+      border: none;
+      color: var(--text);
+      font-weight: 600;
+      font-size: 0.9rem;
+      flex: 1;
+    }
+
+    .edit-section textarea {
+      width: 100%;
+      padding: 1rem;
+      background: transparent;
+      border: none;
+      color: var(--text);
+      font-size: 1rem;
+      line-height: 1.8;
+      resize: none;
+      min-height: 150px;
+    }
+
+    .edit-section textarea:focus { outline: none; }
+
+    .add-section-btn {
+      width: 100%;
+      padding: 1rem;
+      background: var(--surface);
+      border: 2px dashed var(--border);
+      border-radius: 0.75rem;
+      color: var(--dim);
+      font-size: 0.9rem;
+      cursor: pointer;
+      margin-top: 1rem;
+    }
+
+    .add-section-btn:hover { border-color: var(--dim); color: var(--text); }
+
+    /* Present Mode */
+    .present-mode {
+      display: none;
+      min-height: 100vh;
+      padding-top: 4rem;
+    }
+
+    .present-mode.active { display: flex; flex-direction: column; }
+
+    .slide {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 2rem;
+      max-width: 900px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .slide-title {
+      font-size: 1.2rem;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 2rem;
+      font-weight: 700;
+    }
+
+    .slide-content {
+      font-size: 1.8rem;
+      font-weight: 400;
+      line-height: 1.6;
+    }
+
+    .slide-content .pause {
+      display: block;
+      color: var(--accent);
+      font-size: 1rem;
+      margin: 1.5rem 0;
+      font-weight: 600;
+    }
+
+    .slide-content .emphasis {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    /* Navigation */
+    .slide-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      padding: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .slide-nav button {
+      padding: 1rem 2rem;
+      background: var(--border);
+      border: none;
+      border-radius: 0.5rem;
+      color: var(--text);
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
+    .slide-nav button:disabled { opacity: 0.3; cursor: not-allowed; }
+
+    .slide-progress {
+      font-size: 0.9rem;
+      color: var(--dim);
+    }
+
+    /* Tips Section */
+    .tips-mode {
+      display: none;
+      padding: 5rem 1rem 2rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .tips-mode.active { display: block; }
+
+    .tips-mode h2 {
+      font-size: 1.2rem;
+      margin-bottom: 1.5rem;
+      color: var(--accent);
+    }
+
+    .tips-mode ul {
+      list-style: none;
+    }
+
+    .tips-mode li {
+      padding: 1rem;
+      background: var(--surface);
+      border-radius: 0.5rem;
+      margin-bottom: 0.5rem;
+      font-size: 1.1rem;
+    }
+
+    .delete-btn {
+      background: transparent;
+      border: none;
+      color: var(--dim);
+      cursor: pointer;
+      padding: 0.25rem;
+      font-size: 1.2rem;
+    }
+
+    .delete-btn:hover { color: var(--accent); }
+
+    @media (max-width: 600px) {
+      .slide-content { font-size: 1.4rem; }
+      .header h1 { font-size: 0.85rem; }
+      .btn { padding: 0.4rem 0.75rem; font-size: 0.8rem; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Password Screen -->
+  <div class="password-screen" id="passwordScreen">
+    <div class="password-box">
+      <h1>Pers Tal</h1>
+      <p>Näringslivsfrukosten Haninge</p>
+      <input type="password" id="passwordInput" placeholder="Lösenord" autofocus>
+      <button onclick="checkPassword()">Öppna</button>
+      <div class="password-error" id="passwordError" style="display:none">Fel lösenord</div>
+    </div>
+  </div>
+
+  <!-- Main App -->
+  <div class="app" id="app">
+    <header class="header">
+      <h1>Pers Tal - Näringslivsfrukosten</h1>
+      <div class="header-actions">
+        <button class="btn active" id="btnEdit" onclick="setMode('edit')">Redigera</button>
+        <button class="btn" id="btnPresent" onclick="setMode('present')">Presentation</button>
+        <button class="btn" id="btnTips" onclick="setMode('tips')">Tips</button>
+      </div>
+    </header>
+
+    <!-- Edit Mode -->
+    <div class="edit-mode active" id="editMode"></div>
+
+    <!-- Present Mode -->
+    <div class="present-mode" id="presentMode">
+      <div class="slide" id="currentSlide"></div>
+      <div class="slide-nav">
+        <button onclick="prevSlide()" id="prevBtn">← Föregående</button>
+        <span class="slide-progress" id="slideProgress">1 / 10</span>
+        <button onclick="nextSlide()" id="nextBtn">Nästa →</button>
+      </div>
+    </div>
+
+    <!-- Tips Mode -->
+    <div class="tips-mode" id="tipsMode">
+      <h2>Tips för framförandet</h2>
+      <ul>
+        <li><strong>"Vår största konkurrent är soffan"</strong> — pausa innan och efter. Det är din punchline.</li>
+        <li><strong>"Ett hej kostar inget"</strong> — bra avslut på ett stycke. Använd den.</li>
+        <li><strong>Takterrassen</strong> — folk älskar den. Visa bilder om du kan.</li>
+        <li>Prata som du gör vanligt — det här är inte ett manus att läsa av. Det är en guide.</li>
+        <li>Ha kul. Du har gjort det här förut. Du är bra på det.</li>
+      </ul>
+    </div>
+  </div>
+
+  <script>
+    // Password
+    const CORRECT_PASSWORD = 'coregym2026';
+
+    function checkPassword() {
+      const input = document.getElementById('passwordInput').value;
+      if (input === CORRECT_PASSWORD) {
+        document.getElementById('passwordScreen').style.display = 'none';
+        document.getElementById('app').classList.add('active');
+        sessionStorage.setItem('presentation-auth', 'true');
+        renderEditMode();
+      } else {
+        document.getElementById('passwordError').style.display = 'block';
+      }
+    }
+
+    document.getElementById('passwordInput').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') checkPassword();
+    });
+
+    // Check if already authed
+    if (sessionStorage.getItem('presentation-auth') === 'true') {
+      document.getElementById('passwordScreen').style.display = 'none';
+      document.getElementById('app').classList.add('active');
+    }
+
+    // Default speech content
+    const defaultSections = [
+      {
+        title: "ÖPPNING",
+        content: `Hej allihopa. Per Karlsson, Core Gym.
+
+Jag tänkte berätta lite om vår resa. Från en idé i Tungelsta till... ja, snart fem gym i Haninge.
+
+Men vi börjar från början.`
+      },
+      {
+        title: "BAKGRUNDEN",
+        content: `Jag var idrottslärare i 25 år.
+
+25 år i gymnastiksalen. Och vet ni vad jag lärde mig under de åren?
+
+Att alla kan röra på sig. Alla. Oavsett hur man ser ut, hur gammal man är, hur man mår. Kroppen är gjord för rörelse.
+
+Men — och det här är viktigt — inte alla mår bra av att bli bedömda. Inte alla mår bra av pekpinnar och prestationskrav.
+
+[PAUS]
+
+Så 2012 tänkte jag: tänk om man kunde ta det bästa från skolan — gemenskapen, att alla får vara med — men släppa det jobbiga. Betygen. Jämförelserna. Pressen.
+
+Det blev Core Gym.`
+      },
+      {
+        title: "BORN AND BASED",
+        content: `Vi har ett motto: Born and based i Haninge.
+
+Vi föddes i Haninge och vi verkar i Haninge. Vi trivs bra här — det är en fantastisk kommun att jobba i.
+
+2012 började vi i Tungelsta. Litet gym, stort hjärta.
+2016 kom Västerhaninge. Mitt i centrum.
+2022 öppnade vi Vegastaden. 2900 kvm. Takterrass, padel, utegym. One of a kind — riktigt fint gym.
+
+Och nu... nu kommer Ösmo. Femte gymmet. 2026.
+
+[PAUS]
+
+Fyra gym idag. Snart fem. Men fortfarande samma känsla som när vi började.`
+      },
+      {
+        title: "VÅR STÖRSTA KONKURRENT",
+        content: `Ni undrar kanske vilka våra konkurrenter är.
+
+SATS? Fitness24Seven? Nordic Wellness?
+
+[SKAKA PÅ HUVUDET]
+
+Nej.
+
+Vår största konkurrent är soffan.
+
+[PAUS — LÅT DET LANDA]
+
+Soffan är mjuk och skön. Netflix är bra. "Jag börjar på måndag" — den har vi alla sagt.
+
+Men vi jobbar för att fler ska komma upp ur soffan och hitta till gymmet. Inte för att bli starkast. Utan för att må bättre. Sova bättre. Orka mer.
+
+Det är hela grejen.`
+      },
+      {
+        title: "SÅ HUR GÖR VI DÅ?",
+        content: `Vi säger "kom som du är" — och vi menar det faktiskt.
+
+Har du inte tränat på fem år? Välkommen.
+Tränar du varje dag? Välkommen.
+Är du nervös? Det var vi alla en gång.
+
+Vi har inga krångliga avtal. Vill du sluta? Två månaders uppsägning. Klart.
+
+Och vi har öppet nästan dygnet runt. Fyra på morgonen till midnatt, varje dag.
+
+Ett hej kostar inget. Det är gratis att vara trevlig.`
+      },
+      {
+        title: "DET SOM GÖR OSS ANNORLUNDA",
+        content: `Ett medlemskap — alla gym. Träna i Tungelsta på morgonen, Vega på kvällen.
+
+Vi har precis lanserat EGYM i Västerhaninge. Maskiner som ställer in sig efter dig, kommer ihåg hur du tränar. Funkar riktigt bra.
+
+På Vega har vi 1500 kvm takterrass. Utegym, löparbana, padelbana.
+
+Och vet ni vad? Väg 73 går precis bredvid — men när man står där uppe märker man det inte. Det är grönt runt omkring.
+
+[PAUS]
+
+Men framför allt: vi är fortfarande familjeägda. Jag bor här, mina barn växte upp här.
+
+Vi är grannar. Det förpliktigar.`
+      },
+      {
+        title: "AVSLUTNING",
+        content: `Vi kommer aldrig bli störst.
+
+Det är inte målet heller. Målet är att vara bäst för er som bor här. Haninges gym. Era gym.
+
+Där man kommer som man är, tränar i sin egen takt, och alltid får ett hej när man kliver in.
+
+[PAUS]
+
+Om ni undrar något — kom förbi. Vi finns i Tungelsta, Västerhaninge, Vegastaden.
+
+Och snart i Ösmo.
+
+Tack.`
+      }
+    ];
+
+    // Load or init sections
+    let sections = JSON.parse(localStorage.getItem('presentation-sections')) || defaultSections;
+    let currentSlideIndex = 0;
+
+    function saveSections() {
+      localStorage.setItem('presentation-sections', JSON.stringify(sections));
+    }
+
+    function renderEditMode() {
+      const container = document.getElementById('editMode');
+      container.innerHTML = sections.map((section, i) => `
+        <div class="edit-section" data-index="${i}">
+          <div class="edit-section-header">
+            <input type="text" value="${section.title}" onchange="updateTitle(${i}, this.value)" />
+            <button class="delete-btn" onclick="deleteSection(${i})" title="Ta bort">×</button>
+          </div>
+          <textarea onchange="updateContent(${i}, this.value)" oninput="autoResize(this)">${section.content}</textarea>
+        </div>
+      `).join('') + `
+        <button class="add-section-btn" onclick="addSection()">+ Lägg till avsnitt</button>
+      `;
+
+      // Auto-resize textareas
+      container.querySelectorAll('textarea').forEach(autoResize);
+    }
+
+    function autoResize(el) {
+      el.style.height = 'auto';
+      el.style.height = el.scrollHeight + 'px';
+    }
+
+    function updateTitle(index, value) {
+      sections[index].title = value;
+      saveSections();
+    }
+
+    function updateContent(index, value) {
+      sections[index].content = value;
+      saveSections();
+    }
+
+    function addSection() {
+      sections.push({ title: 'NY SEKTION', content: 'Skriv här...' });
+      saveSections();
+      renderEditMode();
+    }
+
+    function deleteSection(index) {
+      if (sections.length <= 1) return;
+      if (confirm('Ta bort detta avsnitt?')) {
+        sections.splice(index, 1);
+        saveSections();
+        renderEditMode();
+      }
+    }
+
+    // Present mode
+    function renderSlide() {
+      const section = sections[currentSlideIndex];
+      const content = section.content
+        .replace(/\[([^\]]+)\]/g, '<span class="pause">[$1]</span>')
+        .replace(/\n/g, '<br>');
+
+      document.getElementById('currentSlide').innerHTML = `
+        <div class="slide-title">${section.title}</div>
+        <div class="slide-content">${content}</div>
+      `;
+
+      document.getElementById('slideProgress').textContent = `${currentSlideIndex + 1} / ${sections.length}`;
+      document.getElementById('prevBtn').disabled = currentSlideIndex === 0;
+      document.getElementById('nextBtn').disabled = currentSlideIndex === sections.length - 1;
+    }
+
+    function nextSlide() {
+      if (currentSlideIndex < sections.length - 1) {
+        currentSlideIndex++;
+        renderSlide();
+      }
+    }
+
+    function prevSlide() {
+      if (currentSlideIndex > 0) {
+        currentSlideIndex--;
+        renderSlide();
+      }
+    }
+
+    // Swipe support
+    let touchStartX = 0;
+    document.addEventListener('touchstart', (e) => {
+      touchStartX = e.touches[0].clientX;
+    });
+
+    document.addEventListener('touchend', (e) => {
+      const diff = touchStartX - e.changedTouches[0].clientX;
+      if (Math.abs(diff) > 50) {
+        if (diff > 0) nextSlide();
+        else prevSlide();
+      }
+    });
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ') nextSlide();
+      if (e.key === 'ArrowLeft') prevSlide();
+    });
+
+    // Mode switching
+    function setMode(mode) {
+      document.querySelectorAll('.btn').forEach(b => b.classList.remove('active'));
+      document.getElementById('btn' + mode.charAt(0).toUpperCase() + mode.slice(1)).classList.add('active');
+
+      document.getElementById('editMode').classList.remove('active');
+      document.getElementById('presentMode').classList.remove('active');
+      document.getElementById('tipsMode').classList.remove('active');
+
+      document.getElementById(mode + 'Mode').classList.add('active');
+
+      if (mode === 'present') {
+        currentSlideIndex = 0;
+        renderSlide();
+      }
+    }
+
+    // Init
+    renderEditMode();
+  </script>
+</body>
+</html>
