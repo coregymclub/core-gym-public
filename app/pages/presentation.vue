@@ -129,9 +129,27 @@ Men — och det här är viktigt — inte alla mår bra av att bli bedömda. Int
 
 [PAUS]
 
-Så 2012 tänkte jag: tänk om man kunde ta det bästa från skolan — gemenskapen, att alla får vara med — men släppa det jobbiga. Betygen. Jämförelserna. Pressen.
+Sen sa jag upp mig. Efter 25 år. Och visste inte riktigt vad jag skulle göra.
 
-Det blev Core Gym.`
+Under den perioden provade jag lite av varje. PT-utbildning. Olika kurser.
+
+Och så gick jag en... "Certifierad Barista Nivå 1".
+
+[PAUS]
+
+Jag hade köpt en kaffemaskin. En kille på kursen frågade vad jag hade för maskin.
+
+Jag beskrev den. Han nickade. "Vilken kvarn har du?"
+
+"Kvarn? ...Den sitter i maskinen."
+
+[PAUS]
+
+Han sa inte så mycket mer efter det.
+
+[PAUS]
+
+Men 2012 startade jag Core Gym. Och det kändes rätt.`
   },
   {
     title: "BORN AND BASED",
@@ -163,11 +181,23 @@ Vår största konkurrent är soffan.
 
 [PAUS — LÅT DET LANDA]
 
-Soffan är mjuk och skön. Netflix är bra. "Jag börjar på måndag" — den har vi alla sagt.
+Vet ni hur många som tränar på gym i Sverige? Runt 20-25 procent.
 
-Men vi jobbar för att fler ska komma upp ur soffan och hitta till gymmet. Inte för att bli starkast. Utan för att må bättre. Sova bättre. Orka mer.
+Det betyder att 75 procent inte gör det.
 
-Det är hela grejen.`
+[PAUS]
+
+De som redan tränar — de hittar till gymmet. De behöver inte oss.
+
+Men de i soffan? De når vi inte med snack om progressive overload och periodisering.
+
+[PAUS]
+
+De vill bara trycka på knappen och få sitt kaffe.
+
+[PAUS]
+
+Det är Core Gym.`
   },
   {
     title: "SÅ HUR GÖR VI DÅ?",
