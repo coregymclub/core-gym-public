@@ -1,17 +1,43 @@
 <script setup lang="ts">
 useHead({
   title: 'Dans för barn och unga - Core Gym Club',
-  meta: [{ name: 'description', content: 'Dans för barn och unga i Tungelsta. Zey Dance Club i samarbete med Core Gym Club. Barndans, showdans, balett, hiphop och breakdance för 5-16 år.' }]
+  meta: [
+    { name: 'description', content: 'Dans för barn och unga i Tungelsta. Zey Dance Club i samarbete med Core Gym Club. Barndans, showdans, balett, hiphop och breakdance för 5-16 år.' },
+    { property: 'og:title', content: 'Dans för barn och unga - Core Gym Club' },
+    { property: 'og:description', content: 'Dans för barn och unga i Tungelsta. Zey Dance Club i samarbete med Core Gym Club. Barndans, showdans, balett, hiphop och breakdance för 5-16 år.' },
+    { property: 'og:image', content: 'https://coregym.club/images/og-barndans.jpg' },
+    { property: 'og:image:width', content: '1200' },
+    { property: 'og:image:height', content: '630' },
+    { property: 'og:type', content: 'website' }
+  ]
 })
 
 useThemeColor('#ec4899')
 
-const zeyGroups = [
-  { name: 'Danzemix Kidz', age: '5-7 år', day: 'Måndagar', time: '17:10-17:55', length: '45 min', price: '1 800 kr/termin' },
-  { name: 'Danzemix Beat', age: '8-10 år', day: 'Torsdagar', time: '17:10-18:00', length: '50 min', price: '1 800 kr/termin' },
-  { name: 'Danzemix Flow', age: '11-13 år', day: 'Torsdagar', time: '18:05-19:00', length: '55 min', price: '1 900 kr/termin' },
-  { name: 'Danzemix Vibe', age: '14-16 år', day: 'Måndagar', time: '18:00-19:00', length: '60 min', price: '1 900 kr/termin' },
-]
+// Fetch updates
+interface Update {
+  id: string
+  title: string
+  content: string
+  published_at: string
+}
+
+const updates = ref<Update[]>([])
+const NEWS_API = 'https://coregym-news-api.gustav-brydner.workers.dev'
+
+onMounted(async () => {
+  try {
+    const res = await fetch(`${NEWS_API}/news?limit=50`)
+    const data = await res.json()
+    updates.value = data.news.filter((n: any) => n.categories?.includes('barndans')).slice(0, 3)
+  } catch (e) {
+    console.error('Failed to fetch updates', e)
+  }
+})
+
+function formatDate(dateStr: string) {
+  return new Date(dateStr).toLocaleDateString('sv-SE', { day: 'numeric', month: 'short' })
+}
 
 const benefits = [
   { title: 'Tillhörighet', desc: 'Känn gemenskap i gruppen' },
@@ -20,63 +46,8 @@ const benefits = [
   { title: 'Utveckling', desc: 'Lär dig nya färdigheter' },
 ]
 
-// Bottom sheet states
-const showZeySheet = ref(false)
+// Bottom sheet state
 const showRorelseSheet = ref(false)
-
-// Zey Dance Club form
-const zeyForm = ref({
-  childName: '',
-  childAge: '',
-  parentName: '',
-  phone: '',
-  email: '',
-  group: ''
-})
-const zeySubmitting = ref(false)
-const zeySuccess = ref(false)
-const zeyError = ref<string | null>(null)
-
-async function handleZeySubmit() {
-  if (!zeyForm.value.childName || !zeyForm.value.childAge || !zeyForm.value.parentName || !zeyForm.value.phone || !zeyForm.value.email || !zeyForm.value.group) {
-    zeyError.value = 'Fyll i alla fält'
-    return
-  }
-
-  zeySubmitting.value = true
-  zeyError.value = null
-
-  try {
-    const response = await fetch('https://student-email.coregymclub.se/send', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        to: 'zeydanceclub@hotmail.com',
-        subject: `Zey Dance Club anmälan: ${zeyForm.value.childName}`,
-        html: `
-          <h2>Ny anmälan till Zey Dance Club</h2>
-          <p><strong>Barnets namn:</strong> ${zeyForm.value.childName}</p>
-          <p><strong>Barnets ålder:</strong> ${zeyForm.value.childAge}</p>
-          <p><strong>Önskad grupp:</strong> ${zeyForm.value.group}</p>
-          <p><strong>Vårdnadshavare:</strong> ${zeyForm.value.parentName}</p>
-          <p><strong>Telefon:</strong> ${zeyForm.value.phone}</p>
-          <p><strong>E-post:</strong> ${zeyForm.value.email}</p>
-        `,
-        replyTo: zeyForm.value.email
-      })
-    })
-
-    if (response.ok) {
-      zeySuccess.value = true
-    } else {
-      throw new Error('Kunde inte skicka')
-    }
-  } catch (e) {
-    zeyError.value = 'Något gick fel. Försök igen!'
-  } finally {
-    zeySubmitting.value = false
-  }
-}
 
 // Rörelseglädje form
 const rorelseForm = ref({
@@ -100,6 +71,7 @@ async function handleRorelseSubmit() {
   rorelseError.value = null
 
   try {
+    // Skicka email
     const response = await fetch('https://student-email.coregymclub.se/send', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -120,6 +92,21 @@ async function handleRorelseSubmit() {
 
     if (response.ok) {
       rorelseSuccess.value = true
+
+      // Posta till Barndans-rummet i teamchatten
+      try {
+        await fetch('https://teamchat.coregym.club/api/terminal/post', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            room: 'barndans',
+            message: `📩 **Ny anmälan - Rörelseglädje 3-4 år**\n\n👶 **Barn:** ${rorelseForm.value.childName} (${rorelseForm.value.childAge})\n👤 **Vårdnadshavare:** ${rorelseForm.value.parentName}\n📞 ${rorelseForm.value.phone}\n📧 ${rorelseForm.value.email}`
+          })
+        })
+      } catch (chatErr) {
+        // Logga fel men låt inte det påverka användarupplevelsen
+        console.error('Kunde inte posta till teamchat:', chatErr)
+      }
     } else {
       throw new Error('Kunde inte skicka')
     }
@@ -159,83 +146,58 @@ async function handleRorelseSubmit() {
       </div>
     </section>
 
-    <!-- Zey Dance Club -->
+    <!-- Zey Dance Club - Intro -->
     <section id="zey" class="section bg-surface relative z-10 -mt-16 rounded-t-[3rem] pt-24">
       <div class="container">
-        <div class="max-w-4xl mx-auto">
-          <div class="text-center mb-12">
-            <span class="inline-block px-4 py-2 rounded-full bg-pink-100 text-pink-600 mb-6 text-sm font-bold tracking-widest uppercase">
-              I samarbete med Core Gym Club
+        <div class="max-w-2xl mx-auto">
+          <!-- Zey Dance Club Card -->
+          <a
+            href="https://zeydance.coregym.club"
+            class="block bg-gradient-to-br from-fuchsia-600 to-violet-600 rounded-3xl p-8 md:p-10 text-white shadow-xl hover:shadow-2xl hover:scale-[1.02] transition-all duration-300 group"
+          >
+            <span class="inline-block px-3 py-1 bg-white/20 rounded-full text-xs font-semibold tracking-wider uppercase mb-4">
+              5-16 år
             </span>
-            <h2 class="font-display font-bold text-4xl md:text-5xl lg:text-6xl mb-6 uppercase tracking-tight text-on-surface">Zey Dance Club</h2>
-            <p class="text-xl md:text-2xl text-on-surface-dim max-w-2xl mx-auto leading-relaxed">
-              Professionella danskurser för 5-16 år. En mix av barndans, showdans, balett, hiphop och breakdance — varför välja en stil när du kan få det bästa av flera?
+            <h2 class="font-display font-bold text-3xl md:text-4xl mb-4 uppercase tracking-tight">
+              Zey Dance Club
+            </h2>
+            <p class="text-white/80 text-lg leading-relaxed mb-6">
+              Professionella danskurser i samarbete med Core Gym Club. En mix av showdans, balett, hiphop och breakdance.
             </p>
-          </div>
-
-          <!-- Groups table -->
-          <div class="bg-surface-dim rounded-3xl border border-outline/20 overflow-hidden mb-12">
-            <div class="overflow-x-auto">
-              <table class="w-full text-left">
-                <thead>
-                  <tr class="border-b border-outline/20 bg-pink-50/50">
-                    <th class="px-6 py-4 text-sm font-bold uppercase tracking-wider text-on-surface-dim">Grupp</th>
-                    <th class="px-6 py-4 text-sm font-bold uppercase tracking-wider text-on-surface-dim">Ålder</th>
-                    <th class="px-6 py-4 text-sm font-bold uppercase tracking-wider text-on-surface-dim">Dag & tid</th>
-                    <th class="px-6 py-4 text-sm font-bold uppercase tracking-wider text-on-surface-dim">Pris</th>
-                  </tr>
-                </thead>
-                <tbody class="divide-y divide-outline/10">
-                  <tr v-for="group in zeyGroups" :key="group.name" class="hover:bg-pink-50/30 transition-colors">
-                    <td class="px-6 py-4">
-                      <span class="font-bold text-on-surface">{{ group.name }}</span>
-                    </td>
-                    <td class="px-6 py-4 text-on-surface-dim">{{ group.age }}</td>
-                    <td class="px-6 py-4 text-on-surface-dim">
-                      <span class="block">{{ group.day }}</span>
-                      <span class="text-on-surface-dim/70 text-sm">{{ group.time }} ({{ group.length }})</span>
-                    </td>
-                    <td class="px-6 py-4 text-on-surface-dim">{{ group.price }}</td>
-                  </tr>
-                </tbody>
-              </table>
+            <div class="flex items-center gap-2 text-white font-semibold">
+              <span>Läs mer och anmäl</span>
+              <svg class="w-5 h-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+              </svg>
             </div>
-          </div>
+          </a>
+        </div>
+      </div>
+    </section>
 
-          <p class="text-center text-on-surface-dim mb-12">
-            12 veckor per termin. Individuell coachning, repetitioner och avslutande uppvisning ingår.
-          </p>
-
-          <!-- Practical info -->
-          <div class="grid md:grid-cols-2 gap-6">
-            <div class="bg-surface-dim rounded-2xl border border-outline/20 p-6">
-              <h3 class="font-bold text-lg text-on-surface mb-4">Praktisk info</h3>
-              <div class="space-y-3 text-on-surface-dim">
-                <div class="flex justify-between">
-                  <span>Plats</span>
-                  <span class="text-on-surface font-medium">Rosvägen 2, Tungelsta</span>
+    <!-- Updates (only show if there are any) -->
+    <section v-if="updates.length > 0" class="py-12 bg-gradient-to-b from-pink-50/50 to-surface">
+      <div class="container">
+        <div class="max-w-4xl mx-auto">
+          <h2 class="text-xs font-semibold uppercase tracking-[0.2em] text-pink-600 mb-6 text-center">Aktuellt</h2>
+          <div class="space-y-3">
+            <div
+              v-for="update in updates"
+              :key="update.id"
+              class="bg-white rounded-2xl p-5 shadow-sm border border-pink-100/50"
+            >
+              <div class="flex items-start gap-4">
+                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-pink-100 to-purple-100 flex items-center justify-center flex-shrink-0">
+                  <svg class="w-5 h-5 text-pink-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
+                  </svg>
                 </div>
-                <div class="flex justify-between">
-                  <span>Start</span>
-                  <span class="text-on-surface font-medium">Måndag 9 februari</span>
-                </div>
-                <div class="flex justify-between">
-                  <span>Prova på</span>
-                  <span class="text-on-surface font-medium">99 kr</span>
+                <div class="flex-1">
+                  <h3 class="font-semibold text-on-surface">{{ update.title }}</h3>
+                  <p v-if="update.content" class="text-on-surface-dim text-sm mt-1 leading-relaxed line-clamp-2" v-html="update.content.replace(/<[^>]*>/g, ' ').substring(0, 150) + '...'" />
+                  <p class="text-xs text-on-surface-dim/50 mt-2">{{ formatDate(update.published_at) }}</p>
                 </div>
               </div>
-              <p class="text-sm text-on-surface-dim/70 mt-4">Uppehåll sportlov v.9 och påsklov v.15</p>
-            </div>
-
-            <div class="bg-pink-500 rounded-2xl p-6 flex flex-col text-white">
-              <h3 class="font-bold text-lg mb-4">Anmälan</h3>
-              <p class="text-white/80 mb-6">Anmäl ditt barn till Zey Dance Club. Vi kontaktar dig med bekräftelse.</p>
-              <button
-                @click="showZeySheet = true"
-                class="btn bg-white text-pink-600 hover:bg-pink-50 border-none mt-auto"
-              >
-                Anmäl till Zey Dance Club
-              </button>
             </div>
           </div>
         </div>
@@ -268,7 +230,7 @@ async function handleRorelseSubmit() {
               <h3 class="text-title text-xl mb-2">Söndagar 16:00-16:45</h3>
               <p class="text-body text-on-surface-dim mb-4">Lek och rörelse med musik</p>
               <div class="pt-4 border-t border-outline/20 text-sm text-on-surface-dim">
-                <span class="font-medium">Instruktör:</span> Lisa
+                <span class="font-medium">Instruktör:</span> Ylva
               </div>
             </div>
           </div>
@@ -277,7 +239,7 @@ async function handleRorelseSubmit() {
           <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-2xl mx-auto mb-12">
             <div class="text-center p-4">
               <span class="text-label text-on-surface-dim block mb-1">Start</span>
-              <span class="font-bold">Våren 2026</span>
+              <span class="font-bold">1 februari</span>
             </div>
             <div class="text-center p-4">
               <span class="text-label text-on-surface-dim block mb-1">Pris</span>
@@ -345,66 +307,15 @@ async function handleRorelseSubmit() {
         <h2 class="text-section text-white mb-4">Låt dansen börja!</h2>
         <p class="text-lead text-white/80 mb-10">Dans för alla barn i Tungelsta</p>
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
-          <button @click="showZeySheet = true" class="btn bg-white text-purple-600 hover:bg-pink-50 shadow-xl border-none">
-            Anmäl till Zey Dance Club
-          </button>
+          <a href="https://zeydance.coregym.club" class="btn bg-white text-purple-600 hover:bg-pink-50 shadow-xl border-none">
+            Zey Dance Club (5-16 år)
+          </a>
           <button @click="showRorelseSheet = true" class="btn bg-white/10 text-white hover:bg-white/20 border border-white/30">
-            Rörelseglädje 3-4 år
+            Rörelseglädje (3-4 år)
           </button>
         </div>
       </div>
     </section>
-
-    <!-- Zey Dance Club Bottom Sheet -->
-    <SheetsBottomSheet :open="showZeySheet" title="Anmälan Zey Dance Club" subtitle="Fyll i uppgifterna nedan så kontaktar vi dig." @close="showZeySheet = false">
-      <!-- Success state -->
-      <div v-if="zeySuccess" class="text-center py-8">
-        <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-          <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-          </svg>
-        </div>
-        <h3 class="font-bold text-xl text-on-surface mb-2">Tack för din anmälan!</h3>
-        <p class="text-on-surface-dim">Vi hör av oss inom kort.</p>
-      </div>
-
-      <!-- Form -->
-      <form v-else @submit.prevent="handleZeySubmit" class="space-y-4 pb-4">
-        <div>
-          <label class="block text-sm font-medium text-on-surface-dim mb-1">Barnets namn</label>
-          <input v-model="zeyForm.childName" type="text" required class="w-full px-4 py-3 rounded-xl border border-outline/30 focus:border-pink-500 focus:outline-none text-on-surface" placeholder="Barnets förnamn och efternamn" />
-        </div>
-        <div>
-          <label class="block text-sm font-medium text-on-surface-dim mb-1">Barnets ålder</label>
-          <input v-model="zeyForm.childAge" type="text" required class="w-full px-4 py-3 rounded-xl border border-outline/30 focus:border-pink-500 focus:outline-none text-on-surface" placeholder="T.ex. 7 år" />
-        </div>
-        <div>
-          <label class="block text-sm font-medium text-on-surface-dim mb-1">Önskad grupp</label>
-          <select v-model="zeyForm.group" required class="w-full px-4 py-3 rounded-xl border border-outline/30 focus:border-pink-500 focus:outline-none text-on-surface bg-surface">
-            <option value="" disabled>Välj grupp</option>
-            <option v-for="group in zeyGroups" :key="group.name" :value="group.name">{{ group.name }} ({{ group.age }})</option>
-          </select>
-        </div>
-        <div>
-          <label class="block text-sm font-medium text-on-surface-dim mb-1">Vårdnadshavares namn</label>
-          <input v-model="zeyForm.parentName" type="text" required class="w-full px-4 py-3 rounded-xl border border-outline/30 focus:border-pink-500 focus:outline-none text-on-surface" placeholder="Ditt namn" />
-        </div>
-        <div>
-          <label class="block text-sm font-medium text-on-surface-dim mb-1">Telefon</label>
-          <input v-model="zeyForm.phone" type="tel" required class="w-full px-4 py-3 rounded-xl border border-outline/30 focus:border-pink-500 focus:outline-none text-on-surface" placeholder="07X-XXX XX XX" />
-        </div>
-        <div>
-          <label class="block text-sm font-medium text-on-surface-dim mb-1">E-post</label>
-          <input v-model="zeyForm.email" type="email" required class="w-full px-4 py-3 rounded-xl border border-outline/30 focus:border-pink-500 focus:outline-none text-on-surface" placeholder="din@email.se" />
-        </div>
-
-        <div v-if="zeyError" class="text-red-600 text-sm bg-red-50 px-4 py-3 rounded-xl">{{ zeyError }}</div>
-
-        <button type="submit" :disabled="zeySubmitting" class="w-full btn bg-pink-500 hover:bg-pink-400 text-white border-none py-4 text-lg disabled:opacity-50">
-          {{ zeySubmitting ? 'Skickar...' : 'Skicka anmälan' }}
-        </button>
-      </form>
-    </SheetsBottomSheet>
 
     <!-- Rörelseglädje Bottom Sheet -->
     <SheetsBottomSheet :open="showRorelseSheet" title="Anmälan Rörelseglädje" subtitle="3-4 år — Fyll i uppgifterna nedan." @close="showRorelseSheet = false">
