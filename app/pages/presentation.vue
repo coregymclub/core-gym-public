@@ -11,8 +11,30 @@ const CORRECT_PASSWORD = 'coregym2026'
 const isAuthed = ref(false)
 const passwordInput = ref('')
 const passwordError = ref(false)
-const mode = ref<'edit' | 'present' | 'tips'>('edit')
+const mode = ref<'edit' | 'present' | 'tips' | 'slides' | 'slideshow'>('edit')
 const currentSlideIndex = ref(0)
+const currentImageIndex = ref(0)
+
+// Default slides with images from Core Gym's journey
+const defaultSlides = [
+  {
+    url: 'https://images.ctfassets.net/yg0jporv2qfl/2wDfEJALHq2kWIuqYeymCk/7e35d8b6ecc8e5c5e07add889c9c8c3a/core-gym-tungelsta.jpg',
+    title: 'Tungelsta 2012',
+    caption: 'Har det borjade - vara forsta gym'
+  },
+  {
+    url: 'https://images.ctfassets.net/yg0jporv2qfl/4jKqDr5WqcwiAKcSQs8yOw/a5c5e4d0a46c4c3c8c1e2e5e9e8e7e6e/core-gym-vasterhaninge.jpg',
+    title: 'Vasterhaninge 2016',
+    caption: 'Mitt i centrum'
+  },
+  {
+    url: 'https://images.ctfassets.net/yg0jporv2qfl/vegastaden-hero/hero-image/core-gym-vegastaden.jpg',
+    title: 'Vegastaden 2022',
+    caption: '2900 kvm - One of a kind'
+  }
+]
+
+const slides = ref<{ url: string; title: string; caption: string }[]>([])
 
 const defaultSections = [
   {
@@ -133,6 +155,9 @@ onMounted(() => {
   // Load sections
   const saved = localStorage.getItem('presentation-sections')
   sections.value = saved ? JSON.parse(saved) : defaultSections
+  // Load slides
+  const savedSlides = localStorage.getItem('presentation-slides')
+  slides.value = savedSlides ? JSON.parse(savedSlides) : defaultSlides
 })
 
 function checkPassword() {
@@ -190,24 +215,87 @@ function formatContent(content: string) {
     .replace(/\n/g, '<br>')
 }
 
-function setMode(newMode: 'edit' | 'present' | 'tips') {
+function setMode(newMode: 'edit' | 'present' | 'tips' | 'slides' | 'slideshow') {
   mode.value = newMode
   if (newMode === 'present') {
     currentSlideIndex.value = 0
   }
+  if (newMode === 'slideshow') {
+    currentImageIndex.value = 0
+  }
 }
+
+// Slide management
+function saveSlides() {
+  localStorage.setItem('presentation-slides', JSON.stringify(slides.value))
+}
+
+function addSlide() {
+  slides.value.push({ url: '', title: 'Ny bild', caption: '' })
+  saveSlides()
+}
+
+function deleteSlide(index: number) {
+  if (confirm('Ta bort denna bild?')) {
+    slides.value.splice(index, 1)
+    saveSlides()
+  }
+}
+
+function updateSlide(index: number, field: 'url' | 'title' | 'caption', value: string) {
+  slides.value[index][field] = value
+  saveSlides()
+}
+
+function moveSlide(index: number, direction: 'up' | 'down') {
+  const newIndex = direction === 'up' ? index - 1 : index + 1
+  if (newIndex < 0 || newIndex >= slides.value.length) return
+  const temp = slides.value[index]
+  slides.value[index] = slides.value[newIndex]
+  slides.value[newIndex] = temp
+  saveSlides()
+}
+
+function nextImage() {
+  if (currentImageIndex.value < slides.value.length - 1) {
+    currentImageIndex.value++
+  }
+}
+
+function prevImage() {
+  if (currentImageIndex.value > 0) {
+    currentImageIndex.value--
+  }
+}
+
+const currentSlide = computed(() => slides.value[currentImageIndex.value])
 
 // Keyboard navigation
 onMounted(() => {
   window.addEventListener('keydown', (e) => {
-    if (mode.value !== 'present') return
-    if (e.key === 'ArrowRight' || e.key === ' ') {
-      e.preventDefault()
-      nextSlide()
+    if (mode.value === 'present') {
+      if (e.key === 'ArrowRight' || e.key === ' ') {
+        e.preventDefault()
+        nextSlide()
+      }
+      if (e.key === 'ArrowLeft') {
+        e.preventDefault()
+        prevSlide()
+      }
     }
-    if (e.key === 'ArrowLeft') {
-      e.preventDefault()
-      prevSlide()
+    if (mode.value === 'slideshow') {
+      if (e.key === 'ArrowRight' || e.key === ' ') {
+        e.preventDefault()
+        nextImage()
+      }
+      if (e.key === 'ArrowLeft') {
+        e.preventDefault()
+        prevImage()
+      }
+      if (e.key === 'Escape') {
+        e.preventDefault()
+        setMode('slides')
+      }
     }
   })
 })
@@ -239,8 +327,9 @@ const currentSection = computed(() => sections.value[currentSlideIndex.value])
       <header class="header">
         <h1>Pers Tal</h1>
         <div class="header-actions">
-          <button :class="['btn', { active: mode === 'edit' }]" @click="setMode('edit')">Redigera</button>
-          <button :class="['btn', { active: mode === 'present' }]" @click="setMode('present')">Presentation</button>
+          <button :class="['btn', { active: mode === 'edit' }]" @click="setMode('edit')">Manus</button>
+          <button :class="['btn', { active: mode === 'present' }]" @click="setMode('present')">Tala</button>
+          <button :class="['btn', { active: mode === 'slides' || mode === 'slideshow' }]" @click="setMode('slides')">Bildspel</button>
           <button :class="['btn', { active: mode === 'tips' }]" @click="setMode('tips')">Tips</button>
         </div>
       </header>
@@ -283,6 +372,73 @@ const currentSection = computed(() => sections.value[currentSlideIndex.value])
           <li>Prata som du gör vanligt — det här är inte ett manus att läsa av. Det är en guide.</li>
           <li>Ha kul. Du har gjort det här förut. Du är bra på det.</li>
         </ul>
+      </div>
+
+      <!-- Slides Editor Mode -->
+      <div v-if="mode === 'slides'" class="slides-mode">
+        <div class="slides-header">
+          <h2>Bildspel</h2>
+          <button class="start-slideshow-btn" @click="setMode('slideshow')" :disabled="slides.length === 0">
+            Starta bildspel
+          </button>
+        </div>
+        <p class="slides-info">Lagg till bilder som visas under presentationen. Anvand bild-URL:er fran er bildbank.</p>
+
+        <div class="slides-list">
+          <div v-for="(slide, i) in slides" :key="i" class="slide-item">
+            <div class="slide-preview">
+              <img v-if="slide.url" :src="slide.url" :alt="slide.title" @error="($event.target as HTMLImageElement).src = 'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect fill=%22%23333%22 width=%22100%22 height=%22100%22/><text x=%2250%22 y=%2255%22 text-anchor=%22middle%22 fill=%22%23888%22 font-size=%2212%22>Ingen bild</text></svg>'" />
+              <div v-else class="no-image">Ingen bild</div>
+            </div>
+            <div class="slide-fields">
+              <input
+                :value="slide.title"
+                @input="updateSlide(i, 'title', ($event.target as HTMLInputElement).value)"
+                placeholder="Titel (t.ex. Tungelsta 2012)"
+                class="slide-title-input"
+              />
+              <input
+                :value="slide.url"
+                @input="updateSlide(i, 'url', ($event.target as HTMLInputElement).value)"
+                placeholder="Bild-URL (https://...)"
+                class="slide-url-input"
+              />
+              <input
+                :value="slide.caption"
+                @input="updateSlide(i, 'caption', ($event.target as HTMLInputElement).value)"
+                placeholder="Bildtext (valfritt)"
+                class="slide-caption-input"
+              />
+            </div>
+            <div class="slide-actions">
+              <button @click="moveSlide(i, 'up')" :disabled="i === 0" title="Flytta upp">↑</button>
+              <button @click="moveSlide(i, 'down')" :disabled="i === slides.length - 1" title="Flytta ner">↓</button>
+              <button @click="deleteSlide(i)" class="delete" title="Ta bort">×</button>
+            </div>
+          </div>
+        </div>
+
+        <button class="add-slide-btn" @click="addSlide">+ Lagg till bild</button>
+      </div>
+
+      <!-- Slideshow Mode (fullscreen) -->
+      <div v-if="mode === 'slideshow'" class="slideshow-mode">
+        <div class="slideshow-image" v-if="currentSlide">
+          <img :src="currentSlide.url" :alt="currentSlide.title" />
+          <div class="slideshow-overlay">
+            <div class="slideshow-title">{{ currentSlide.title }}</div>
+            <div v-if="currentSlide.caption" class="slideshow-caption">{{ currentSlide.caption }}</div>
+          </div>
+        </div>
+        <div class="slideshow-nav">
+          <button @click="setMode('slides')" class="exit-btn">Avsluta</button>
+          <div class="slideshow-controls">
+            <button :disabled="currentImageIndex === 0" @click="prevImage">←</button>
+            <span class="slideshow-progress">{{ currentImageIndex + 1 }} / {{ slides.length }}</span>
+            <button :disabled="currentImageIndex === slides.length - 1" @click="nextImage">→</button>
+          </div>
+          <div class="slideshow-hint">Piltangenter eller mellanslag for att navigera • ESC for att avsluta</div>
+        </div>
       </div>
     </div>
   </div>
@@ -574,9 +730,280 @@ const currentSection = computed(() => sections.value[currentSlideIndex.value])
   line-height: 1.5;
 }
 
+/* Slides Editor Mode */
+.slides-mode {
+  padding: 5rem 1rem 2rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.slides-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.slides-header h2 {
+  font-size: 1.2rem;
+  color: var(--accent);
+}
+
+.start-slideshow-btn {
+  padding: 0.75rem 1.5rem;
+  background: var(--accent);
+  border: none;
+  border-radius: 0.5rem;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.start-slideshow-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.slides-info {
+  color: var(--dim);
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+}
+
+.slides-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.slide-item {
+  background: var(--surface);
+  border-radius: 0.75rem;
+  padding: 1rem;
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.slide-preview {
+  width: 120px;
+  height: 80px;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: var(--border);
+}
+
+.slide-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.no-image {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--dim);
+  font-size: 0.75rem;
+}
+
+.slide-fields {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.slide-fields input {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  color: var(--text);
+  font-size: 0.9rem;
+}
+
+.slide-title-input {
+  font-weight: 600;
+}
+
+.slide-url-input {
+  font-family: monospace;
+  font-size: 0.8rem !important;
+}
+
+.slide-caption-input {
+  color: var(--dim);
+}
+
+.slide-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.slide-actions button {
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  background: transparent;
+  color: var(--dim);
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.slide-actions button:hover:not(:disabled) {
+  background: var(--border);
+  color: var(--text);
+}
+
+.slide-actions button:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.slide-actions button.delete:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
+}
+
+.add-slide-btn {
+  width: 100%;
+  padding: 1rem;
+  background: var(--surface);
+  border: 2px dashed var(--border);
+  border-radius: 0.75rem;
+  color: var(--dim);
+  font-size: 0.9rem;
+  cursor: pointer;
+  margin-top: 1rem;
+}
+
+.add-slide-btn:hover {
+  border-color: var(--dim);
+  color: var(--text);
+}
+
+/* Slideshow Mode */
+.slideshow-mode {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #000;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+}
+
+.slideshow-image {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.slideshow-image img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.slideshow-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(transparent, rgba(0,0,0,0.8));
+  padding: 3rem 2rem 6rem;
+  text-align: center;
+}
+
+.slideshow-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: white;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+
+.slideshow-caption {
+  font-size: 1.2rem;
+  color: rgba(255,255,255,0.8);
+  margin-top: 0.5rem;
+}
+
+.slideshow-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0,0,0,0.9);
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.exit-btn {
+  padding: 0.75rem 1.5rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  color: var(--text);
+  cursor: pointer;
+}
+
+.slideshow-controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.slideshow-controls button {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.slideshow-controls button:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.slideshow-progress {
+  font-size: 1rem;
+  color: var(--dim);
+  min-width: 60px;
+  text-align: center;
+}
+
+.slideshow-hint {
+  font-size: 0.75rem;
+  color: var(--dim);
+}
+
 @media (max-width: 600px) {
   .slide-content { font-size: 1.4rem; }
   .header h1 { font-size: 0.85rem; }
   .btn { padding: 0.4rem 0.75rem; font-size: 0.8rem; }
+  .slide-item { flex-direction: column; }
+  .slide-preview { width: 100%; height: 150px; }
+  .slide-actions { flex-direction: row; }
+  .slideshow-title { font-size: 1.5rem; }
+  .slideshow-hint { display: none; }
 }
 </style>
