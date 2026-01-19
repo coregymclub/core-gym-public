@@ -11,7 +11,8 @@ const CORRECT_PASSWORD = 'coregym2026'
 const isAuthed = ref(false)
 const passwordInput = ref('')
 const passwordError = ref(false)
-const mode = ref<'edit' | 'present' | 'tips' | 'slides' | 'slideshow'>('edit')
+const mode = ref<'edit' | 'present' | 'slides' | 'slideshow'>('edit')
+const chatOpen = ref(false)
 const currentSlideIndex = ref(0)
 const currentImageIndex = ref(0)
 
@@ -283,7 +284,7 @@ function formatContent(content: string) {
     .replace(/\n/g, '<br>')
 }
 
-function setMode(newMode: 'edit' | 'present' | 'tips' | 'slides' | 'slideshow') {
+function setMode(newMode: 'edit' | 'present' | 'slides' | 'slideshow') {
   mode.value = newMode
   if (newMode === 'present') {
     currentSlideIndex.value = 0
@@ -291,6 +292,10 @@ function setMode(newMode: 'edit' | 'present' | 'tips' | 'slides' | 'slideshow') 
   if (newMode === 'slideshow') {
     currentImageIndex.value = 0
   }
+}
+
+function toggleChat() {
+  chatOpen.value = !chatOpen.value
 }
 
 // Slide management
@@ -407,7 +412,7 @@ const currentSection = computed(() => sections.value[currentSlideIndex.value])
           <button :class="['btn', { active: mode === 'edit' }]" @click="setMode('edit')">Manus</button>
           <button :class="['btn', { active: mode === 'present' }]" @click="setMode('present')">Tala</button>
           <button :class="['btn', { active: mode === 'slides' || mode === 'slideshow' }]" @click="setMode('slides')">Bildspel</button>
-          <button :class="['btn', { active: mode === 'tips' }]" @click="setMode('tips')">Tips</button>
+          <button :class="['btn', 'btn-chat', { active: chatOpen }]" @click="toggleChat">Chatt</button>
         </div>
       </header>
 
@@ -439,16 +444,16 @@ const currentSection = computed(() => sections.value[currentSlideIndex.value])
         </div>
       </div>
 
-      <!-- Tips Mode -->
-      <div v-if="mode === 'tips'" class="tips-mode">
-        <h2>Tips för framförandet</h2>
-        <ul>
-          <li><strong>"Vår största konkurrent är soffan"</strong> — pausa innan och efter. Det är din punchline.</li>
-          <li><strong>"Ett hej kostar inget"</strong> — bra avslut på ett stycke. Använd den.</li>
-          <li><strong>Takterrassen</strong> — folk älskar den. Visa bilder om du kan.</li>
-          <li>Prata som du gör vanligt — det här är inte ett manus att läsa av. Det är en guide.</li>
-          <li>Ha kul. Du har gjort det här förut. Du är bra på det.</li>
-        </ul>
+      <!-- Chat Panel -->
+      <div v-if="chatOpen" class="chat-panel">
+        <div class="chat-header">
+          <span>Chatt med Claude</span>
+          <button @click="toggleChat" class="chat-close">&times;</button>
+        </div>
+        <iframe
+          src="https://teamchat.coregym.club/room/presentation?embed=1&name=Per&staff=1"
+          class="chat-iframe"
+        ></iframe>
       </div>
 
       <!-- Slides Editor Mode -->
@@ -894,31 +899,60 @@ const currentSection = computed(() => sections.value[currentSlideIndex.value])
   color: var(--dim);
 }
 
-/* Tips Mode */
-.tips-mode {
-  padding: 5rem 1rem 2rem;
-  max-width: 600px;
-  margin: 0 auto;
+/* Chat Panel */
+.btn-chat {
+  background: #8b5cf6 !important;
+  border-color: #8b5cf6 !important;
 }
 
-.tips-mode h2 {
-  font-size: 1.2rem;
-  margin-bottom: 1.5rem;
-  color: var(--accent);
+.btn-chat.active {
+  background: #7c3aed !important;
+  border-color: #7c3aed !important;
 }
 
-.tips-mode ul {
-  list-style: none;
-  padding: 0;
-}
-
-.tips-mode li {
-  padding: 1rem;
+.chat-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 400px;
+  height: 100vh;
   background: var(--surface);
-  border-radius: 0.5rem;
-  margin-bottom: 0.5rem;
-  font-size: 1.1rem;
-  line-height: 1.5;
+  border-left: 1px solid var(--border);
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  box-shadow: -4px 0 20px rgba(0,0,0,0.3);
+}
+
+.chat-header {
+  padding: 1rem;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 600;
+}
+
+.chat-close {
+  background: transparent;
+  border: none;
+  color: var(--dim);
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+}
+
+.chat-close:hover {
+  color: var(--text);
+}
+
+.chat-iframe {
+  flex: 1;
+  width: 100%;
+  border: none;
+  background: var(--bg);
 }
 
 /* Slides Editor Mode */
@@ -1396,6 +1430,10 @@ const currentSection = computed(() => sections.value[currentSlideIndex.value])
   color: var(--dim);
 }
 
+@media (max-width: 900px) {
+  .chat-panel { width: 320px; }
+}
+
 @media (max-width: 600px) {
   .slide-content { font-size: 1.4rem; }
   .header h1 { font-size: 0.85rem; }
@@ -1409,6 +1447,7 @@ const currentSection = computed(() => sections.value[currentSlideIndex.value])
   .show-text-body { font-size: 2.5rem; }
   .show-image-title { font-size: 1.5rem; }
   .add-slide-buttons { flex-wrap: wrap; }
+  .chat-panel { width: 100%; }
   .add-slide-btn { flex: 1 1 45%; }
 }
 </style>
