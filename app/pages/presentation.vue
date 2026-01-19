@@ -27,6 +27,7 @@ interface Slide {
   url?: string
   caption?: string
   logo?: string
+  qr?: string
 }
 
 // Default slides following the speech structure
@@ -35,7 +36,8 @@ const defaultSlides: Slide[] = [
     type: 'title',
     title: '',
     subtitle: 'Per Karlsson',
-    logo: 'https://coregym.club/images/logo-dark.svg'
+    logo: 'https://coregym.club/images/logo-dark.svg',
+    qr: 'https://coregym.club/images/qr-coregym.svg'
   },
   {
     type: 'text',
@@ -99,7 +101,8 @@ const defaultSlides: Slide[] = [
   {
     type: 'title',
     title: 'Tack!',
-    subtitle: 'coregym.club'
+    subtitle: 'coregym.club',
+    qr: 'https://coregym.club/images/qr-coregym.svg'
   }
 ]
 
@@ -526,6 +529,14 @@ const currentSection = computed(() => sections.value[currentSlideIndex.value])
               />
 
               <input
+                v-if="slide.type === 'title'"
+                :value="slide.qr || ''"
+                @input="updateSlide(i, 'qr', ($event.target as HTMLInputElement).value)"
+                placeholder="QR-kod URL (valfritt)"
+                class="slide-url-input"
+              />
+
+              <input
                 v-if="slide.type === 'text'"
                 :value="slide.text || ''"
                 @input="updateSlide(i, 'text', ($event.target as HTMLInputElement).value)"
@@ -579,9 +590,15 @@ const currentSection = computed(() => sections.value[currentSlideIndex.value])
         <div class="slideshow-content" v-if="currentSlide">
           <!-- Title Slide -->
           <div v-if="currentSlide.type === 'title'" class="show-title">
-            <img v-if="currentSlide.logo" :src="currentSlide.logo" alt="Logo" class="show-title-logo" />
-            <div v-if="currentSlide.title" class="show-title-main">{{ currentSlide.title }}</div>
-            <div v-if="currentSlide.subtitle" class="show-title-sub">{{ currentSlide.subtitle }}</div>
+            <div class="show-title-content">
+              <img v-if="currentSlide.logo" :src="currentSlide.logo" alt="Logo" class="show-title-logo" />
+              <div v-if="currentSlide.title" class="show-title-main">{{ currentSlide.title }}</div>
+              <div v-if="currentSlide.subtitle" class="show-title-sub">{{ currentSlide.subtitle }}</div>
+            </div>
+            <div v-if="currentSlide.qr" class="show-title-qr">
+              <img :src="currentSlide.qr" alt="QR kod" class="qr-code" />
+              <span class="qr-label">coregym.club</span>
+            </div>
           </div>
 
           <!-- Text Slide -->
@@ -1227,7 +1244,7 @@ const currentSection = computed(() => sections.value[currentSlideIndex.value])
   left: 0;
   right: 0;
   bottom: 0;
-  background: #0a0a0a;
+  background: #f5f5f5;
   z-index: 1000;
   display: flex;
   flex-direction: column;
@@ -1256,16 +1273,39 @@ const currentSection = computed(() => sections.value[currentSlideIndex.value])
 .show-title-main {
   font-size: 5rem;
   font-weight: 800;
-  color: white;
+  color: #1c1b1d;
   letter-spacing: -0.02em;
   line-height: 1.1;
 }
 
 .show-title-sub {
   font-size: 2rem;
-  color: var(--dim);
+  color: #666;
   margin-top: 1rem;
   font-weight: 400;
+}
+
+.show-title-content {
+  text-align: center;
+}
+
+.show-title-qr {
+  position: absolute;
+  bottom: 6rem;
+  right: 3rem;
+  text-align: center;
+}
+
+.qr-code {
+  width: 120px;
+  height: 120px;
+}
+
+.qr-label {
+  display: block;
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  color: #666;
 }
 
 /* Text Slide */
@@ -1286,7 +1326,7 @@ const currentSection = computed(() => sections.value[currentSlideIndex.value])
 .show-text-body {
   font-size: 4rem;
   font-weight: 700;
-  color: white;
+  color: #1c1b1d;
   line-height: 1.2;
 }
 
@@ -1356,7 +1396,7 @@ const currentSection = computed(() => sections.value[currentSlideIndex.value])
 /* Placeholder */
 .show-placeholder {
   text-align: center;
-  color: var(--dim);
+  color: #999;
 }
 
 .placeholder-icon {
@@ -1366,7 +1406,7 @@ const currentSection = computed(() => sections.value[currentSlideIndex.value])
 
 .placeholder-title {
   font-size: 2rem;
-  color: var(--text);
+  color: #1c1b1d;
   margin-bottom: 0.5rem;
 }
 
@@ -1380,7 +1420,8 @@ const currentSection = computed(() => sections.value[currentSlideIndex.value])
   bottom: 0;
   left: 0;
   right: 0;
-  background: rgba(0,0,0,0.95);
+  background: rgba(255,255,255,0.95);
+  border-top: 1px solid #ddd;
   padding: 1rem;
   display: flex;
   align-items: center;
@@ -1389,10 +1430,10 @@ const currentSection = computed(() => sections.value[currentSlideIndex.value])
 
 .exit-btn {
   padding: 0.75rem 1.5rem;
-  background: var(--surface);
-  border: 1px solid var(--border);
+  background: #fff;
+  border: 1px solid #ddd;
   border-radius: 0.5rem;
-  color: var(--text);
+  color: #1c1b1d;
   cursor: pointer;
 }
 
@@ -1406,9 +1447,9 @@ const currentSection = computed(() => sections.value[currentSlideIndex.value])
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  color: var(--text);
+  background: #fff;
+  border: 1px solid #ddd;
+  color: #1c1b1d;
   font-size: 1.5rem;
   cursor: pointer;
 }
@@ -1420,14 +1461,14 @@ const currentSection = computed(() => sections.value[currentSlideIndex.value])
 
 .slideshow-progress {
   font-size: 1rem;
-  color: var(--dim);
+  color: #666;
   min-width: 60px;
   text-align: center;
 }
 
 .slideshow-hint {
   font-size: 0.75rem;
-  color: var(--dim);
+  color: #999;
 }
 
 @media (max-width: 900px) {
