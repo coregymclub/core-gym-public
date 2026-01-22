@@ -14,17 +14,22 @@ const isOnDark = ref(false)
 const isScrollingDown = ref(false)
 const lastScrollY = ref(0)
 
-// Theme color for mobile menu (Apple Music warm red)
-const brandColor = '#FA2D48'
+// Theme color for mobile menu (dark theme)
+const brandColor = '#0a0a0a'
 const defaultColor = '#ffffff'
 const isMobile = ref(false)
 
-// Check if mobile on mount
+// Check if mobile on mount + detect Samsung Internet
 onMounted(() => {
   isMobile.value = window.innerWidth < 1024
   window.addEventListener('resize', () => {
     isMobile.value = window.innerWidth < 1024
   })
+
+  // Detect Samsung Internet (has bottom toolbar that overlaps)
+  if (navigator.userAgent.includes('SamsungBrowser')) {
+    document.body.classList.add('samsung-browser')
+  }
 })
 
 // Dynamic theme color based on menu state
@@ -101,34 +106,56 @@ function closeUtbud() {
   currentView.value = 'menu'
 }
 
+
 // Open menu directly to chat (disabled for now)
 // function openChatDirectly() {
 //   shouldOpenToChat.value = true
 //   isMenuOpen.value = true
 // }
 
-// Navigation structure
+// Gym submenu removed - gyms visible on homepage
+
+// Navigation structure - Simplified, no "Våra gym" (visible on homepage)
 const primaryLinks = [
-  { name: 'Våra gym', href: '/anlaggningar' },
+  { name: 'Schema', href: '/schema' },
   { name: 'Vårt utbud', href: null, action: 'utbud' },
   { name: 'Om oss', href: '/om-oss' },
   { name: 'Kontakt', href: '/kontakt' },
   { name: 'Bli medlem', href: '/bli-medlem' },
-  { name: 'Logga in', href: 'https://member.coregym.club', external: true },
+  { name: 'Logga in', href: '/logga-in' },
 ]
 
-const exploreLinks = [
-  { name: 'Schema', href: '/schema' },
-  { name: 'Personlig Träning', href: '/pt' },
-  { name: 'EGYM', href: '/egym' },
-  { name: 'Yoga', href: '/yoga' },
-  { name: 'Mammaträning', href: '/mammatraning' },
-  { name: 'Ungdom', href: '/ungdomstraning' },
-  { name: 'Barndans', href: '/barndans' },
-  { name: 'Weight Trainer', href: '/weight-trainer' },
-  { name: 'InBody', href: '/inbody' },
-  { name: 'Foodbox', href: '/foodbox' },
+// Grouped offerings for better organization
+const offeringCategories = [
+  {
+    title: 'Gruppträning',
+    links: [
+      { name: 'Schema', href: '/schema' },
+      { name: 'Yoga', href: '/yoga' },
+      { name: 'Mammaträning', href: '/mammatraning' },
+    ]
+  },
+  {
+    title: 'Specialiserat',
+    links: [
+      { name: 'EGYM', href: '/egym' },
+      { name: 'Personlig Träning', href: '/pt' },
+      { name: 'InBody', href: '/inbody' },
+      { name: 'Weight Trainer', href: '/weight-trainer' },
+    ]
+  },
+  {
+    title: 'Ungdom & Mat',
+    links: [
+      { name: 'Ungdomsträning', href: '/ungdomstraning' },
+      { name: 'Barndans', href: '/barndans' },
+      { name: 'Foodbox', href: '/foodbox' },
+    ]
+  }
 ]
+
+// Flat list for desktop
+const exploreLinks = offeringCategories.flatMap(cat => cat.links)
 
 // Scroll up detection for expanded menu hint
 const isScrollingUp = ref(false)
@@ -196,57 +223,70 @@ onMounted(() => {
 </script>
 
 <template>
-  <!-- Logo Button (FAB) - Mobile Only -->
-  <!-- Hidden on conversion pages (bli-medlem) and when chat view is active -->
+  <!-- SVG Filter for Liquid Glass Refraction (Chrome only) -->
+  <svg class="liquid-glass-svg">
+    <defs>
+      <filter id="mobile-liquid-glass" x="-50%" y="-50%" width="200%" height="200%" color-interpolation-filters="sRGB">
+        <feTurbulence type="fractalNoise" baseFrequency="0.012 0.012" numOctaves="2" seed="8" result="noise" />
+        <feGaussianBlur in="noise" stdDeviation="1.5" result="softNoise" />
+        <feDisplacementMap in="SourceGraphic" in2="softNoise" scale="6" xChannelSelector="R" yChannelSelector="G" />
+      </filter>
+    </defs>
+  </svg>
+
+  <!-- FAB Background (liquid glass) - Fades out when menu opens -->
+  <Transition name="fab-fade">
+    <button
+      v-if="!isHiddenOnRoute && !isMenuOpen"
+      class="fab-glass lg:hidden"
+      :class="[
+        scrolledPastHero ? 'is-visible' : 'is-hidden',
+        {
+          'on-dark': isOnDark,
+          'is-scrolling-down': isScrollingDown,
+          'is-scrolling-up': isScrollingUp
+        }
+      ]"
+      @click="toggleMenu"
+      aria-label="Öppna meny"
+    >
+      <!-- Specular highlight overlay -->
+      <div class="btn-specular" :class="{ 'specular-dark': isOnDark }"></div>
+
+      <!-- Fingerprint overlay (shows when scrolling up) -->
+      <div
+        class="fingerprint-container absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden"
+        :class="isScrollingUp ? 'fingerprint-active' : 'fingerprint-hidden'"
+      >
+        <img
+          src="/images/finger-print.svg"
+          alt=""
+          class="fingerprint-img"
+        />
+      </div>
+    </button>
+  </Transition>
+
+  <!-- Floating Logo - Stays on top of everything, acts as menu toggle -->
   <button
-    v-if="!isHiddenOnRoute && !(isMenuOpen && currentView === 'chat')"
-    class="logo-btn lg:hidden"
+    v-if="!isHiddenOnRoute"
+    class="floating-logo lg:hidden"
     :class="[
       scrolledPastHero || isMenuOpen ? 'is-visible' : 'is-hidden',
       {
-        'on-dark': isOnDark && !isMenuOpen,
-        'is-menu-open': isMenuOpen,
-        'is-scrolling-down': isScrollingDown && !isMenuOpen
+        'is-scrolling-down': isScrollingDown && !isMenuOpen,
+        'is-menu-open': isMenuOpen
       }
     ]"
     @click="toggleMenu"
     :aria-label="isMenuOpen ? 'Stäng meny' : 'Öppna meny'"
   >
-    <!-- Fingerprint overlay (shows when scrolling up) -->
-    <div
-      class="absolute inset-0 rounded-full flex items-center justify-center transition-opacity duration-500 pointer-events-none overflow-hidden"
-      :class="isScrollingUp && !isMenuOpen ? 'opacity-100' : 'opacity-0'"
-    >
-      <img
-        src="/images/finger-print.svg"
-        alt=""
-        class="w-[95%] h-[95%] object-contain opacity-25 fingerprint-red"
-      />
-    </div>
-
-    <!-- Logo / Close icon -->
-    <div class="relative w-11 h-11 flex items-center justify-center transition-transform duration-500" :class="{ 'rotate-180': isMenuOpen }">
-      <img
-        :src="isOnDark ? '/images/logo.svg' : '/images/logo-dark.svg'"
-        alt="Core Gym Club"
-        class="h-full w-auto absolute transition-all duration-300"
-        :class="[
-          isMenuOpen ? 'opacity-0 scale-50' : 'opacity-100 scale-100',
-          isScrollingUp && !isMenuOpen ? 'opacity-40' : ''
-        ]"
-      />
-      <svg
-        class="w-7 h-7 absolute transition-all duration-300"
-        :class="[
-          isMenuOpen ? 'opacity-100 scale-100 rotate-0 text-black' : 'opacity-0 scale-50 -rotate-90 text-on-surface'
-        ]"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-      >
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-      </svg>
-    </div>
+    <img
+      :src="isMenuOpen ? '/images/logo.svg' : (isOnDark ? '/images/logo.svg' : '/images/logo-dark.svg')"
+      alt="Core Gym Club"
+      class="h-full w-auto transition-all duration-300"
+      :class="isScrollingUp && !isMenuOpen ? 'opacity-50' : 'opacity-100'"
+    />
   </button>
 
 
@@ -273,22 +313,25 @@ onMounted(() => {
       <div
         v-if="isMenuOpen"
         class="menu-overlay fixed z-50 overflow-hidden shadow-2xl
-               inset-0 lg:left-auto lg:right-0 lg:w-[600px] lg:h-full bg-brand-warm lg:bg-surface"
+               inset-0 lg:left-auto lg:right-0 lg:w-[600px] lg:h-full bg-[#0a0a0a] lg:bg-surface"
       >
         
         <!-- Sliding Container -->
         <Transition :name="slideDirection">
           
-          <!-- MENU VIEW -->
-          <div v-if="currentView === 'menu'" class="absolute inset-0 flex flex-col h-full overflow-hidden bg-transparent">
+          <!-- MENU VIEW (handles both menu and utbud states) -->
+          <div v-if="currentView === 'menu' || currentView === 'utbud'" class="absolute inset-0 flex flex-col h-full overflow-hidden bg-transparent">
             
-            <!-- Desktop Close Button - positioned below chat bubble -->
-            <div class="hidden lg:flex absolute top-8 left-16 z-30">
-              <button 
+            <!-- Header: Close button (right only) -->
+            <div class="absolute z-30 menu-header-position flex items-center justify-end w-full px-4 lg:px-8">
+              <button
                 @click="closeMenu"
-                class="w-10 h-10 flex items-center justify-center rounded-full bg-surface-container/50 hover:bg-surface-container transition-colors group"
+                class="w-10 h-10 flex items-center justify-center rounded-full
+                       bg-[#FA2D48]/10 lg:bg-surface-container/50
+                       hover:bg-[#FA2D48]/20 lg:hover:bg-surface-container
+                       active:scale-95 transition-all group"
               >
-                <svg class="w-6 h-6 text-on-surface group-hover:rotate-90 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-5 h-5 lg:w-6 lg:h-6 text-[#FA2D48] lg:text-on-surface transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
@@ -300,81 +343,123 @@ onMounted(() => {
               <!-- Layout: Vertical Stack -->
               <div class="min-h-full flex flex-col px-8 lg:px-16 lg:py-16">
 
-                <!-- Mobile: Clean centered menu -->
-                <div class="lg:hidden flex-1 flex flex-col justify-center -mt-12">
-                  <nav class="space-y-2">
-                    <template v-for="(item, index) in primaryLinks" :key="item.name">
-                      <!-- Action item (Vårt utbud) -->
-                      <button
-                        v-if="item.action === 'utbud'"
-                        class="group flex items-center gap-3 w-full py-2 transition-colors animate-slide-up"
-                        :style="{ animationDelay: `${index * 60}ms` }"
-                        @click="openUtbud"
-                      >
-                        <span class="font-display font-bold text-5xl tracking-tight text-black">{{ item.name }}</span>
-                        <svg class="w-7 h-7 text-black/40 group-active:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                        </svg>
-                      </button>
+                <!-- Mobile: Two-tone menu (black + red) -->
+                <!-- Positioned with top padding for visual balance -->
+                <div class="lg:hidden flex-1 flex flex-col items-center justify-center pb-28 relative">
 
-                      <!-- External link -->
-                      <a
-                        v-else-if="item.external"
-                        :href="item.href"
-                        target="_blank"
-                        rel="noopener"
-                        class="group block py-2 transition-colors animate-slide-up"
-                        :style="{ animationDelay: `${index * 60}ms` }"
-                        @click="closeMenu"
-                      >
-                        <span class="font-display font-bold text-5xl tracking-tight text-black/60">{{ item.name }}</span>
-                      </a>
+                  <!-- All content centered -->
+                  <div class="w-full flex flex-col items-center gap-5">
 
-                      <!-- Internal link -->
-                      <NuxtLink
-                        v-else
-                        :to="item.href"
-                        class="group block py-2 transition-colors animate-slide-up"
-                        :style="{ animationDelay: `${index * 60}ms` }"
-                        @click="closeMenu"
-                      >
-                        <span class="font-display font-bold text-5xl tracking-tight text-black">{{ item.name }}</span>
-                      </NuxtLink>
-                    </template>
-                  </nav>
-                </div>
+                    <!-- TOP: Slogan -->
+                    <p class="text-[10px] tracking-[0.35em] text-[#FA2D48]/40 animate-slide-up" style="animation-delay: 0ms">
+                      STARKARE ÄN DU TROR
+                    </p>
 
-                <!-- Desktop: Keep original large links -->
-                <div class="hidden lg:block mb-10">
-                  <div class="space-y-6">
-                    <template v-for="(item, index) in primaryLinks" :key="'desktop-' + item.name">
-                      <NuxtLink
-                        v-if="item.href"
-                        :to="item.href"
-                        class="block group animate-slide-up"
-                        :style="{ animationDelay: `${index * 50}ms` }"
-                        @click="closeMenu"
+                    <!-- CENTER: Main navigation -->
+                    <div class="relative w-full">
+                      <!-- MENU - dims and blurs when utbud is shown -->
+                      <nav
+                        class="w-full text-center space-y-1 transition-all duration-300"
+                        :class="currentView === 'utbud' ? 'opacity-15 pointer-events-none blur-sm' : 'opacity-100 blur-0'"
                       >
-                        <span class="font-display font-bold text-5xl uppercase tracking-tighter text-on-surface hover:text-brand transition-colors duration-200">
-                          {{ item.name }}
-                        </span>
-                      </NuxtLink>
-                    </template>
+                        <NuxtLink
+                          to="/om-oss"
+                          class="block py-0.5 animate-slide-up"
+                          style="animation-delay: 50ms"
+                          @click="closeMenu"
+                        >
+                          <span class="font-display font-black text-[2.75rem] tracking-tight text-[#FA2D48]">OM CORE</span>
+                        </NuxtLink>
+
+                        <NuxtLink
+                          to="/kontakt"
+                          class="block py-0.5 animate-slide-up"
+                          style="animation-delay: 80ms"
+                          @click="closeMenu"
+                        >
+                          <span class="font-display font-black text-[2.75rem] tracking-tight text-[#FA2D48]">KONTAKT</span>
+                        </NuxtLink>
+
+                        <NuxtLink
+                          to="/schema"
+                          class="block py-0.5 animate-slide-up"
+                          style="animation-delay: 110ms"
+                          @click="closeMenu"
+                        >
+                          <span class="font-display font-black text-[2.75rem] tracking-tight text-[#FA2D48]">SCHEMA</span>
+                        </NuxtLink>
+
+                        <!-- GÅ MED | LOGGA IN -->
+                        <div class="flex items-center justify-center gap-5 pt-6 animate-slide-up" style="animation-delay: 140ms">
+                          <NuxtLink
+                            to="/bli-medlem"
+                            class="font-display font-black text-[1.75rem] tracking-tight text-[#FA2D48]"
+                            @click="closeMenu"
+                          >
+                            GÅ MED
+                          </NuxtLink>
+                          <span class="text-[#FA2D48]/20 text-2xl">|</span>
+                          <NuxtLink
+                            to="/logga-in"
+                            class="font-display font-bold text-[1.75rem] tracking-tight text-[#FA2D48]/50"
+                            @click="closeMenu"
+                          >
+                            LOGGA IN
+                          </NuxtLink>
+                        </div>
+                      </nav>
+
+                      <!-- UTBUD - Fades in over dimmed menu -->
+                      <Transition name="fade">
+                        <div v-if="currentView === 'utbud'" class="absolute inset-0 flex items-center justify-center px-3">
+                          <div class="offerings-dynamic">
+                            <NuxtLink to="/yoga" class="offering-pill" @click="closeMenu">YOGA</NuxtLink>
+                            <NuxtLink to="/pt" class="offering-pill offering-lg" @click="closeMenu">PT</NuxtLink>
+                            <NuxtLink to="/egym" class="offering-pill" @click="closeMenu">EGYM</NuxtLink>
+                            <NuxtLink to="/mammatraning" class="offering-pill" @click="closeMenu">MAMMA</NuxtLink>
+                            <NuxtLink to="/inbody" class="offering-pill" @click="closeMenu">INBODY</NuxtLink>
+                            <NuxtLink to="/barndans" class="offering-pill" @click="closeMenu">BARNDANS</NuxtLink>
+                            <NuxtLink to="/ungdomstraning" class="offering-pill" @click="closeMenu">UNGDOM</NuxtLink>
+                            <NuxtLink to="/foodbox" class="offering-pill" @click="closeMenu">FOODBOX</NuxtLink>
+                            <NuxtLink to="/weight-trainer" class="offering-pill" @click="closeMenu">WEIGHTS</NuxtLink>
+                          </div>
+                        </div>
+                      </Transition>
+                    </div>
+
+                    <!-- UTBUD button -->
+                    <button
+                      @click="currentView === 'utbud' ? closeUtbud() : openUtbud()"
+                      class="utbud-badge animate-slide-up mt-4"
+                      :class="{ 'is-active': currentView === 'utbud' }"
+                      style="animation-delay: 180ms"
+                    >
+                      <span>{{ currentView === 'utbud' ? '✕' : '+' }}</span>
+                      UTBUD
+                    </button>
+
+                    <!-- Gym info - only visible when utbud is open -->
+                    <Transition name="fade">
+                      <p v-if="currentView === 'utbud'" class="text-center text-[11px] tracking-[0.15em] text-[#FA2D48]/60 animate-slide-up leading-relaxed">
+                        4 GYM I HANINGE (SNART 5!)
+                      </p>
+                    </Transition>
+
                   </div>
+
                 </div>
 
-                <!-- Desktop: Divider -->
-                <div class="hidden lg:block w-full h-px bg-outline/10 mb-10"></div>
-
-                <!-- Desktop: Explore Links -->
+                <!-- Desktop: Navigation now in header, this menu is mobile-only -->
+                <!-- Keep explore links for reference on desktop if menu is opened -->
                 <div class="hidden lg:block">
-                  <div class="flex flex-wrap gap-x-4 gap-y-2">
+                  <p class="text-on-surface-dim text-sm mb-6">Utforska vårt utbud:</p>
+                  <div class="flex flex-wrap gap-3">
                     <NuxtLink
                       v-for="(link, index) in exploreLinks"
                       :key="link.name"
                       :to="link.href"
-                      class="inline-flex px-0 py-1 text-sm font-medium text-on-surface-dim hover:text-brand transition-colors animate-slide-up"
-                      :style="{ animationDelay: `${(index + primaryLinks.length) * 30}ms` }"
+                      class="px-4 py-2 rounded-full bg-surface-container text-on-surface text-sm font-medium hover:bg-surface-dim transition-colors animate-slide-up"
+                      :style="{ animationDelay: `${index * 30}ms` }"
                       @click="closeMenu"
                     >
                       {{ link.name }}
@@ -394,41 +479,6 @@ onMounted(() => {
             </div>
           </div>
 
-          <!-- UTBUD VIEW -->
-          <div v-else-if="currentView === 'utbud'" class="absolute inset-0 h-full flex flex-col bg-brand-warm lg:bg-surface overflow-hidden">
-            <!-- Header with back button -->
-            <div class="utbud-header flex items-center z-10 flex-shrink-0">
-              <button
-                @click="closeUtbud"
-                class="w-14 h-14 flex items-center justify-center rounded-full text-black lg:text-on-surface hover:bg-black/10 lg:hover:bg-surface-container transition-colors active:scale-95"
-              >
-                <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-                </svg>
-              </button>
-            </div>
-
-            <!-- Large title -->
-            <div class="px-8 pt-4 lg:hidden">
-              <h2 class="font-display font-bold text-5xl tracking-tight text-black">Vårt utbud</h2>
-            </div>
-
-            <!-- Utbud content -->
-            <div class="flex-1 overflow-y-auto px-6 py-6">
-              <div class="flex flex-wrap gap-3">
-                <NuxtLink
-                  v-for="(link, index) in exploreLinks"
-                  :key="link.name"
-                  :to="link.href"
-                  class="px-5 py-3 rounded-full bg-black/15 lg:bg-surface-container text-black lg:text-on-surface text-base font-medium active:bg-black/25 lg:active:bg-surface-dim active:scale-95 transition-all animate-slide-up"
-                  :style="{ animationDelay: `${index * 40}ms` }"
-                  @click="closeMenu"
-                >
-                  {{ link.name }}
-                </NuxtLink>
-              </div>
-            </div>
-          </div>
 
         </Transition>
 
@@ -472,6 +522,86 @@ onMounted(() => {
   padding-bottom: 0.75rem;
   padding-left: 0.5rem;
   padding-right: 1rem;
+}
+
+/* Menu header position with safe area */
+.menu-header-position {
+  top: max(2rem, env(safe-area-inset-top) + 1.25rem);
+  left: 0;
+  right: 0;
+}
+
+@media (min-width: 1024px) {
+  .menu-header-position {
+    top: 2rem;
+  }
+}
+
+/* Menu bottom logo */
+.menu-bottom-logo {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 1.5rem;
+  padding-bottom: max(1.5rem, env(safe-area-inset-bottom) + 1rem);
+  display: flex;
+  justify-content: center;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Grid Menu */
+.menu-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 2px;
+}
+
+.menu-grid-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.75rem 1rem;
+  background: var(--color-brand-warm, #FAE8D4);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.15s ease;
+}
+
+.menu-grid-item:active {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.menu-grid-text {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.125rem;
+  letter-spacing: -0.01em;
+  color: #000;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.menu-grid-cta {
+  background: #000;
+}
+
+.menu-grid-cta:active {
+  background: #1a1a1a;
+}
+
+.menu-grid-text-cta {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.125rem;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 /* Hand-drawn Chat Bubble Button */
@@ -529,103 +659,161 @@ onMounted(() => {
   }
 }
 
-/* Logo Button (FAB) */
-.logo-btn {
+/* Hidden SVG for filters */
+.liquid-glass-svg {
+  position: absolute;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+/* FAB Glass Background - Clean glass effect (Safari-friendly) */
+.fab-glass {
   position: fixed;
-  bottom: 24px;
+  bottom: 20px;
   left: 50%;
   z-index: 51;
   border-radius: 9999px;
-  padding: 16px 24px;
+  width: 76px;
+  height: 68px;
   cursor: pointer;
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.4) 0%,
-    rgba(255, 255, 255, 0.1) 50%,
-    rgba(255, 255, 255, 0.25) 100%
-  );
-  backdrop-filter: blur(40px) saturate(200%) brightness(1.1);
-  -webkit-backdrop-filter: blur(40px) saturate(200%) brightness(1.1);
-  border: 1px solid rgba(255, 255, 255, 0.35);
+  overflow: hidden;
+  /* Simple frosted glass */
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.8);
   box-shadow:
-    0 8px 32px rgba(0, 0, 0, 0.1),
-    0 2px 8px rgba(0, 0, 0, 0.05),
-    inset 0 1px 1px rgba(255, 255, 255, 0.6),
-    inset 0 -1px 1px rgba(0, 0, 0, 0.05);
-  will-change: transform, opacity, background-color;
+    0 8px 32px rgba(0, 0, 0, 0.12),
+    0 2px 8px rgba(0, 0, 0, 0.08);
+  will-change: transform, opacity;
+  transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-.logo-btn.is-hidden {
-  transform: translateX(-50%) translateY(120px) scale(0.8);
+/* Specular highlight - simplified */
+.btn-specular {
+  display: none;
+}
+
+.fab-glass.is-hidden {
+  transform: translateX(-50%) translateY(100px) scale(0.9);
   opacity: 0;
   pointer-events: none;
-  transition: all 0.4s cubic-bezier(0.4, 0, 1, 1);
+  transition: all 0.3s ease-out;
 }
 
-.logo-btn.is-visible {
+.fab-glass.is-visible {
   transform: translateX(-50%) translateY(0) scale(1);
   opacity: 1;
-  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.4s ease, background 0.3s ease, box-shadow 0.3s ease;
 }
 
-.logo-btn.is-visible:hover {
-  transform: translateX(-50%) translateY(-4px) scale(1.02);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15), 0 4px 12px rgba(0, 0, 0, 0.08);
+.fab-glass.is-visible:active {
+  transform: translateX(-50%) scale(0.95);
+  transition: transform 0.1s ease;
 }
 
-.logo-btn.is-visible:active {
-  transform: translateX(-50%) translateY(2px) scale(0.92);
-  transition: transform 0.08s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.logo-btn.is-visible:not(:active) {
-  transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.4s ease, background 0.3s ease, box-shadow 0.3s ease;
-}
-
-.logo-btn.is-menu-open {
-  background: #FA2D48;
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
-  border: 2px dotted rgba(0, 0, 0, 0.15);
-  color: white;
-  transform: translateX(-50%) translateY(0) scale(1);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15), 0 2px 8px rgba(0, 0, 0, 0.1);
-  transition: border-radius 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), transform 0.2s ease, background 0.3s ease;
-}
-
-.logo-btn.is-menu-open:active {
-  border-radius: 24px;
-  transform: translateX(-50%) translateY(2px) scale(0.95);
-  background: #E8253D;
-}
-
-.logo-btn.on-dark {
-  background: linear-gradient(135deg, rgba(60, 60, 60, 0.5) 0%, rgba(30, 30, 30, 0.3) 50%, rgba(50, 50, 50, 0.4) 100%);
-  border-color: rgba(255, 255, 255, 0.1);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 2px 8px rgba(0, 0, 0, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.1), inset 0 -1px 1px rgba(0, 0, 0, 0.2);
-}
-
-.logo-btn.is-scrolling-down {
-  transform: translateX(-50%) translateY(0) scale(0.85);
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.05) 50%, rgba(255, 255, 255, 0.15) 100%);
+/* On dark backgrounds */
+.fab-glass.on-dark {
+  background: rgba(40, 40, 40, 0.7);
   border-color: rgba(255, 255, 255, 0.15);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06), inset 0 1px 1px rgba(255, 255, 255, 0.3);
-  backdrop-filter: blur(24px) saturate(150%) brightness(1.05);
-  -webkit-backdrop-filter: blur(24px) saturate(150%) brightness(1.05);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
-.logo-btn.is-scrolling-down.on-dark {
-  background: linear-gradient(135deg, rgba(40, 40, 40, 0.3) 0%, rgba(20, 20, 20, 0.15) 50%, rgba(35, 35, 35, 0.25) 100%);
-  border-color: rgba(255, 255, 255, 0.05);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15), inset 0 1px 1px rgba(255, 255, 255, 0.05);
+/* Scrolling Down - shrink slightly */
+.fab-glass.is-scrolling-down {
+  transform: translateX(-50%) scale(0.85);
+  opacity: 0.5;
 }
 
-/* Fingerprint red color filter + thumbprint shape */
-.fingerprint-red {
-  filter: invert(27%) sepia(89%) saturate(1789%) hue-rotate(341deg) brightness(87%) contrast(97%);
-  transform: scaleX(1.1);
+/* Scrolling Up - normal */
+.fab-glass.is-scrolling-up {
+  transform: translateX(-50%) scale(1);
+  opacity: 1;
 }
 
+/* Fingerprint hidden by default */
+.fingerprint-container {
+  display: none;
+}
+
+@keyframes fingerprint-pulse {
+  0%, 100% {
+    opacity: 0.18;
+  }
+  50% {
+    opacity: 0.28;
+  }
+}
+
+/* Floating Logo - Stays on top of everything */
+.floating-logo {
+  position: fixed;
+  /* Center in FAB: FAB is 76x68 at bottom: 20px */
+  bottom: 38px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 60;
+  height: 32px;
+  padding: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.floating-logo.is-hidden {
+  opacity: 0;
+  transform: translateX(-50%) translateY(30px);
+  pointer-events: none;
+}
+
+.floating-logo.is-visible {
+  opacity: 1;
+  transform: translateX(-50%);
+}
+
+.floating-logo.is-scrolling-down {
+  transform: translateX(-50%) scale(0.85);
+  opacity: 0.5;
+}
+
+.floating-logo.is-menu-open {
+  /* Larger logo at bottom of menu */
+  bottom: max(36px, env(safe-area-inset-bottom) + 20px);
+  height: 56px;
+  opacity: 0.6;
+}
+
+/* Red color filter for logo in menu */
+.floating-logo.is-menu-open img {
+  filter: brightness(0) saturate(100%) invert(26%) sepia(89%) saturate(2137%) hue-rotate(340deg) brightness(97%) contrast(101%);
+}
+
+.floating-logo:active {
+  transform: translateX(-50%) scale(0.95);
+}
+
+/* FAB fade transition */
+.fab-fade-enter-active {
+  transition: all 0.35s ease-out;
+}
+
+.fab-fade-leave-active {
+  transition: all 0.25s ease-in;
+}
+
+.fab-fade-enter-from {
+  opacity: 0;
+  transform: translateX(-50%) translateY(20px);
+}
+
+.fab-fade-leave-to {
+  opacity: 0;
+  transform: translateX(-50%) translateY(10px);
+}
 
 /* RESPONSIVE MENU TRANSITIONS */
 /* Default (Mobile): Slide Up / Down */
@@ -678,6 +866,244 @@ onMounted(() => {
 }
 .slide-right-leave-to {
   transform: translateX(100%);
+}
+
+/* Samsung Internet - has bottom toolbar (~56-64px) that overlaps fixed elements */
+:global(body.samsung-browser) .fab-glass {
+  bottom: 80px;
+}
+
+:global(body.samsung-browser) .floating-logo {
+  bottom: 96px; /* Center in FAB: 80 + 36 = 116, minus half logo = 96 */
+}
+
+:global(body.samsung-browser) .floating-logo.is-menu-open {
+  bottom: max(100px, env(safe-area-inset-bottom) + 84px);
+}
+
+/* Quick links in dark menu */
+.menu-quick-link {
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  color: rgba(255, 255, 255, 0.4);
+  transition: color 0.2s ease;
+  padding: 4px 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.menu-quick-link:hover,
+.menu-quick-link:active {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* Quick links in two-tone RED theme */
+.menu-quick-link-red {
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  color: rgba(250, 45, 72, 0.5); /* #FA2D48 at 50% */
+  transition: color 0.2s ease;
+  padding: 4px 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.menu-quick-link-red:hover,
+.menu-quick-link-red:active {
+  color: rgba(250, 45, 72, 0.9); /* #FA2D48 at 90% */
+}
+
+/* Pill buttons for quick links */
+.menu-pill-red {
+  display: inline-block;
+  padding: 12px 20px;
+  border-radius: 12px;
+  background: rgba(250, 45, 72, 0.08);
+  border: 1px solid rgba(250, 45, 72, 0.2);
+  color: #FA2D48;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  transition: all 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.menu-pill-red:hover,
+.menu-pill-red:active {
+  background: rgba(250, 45, 72, 0.15);
+  border-color: rgba(250, 45, 72, 0.35);
+}
+
+/* Horizontal scrolling offerings - edge to edge */
+.offerings-row {
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x proximity;
+  padding: 0; /* No horizontal padding - edge to edge */
+}
+
+.offerings-row::-webkit-scrollbar {
+  display: none;
+}
+
+.offerings-row > *:first-child {
+  margin-left: 0;
+}
+
+.offerings-row > *:last-child {
+  margin-right: 16px;
+}
+
+.offerings-row > * {
+  scroll-snap-align: start;
+  flex-shrink: 0;
+}
+
+/* Menu/Utbud swap transitions */
+.menu-swap-enter-active,
+.menu-swap-leave-active {
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.menu-swap-enter-from {
+  opacity: 0;
+  transform: translateX(-30px);
+}
+
+.menu-swap-leave-to {
+  opacity: 0;
+  transform: translateX(-30px);
+}
+
+.utbud-swap-enter-active,
+.utbud-swap-leave-active {
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.utbud-swap-enter-from {
+  opacity: 0;
+  transform: translateX(30px);
+}
+
+.utbud-swap-leave-to {
+  opacity: 0;
+  transform: translateX(30px);
+}
+
+/* Simple fade transition */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+/* Dynamic offerings layout */
+.offerings-dynamic {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px 12px;
+  max-width: 100%;
+}
+
+/* Offering pills - ALL CAPS with blur background */
+.offering-pill {
+  padding: 12px 20px;
+  min-width: 72px;
+  border-radius: 24px;
+  background: rgba(10, 10, 10, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(250, 45, 72, 0.2);
+  color: #FA2D48;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-align: center;
+  transition: all 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.offering-pill:active {
+  background: rgba(250, 45, 72, 0.15);
+  transform: scale(0.96);
+}
+
+/* Larger pill for short important words like PT */
+.offering-pill.offering-lg {
+  padding: 14px 26px;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+
+/* Flowing menu links */
+.menu-flow {
+  line-height: 2.2;
+}
+
+.menu-flow-link {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 28px;
+  letter-spacing: -0.02em;
+  color: #FA2D48;
+  transition: opacity 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.menu-flow-link:active {
+  opacity: 0.6;
+}
+
+.menu-flow-link.menu-flow-secondary {
+  color: rgba(250, 45, 72, 0.5);
+}
+
+.menu-flow-divider {
+  color: rgba(250, 45, 72, 0.2);
+  font-weight: 300;
+  font-size: 24px;
+  margin: 0 8px;
+}
+
+/* UTBUD badge button */
+.utbud-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: rgba(250, 45, 72, 0.5);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  padding: 10px 20px;
+  border-radius: 24px;
+  background: transparent;
+  border: 1px solid rgba(250, 45, 72, 0.15);
+  transition: all 0.3s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.utbud-badge span {
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.utbud-badge:active {
+  transform: scale(0.96);
+}
+
+.utbud-badge.is-active {
+  color: #FA2D48;
+  background: rgba(250, 45, 72, 0.1);
+  border-color: rgba(250, 45, 72, 0.3);
 }
 
 </style>

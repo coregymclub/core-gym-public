@@ -88,14 +88,12 @@ onMounted(() => {
             <div class="w-px h-5 bg-black/10 mx-1"></div>
 
             <!-- Logga in -->
-            <a
-              href="https://member.coregym.club"
-              target="_blank"
-              rel="noopener"
+            <NuxtLink
+              to="/logga-in"
               class="px-4 py-2 rounded-full text-sm font-medium text-on-surface/70 hover:text-on-surface hover:bg-black/5 transition-all duration-200"
             >
               Logga in
-            </a>
+            </NuxtLink>
 
             <!-- Bli medlem in pill -->
             <NuxtLink
@@ -124,14 +122,12 @@ onMounted(() => {
 
           <!-- Right side actions (absolute positioned) -->
           <div class="absolute right-6 flex items-center gap-3">
-            <a
-              href="https://member.coregym.club"
-              target="_blank"
-              rel="noopener"
+            <NuxtLink
+              to="/logga-in"
               class="px-4 py-2 rounded-full text-sm font-medium text-white/70 hover:text-white transition-colors"
             >
               Logga in
-            </a>
+            </NuxtLink>
             <NuxtLink
               v-if="showActions"
               to="/bli-medlem"
