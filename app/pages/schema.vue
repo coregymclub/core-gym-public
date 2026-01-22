@@ -326,34 +326,33 @@ onUnmounted(() => {
             :key="index"
             class="carousel-item"
           >
-            <img :src="image.src" :alt="image.alt" />
+            <img :src="image.src" :alt="image.alt" loading="lazy" />
           </div>
         </div>
       </div>
     </section>
 
     <!-- Schedule -->
-    <section class="section bg-surface relative z-10 -mt-12 rounded-t-[2.5rem] pt-12">
+    <section class="section bg-surface relative z-10 -mt-12 rounded-t-[2.5rem] pt-8">
       <div class="container">
-        
-        <!-- Class Type Filter Chips -->
-        <div class="mb-12 max-w-4xl mx-auto">
-          <div class="chip-group justify-center pb-0">
+
+        <!-- Clean Text Filters -->
+        <div class="mb-10 max-w-4xl mx-auto">
+          <div class="flex items-center justify-center gap-6 md:gap-8 flex-wrap">
             <button
-              class="chip-filter"
-              :class="{ 'is-selected': selectedClassType === null }"
+              class="text-base md:text-lg font-medium transition-colors"
+              :class="selectedClassType === null ? 'text-on-surface font-bold' : 'text-on-surface-dim hover:text-on-surface'"
               @click="selectedClassType = null"
             >
-              Alla
+              Alla pass
             </button>
             <button
               v-for="type in classTypes"
               :key="type.id"
-              class="chip-filter"
-              :class="{ 'is-selected': selectedClassType === type.id }"
+              class="text-base md:text-lg font-medium transition-colors"
+              :class="selectedClassType === type.id ? 'text-on-surface font-bold' : 'text-on-surface-dim hover:text-on-surface'"
               @click="selectedClassType = type.id"
             >
-              <span class="w-2 h-2 rounded-full" :class="type.color" />
               {{ type.name }}
             </button>
           </div>
@@ -373,56 +372,59 @@ onUnmounted(() => {
         </div>
 
         <!-- Schedule Grid - Responsive -->
-        <div v-else-if="filteredSchedule.length > 0" class="space-y-16 lg:space-y-20 max-w-7xl mx-auto">
+        <div v-else-if="filteredSchedule.length > 0" class="space-y-16 lg:space-y-24 max-w-7xl mx-auto">
           <div v-for="day in filteredSchedule" :key="day.date">
-            <!-- Day Header -->
-            <div class="flex items-baseline gap-4 mb-6 lg:mb-8 border-b border-outline/30 pb-4">
-              <h3 class="font-display font-bold text-3xl sm:text-4xl md:text-5xl capitalize text-on-surface">{{ day.dayName }}</h3>
-              <span class="text-2xl md:text-3xl text-on-surface-dim/40 font-medium">{{ formatDateShort(day.date) }}</span>
+            <!-- Day Header - Editorial Style -->
+            <div class="mb-8 lg:mb-10">
+              <h3 class="font-display font-bold text-4xl sm:text-5xl md:text-6xl capitalize text-on-surface tracking-tight">{{ day.dayName }}</h3>
+              <p class="text-lg md:text-xl text-on-surface-dim/50 mt-2">{{ formatDateShort(day.date) }}</p>
             </div>
 
             <!-- Classes - Vertical list -->
-            <div class="flex flex-col gap-2 overflow-hidden max-w-3xl">
+            <div class="flex flex-col gap-3 overflow-hidden max-w-3xl">
               <button
                 v-for="cls in day.classes"
                 :key="cls.id"
-                class="group relative w-full text-left bg-surface hover:bg-surface-dim rounded-xl lg:rounded-2xl pl-3 pr-4 py-3.5 sm:pl-4 sm:pr-5 sm:py-4 lg:p-5 transition-all duration-200 overflow-hidden border border-transparent hover:border-outline/20"
+                class="group relative w-full text-left bg-surface-dim hover:bg-surface-container rounded-2xl p-4 sm:p-5 lg:p-6 transition-all duration-200 overflow-hidden border border-transparent hover:border-outline/10 hover:shadow-md"
                 @click="handleClassClick(cls)"
               >
-                <div class="flex items-center gap-3 sm:gap-4">
+                <div class="flex items-center gap-4 sm:gap-5">
                   <!-- Time & Duration -->
-                  <div class="flex flex-col items-center w-14 sm:w-16 flex-shrink-0">
-                    <span class="font-display font-bold text-xl sm:text-2xl leading-none text-on-surface tabular-nums">{{ cls.time }}</span>
-                    <span class="text-xs sm:text-sm font-medium text-on-surface-dim/50 mt-1">{{ calculateDuration(cls.time, cls.endTime) }}</span>
+                  <div class="flex flex-col items-center w-16 sm:w-20 flex-shrink-0">
+                    <span class="font-display font-bold text-2xl sm:text-3xl leading-none text-on-surface tabular-nums">{{ cls.time }}</span>
+                    <span class="text-xs sm:text-sm font-medium text-on-surface-dim/50 mt-1.5">{{ calculateDuration(cls.time, cls.endTime) }}</span>
                   </div>
 
                   <!-- Vertical Line Indicator -->
-                  <div class="w-1.5 h-12 sm:h-14 rounded-full flex-shrink-0" :class="getCategoryColor(cls.name)" />
+                  <div class="w-1.5 h-14 sm:h-16 rounded-full flex-shrink-0" :class="getCategoryColor(cls.name)" />
 
                   <!-- Info -->
                   <div class="flex-1 min-w-0">
-                    <h4 class="font-display font-bold text-base sm:text-lg lg:text-xl uppercase tracking-tight truncate group-hover:text-brand transition-colors text-on-surface mb-1">{{ cls.name }}</h4>
-                    <div class="flex items-center gap-2 text-sm text-on-surface-dim/70">
-                      <span v-if="cls.instructorImage" class="w-5 h-5 rounded-full overflow-hidden flex-shrink-0 border border-outline/20">
-                        <img :src="cls.instructorImage" :alt="cls.instructor || ''" class="w-full h-full object-cover grayscale" />
+                    <h4 class="font-display font-bold text-lg sm:text-xl lg:text-2xl uppercase tracking-tight truncate group-hover:text-brand transition-colors text-on-surface mb-1.5">{{ cls.name }}</h4>
+                    <div class="flex items-center gap-2 text-sm sm:text-base text-on-surface-dim/70">
+                      <span v-if="cls.instructorImage" class="w-6 h-6 rounded-full overflow-hidden flex-shrink-0 border border-outline/20">
+                        <img :src="cls.instructorImage" :alt="cls.instructor || ''" loading="lazy" class="w-full h-full object-cover" />
                       </span>
                       <span v-if="cls.instructor" class="truncate">{{ cls.instructor }}</span>
                     </div>
                   </div>
 
                   <!-- Right side: Site + Availability -->
-                  <div class="flex items-center gap-2 flex-shrink-0">
+                  <div class="flex items-center gap-3 flex-shrink-0">
                     <!-- Site indicator (only when showing all gyms) -->
                     <span
                       v-if="!selectedSite"
-                      class="px-2 py-1 rounded-md bg-surface-dim text-[10px] sm:text-xs font-bold text-on-surface-dim/60 tracking-wide"
+                      class="px-2.5 py-1 rounded-lg bg-surface text-xs sm:text-sm font-bold text-on-surface-dim/60 tracking-wide"
                     >
                       {{ getSiteAbbrev(cls.siteId) }}
                     </span>
-                    <!-- Availability indicator - BIGGER -->
-                    <div class="flex items-center justify-center min-w-[2.5rem]">
-                      <span v-if="cls.spotsLeft === 0" class="px-2 py-0.5 rounded-full text-xs font-bold bg-amber-100 text-amber-600">Kö</span>
-                      <span v-else class="w-3 h-3 rounded-full bg-green-500 shadow-sm shadow-green-500/30" />
+                    <!-- Availability indicator -->
+                    <div class="flex items-center justify-center min-w-[3rem]">
+                      <span v-if="cls.spotsLeft === 0" class="px-3 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-700">Kö</span>
+                      <span v-else class="flex items-center gap-1.5 text-green-600 text-sm font-medium">
+                        <span class="w-2.5 h-2.5 rounded-full bg-green-500" />
+                        <span class="hidden sm:inline">Ledigt</span>
+                      </span>
                     </div>
                   </div>
                 </div>
