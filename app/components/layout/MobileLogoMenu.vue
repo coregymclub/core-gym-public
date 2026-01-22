@@ -250,12 +250,15 @@ onMounted(() => {
       @click="toggleMenu"
       aria-label="Öppna meny"
     >
+      <!-- Invisible placeholder for sizing (44x44) -->
+      <div class="w-11 h-11"></div>
+
       <!-- Specular highlight overlay -->
       <div class="btn-specular" :class="{ 'specular-dark': isOnDark }"></div>
 
       <!-- Fingerprint overlay (shows when scrolling up) -->
       <div
-        class="fingerprint-container absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden"
+        class="fingerprint-container absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden rounded-full"
         :class="isScrollingUp ? 'fingerprint-active' : 'fingerprint-hidden'"
       >
         <img
@@ -670,12 +673,11 @@ onMounted(() => {
 /* FAB Glass Background - Premium liquid glass effect */
 .fab-glass {
   position: fixed;
-  bottom: 20px;
+  bottom: 24px;
   left: 50%;
   z-index: 51;
   border-radius: 9999px;
-  width: 88px;
-  height: 76px;
+  padding: 16px 24px;
   cursor: pointer;
   overflow: hidden;
   /* Liquid glass gradient */
@@ -694,7 +696,7 @@ onMounted(() => {
     inset 0 1px 1px rgba(255, 255, 255, 0.6),
     inset 0 -1px 1px rgba(0, 0, 0, 0.05);
   will-change: transform, opacity;
-  transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 /* Specular highlight overlay */
@@ -824,8 +826,8 @@ onMounted(() => {
 /* Floating Logo - Stays on top of everything */
 .floating-logo {
   position: fixed;
-  /* Center in FAB: FAB is 76x68 at bottom: 20px */
-  bottom: 32px;
+  /* Center in FAB: FAB at bottom:24px with padding:16px, logo 44px */
+  bottom: 40px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 60;
