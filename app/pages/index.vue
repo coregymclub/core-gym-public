@@ -13,7 +13,7 @@ const gyms = [
     name: 'Tungelsta',
     tag: 'Originalet',
     href: '/tungelsta',
-    image: '/images/gyms/tungelsta-gym-new.webp',
+    image: '/images/tungelsta-card.avif',
     description: 'Där allt började. Varmt, personligt och familjärt.',
     established: 2012
   },
@@ -21,7 +21,7 @@ const gyms = [
     name: 'Västerhaninge',
     tag: 'Klassiskt',
     href: '/vasterhaninge',
-    image: '/images/gyms/vasterhaninge-gym-new-2.webp',
+    image: '/images/vasterhaninge-card.avif',
     description: 'Mitt i centrum. Effektiv träning nära vardagen.',
     established: 2016
   },
@@ -29,7 +29,7 @@ const gyms = [
     name: 'Vegastaden',
     tag: 'Störst',
     href: '/vegastaden',
-    image: '/images/gyms/vegastaden-new.avif',
+    image: '/images/vegastaden-card.avif',
     description: '2 900 kvm möjligheter. Padel, yoga och takterrass.',
     established: 2022
   },
@@ -37,7 +37,7 @@ const gyms = [
     name: 'EGYM',
     tag: 'Framtidens träning',
     href: '/egym',
-    image: '/images/egym-per.avif',
+    image: '/images/egym-per-new.avif',
     description: 'Maskinerna ställer in sig efter dig. Träna hela kroppen på 15 min.',
     established: 2025
   },
@@ -45,8 +45,8 @@ const gyms = [
     name: 'Ösmo',
     tag: 'Hösten 2026',
     href: '/osmo',
-    image: '/images/osmo-per.webp',
-    description: 'Vårt fjärde gym är på väg.',
+    image: '/images/osmo-prima.avif',
+    description: 'Hösten 2026 lovar vi prima träning i Priskrossarens gamla lokaler. Anmäl intresse idag.',
     comingSoon: true,
     established: 2026
   },
@@ -113,11 +113,10 @@ useThemeColor('#1a1a1a')
       <!-- Background Image (covers both hero and USP sections) -->
       <div class="absolute inset-0 z-0">
         <img
-          src="/images/pt/denise-hero.avif"
+          src="/images/pt/denise-hero.avif?v=2"
           alt="Core Gym Club"
           class="w-full h-full object-cover object-top"
         />
-        <div class="absolute inset-0 bg-gradient-to-b from-black/20 via-black/40 to-black/80" />
       </div>
 
       <!-- Hero -->
@@ -148,27 +147,27 @@ useThemeColor('#1a1a1a')
           <div class="grid grid-cols-2 gap-8 max-w-md mx-auto mb-16">
             <div class="text-center">
               <div class="w-14 h-14 mx-auto mb-5">
-                <img src="/png-icons/open-hours.png" alt="" class="w-full h-full object-contain brightness-0 invert" />
+                <img src="/png-icons/open-hours.png" alt="Öppettider-ikon" loading="lazy" class="w-full h-full object-contain brightness-0 invert" />
               </div>
               <p class="font-display font-bold text-lg text-white">Öppet alla dagar</p>
-              <p class="font-display font-bold text-lg text-white/60">03:55–00:05</p>
+              <p class="font-display font-bold text-lg text-white/60">03:55–24:00</p>
             </div>
             <div class="text-center">
               <div class="w-14 h-14 mx-auto mb-5">
-                <img src="/png-icons/ingen-bindningstid.png" alt="" class="w-full h-full object-contain brightness-0 invert" />
+                <img src="/png-icons/ingen-bindningstid.png" alt="Ingen bindningstid-ikon" loading="lazy" class="w-full h-full object-contain brightness-0 invert" />
               </div>
               <p class="font-display font-bold text-lg text-white">Ingen bindning</p>
             </div>
             <div class="text-center">
               <div class="w-14 h-14 mx-auto mb-5">
-                <img src="/png-icons/location.png" alt="" class="w-full h-full object-contain brightness-0 invert" />
+                <img src="/png-icons/location.png" alt="Platser-ikon" loading="lazy" class="w-full h-full object-contain brightness-0 invert" />
               </div>
               <p class="font-display font-bold text-lg text-white">4 gym i Haninge</p>
-              <p class="font-display font-bold text-lg text-white/60">(snart 5!)</p>
+              <p class="font-display font-bold text-lg text-white/60">(+ Ösmo 2026)</p>
             </div>
             <div class="text-center">
               <div class="w-14 h-14 mx-auto mb-5">
-                <img src="/png-icons/no-starting-fee.png" alt="" class="w-full h-full object-contain brightness-0 invert" />
+                <img src="/png-icons/no-starting-fee.png" alt="Ingen startavgift-ikon" loading="lazy" class="w-full h-full object-contain brightness-0 invert" />
               </div>
               <p class="font-display font-bold text-lg text-white">Ingen startavgift</p>
               <p class="font-display font-bold text-lg text-white/60">(börja direkt)</p>
@@ -237,28 +236,28 @@ useThemeColor('#1a1a1a')
             <div class="grid grid-cols-4 gap-8 pt-10 border-t border-white/20 animate-slide-up max-w-4xl mx-auto" style="animation-delay: 0.4s">
               <div class="text-center">
                 <div class="w-12 h-12 mx-auto mb-3">
-                  <img src="/png-icons/open-hours.png" alt="" class="w-full h-full object-contain brightness-0 invert" />
+                  <img src="/png-icons/open-hours.png" alt="Öppettider-ikon" loading="lazy" class="w-full h-full object-contain brightness-0 invert" />
                 </div>
                 <p class="font-display font-bold text-base text-white">Öppet alla dagar</p>
-                <p class="text-sm text-white/50">03:55–00:05</p>
+                <p class="text-sm text-white/50">03:55–24:00</p>
               </div>
               <div class="text-center">
                 <div class="w-12 h-12 mx-auto mb-3">
-                  <img src="/png-icons/ingen-bindningstid.png" alt="" class="w-full h-full object-contain brightness-0 invert" />
+                  <img src="/png-icons/ingen-bindningstid.png" alt="Ingen bindningstid-ikon" loading="lazy" class="w-full h-full object-contain brightness-0 invert" />
                 </div>
                 <p class="font-display font-bold text-base text-white">Ingen bindning</p>
                 <p class="text-sm text-white/50">Avsluta när du vill</p>
               </div>
               <div class="text-center">
                 <div class="w-12 h-12 mx-auto mb-3">
-                  <img src="/png-icons/location.png" alt="" class="w-full h-full object-contain brightness-0 invert" />
+                  <img src="/png-icons/location.png" alt="Platser-ikon" loading="lazy" class="w-full h-full object-contain brightness-0 invert" />
                 </div>
                 <p class="font-display font-bold text-base text-white">4 gym i Haninge</p>
-                <p class="text-sm text-white/50">(snart 5!)</p>
+                <p class="text-sm text-white/50">(+ Ösmo 2026)</p>
               </div>
               <div class="text-center">
                 <div class="w-12 h-12 mx-auto mb-3">
-                  <img src="/png-icons/no-starting-fee.png" alt="" class="w-full h-full object-contain brightness-0 invert" />
+                  <img src="/png-icons/no-starting-fee.png" alt="Ingen startavgift-ikon" loading="lazy" class="w-full h-full object-contain brightness-0 invert" />
                 </div>
                 <p class="font-display font-bold text-base text-white">Ingen startavgift</p>
                 <p class="text-sm text-white/50">Börja direkt</p>
@@ -285,10 +284,10 @@ useThemeColor('#1a1a1a')
     <!-- Gyms -->
     <section class="py-24 md:py-32 bg-[#f5f5f7]">
       <div class="container">
-        <div class="max-w-5xl mx-auto">
-          <h2 class="font-display font-bold text-4xl md:text-5xl text-[#1d1d1f] mb-10 md:mb-12 text-center">Våra gym</h2>
+        <div class="max-w-6xl mx-auto">
+          <h2 class="font-display font-bold text-4xl md:text-5xl lg:text-6xl text-[#1d1d1f] mb-10 md:mb-12 lg:mb-16 text-center">Våra gym</h2>
 
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5 lg:gap-6">
             <NuxtLink
               v-for="(gym, index) in gyms"
               :key="gym.name"
@@ -300,28 +299,30 @@ useThemeColor('#1a1a1a')
                 <img
                   :src="gym.image"
                   :alt="gym.name"
+                  loading="lazy"
                   class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
                 <!-- Corner gradient for number visibility -->
                 <div class="absolute inset-0 bg-gradient-to-tl from-black/30 via-transparent to-transparent" />
-                <!-- Tag chip - liquid glass -->
-                <span class="absolute bottom-3 left-3 px-4 py-2 bg-white/20 backdrop-blur-xl rounded-full text-sm font-medium text-white border border-white/30 shadow-lg">
+                <!-- Tag chip - liquid glass (solid red for coming soon) -->
+                <span
+                  class="absolute bottom-3 left-3 px-4 py-2 backdrop-blur-md rounded-full text-sm font-medium text-white shadow-lg"
+                  :class="gym.comingSoon ? 'bg-brand border border-white/20' : 'bg-white/20 border border-white/30'"
+                >
                   {{ gym.tag }}
                 </span>
-                <!-- Number + Established year -->
-                <div class="absolute bottom-3 right-4 text-right">
-                  <span class="block font-display font-bold text-6xl md:text-7xl text-white/40 leading-none">
-                    {{ String(index + 1).padStart(2, '0') }}
-                  </span>
-                  <span class="block font-display font-medium text-xs md:text-sm text-white/50 tracking-widest mt-1">
-                    EST. {{ gym.established }}
-                  </span>
-                </div>
               </div>
               <!-- Text section - light background -->
-              <div class="bg-white p-6 md:p-8 text-center">
+              <div class="bg-white p-6 md:p-8 text-center relative">
                 <h3 class="font-display font-bold text-xl md:text-2xl text-[#1d1d1f] mb-2">{{ gym.name }}</h3>
                 <p class="text-[#6e6e73] text-base md:text-lg leading-relaxed">{{ gym.description }}</p>
+                <!-- Established year in corner -->
+                <span
+                  v-if="!gym.comingSoon"
+                  class="absolute top-4 right-4 font-display font-bold text-xs text-brand tracking-widest"
+                >
+                  EST. {{ gym.established }}
+                </span>
               </div>
             </NuxtLink>
           </div>
@@ -354,7 +355,7 @@ useThemeColor('#1a1a1a')
             :key="index"
             class="group-carousel-item"
           >
-            <img :src="image.src" :alt="image.alt" />
+            <img :src="image.src" :alt="image.alt" loading="lazy" />
           </div>
         </div>
       </div>
@@ -385,7 +386,7 @@ useThemeColor('#1a1a1a')
 
           <!-- Image -->
           <div class="aspect-[16/9] rounded-3xl overflow-hidden mb-12">
-            <img src="/images/filip-pt-landscape.webp" alt="Filip tränar en klient på Core Gym" class="w-full h-full object-cover" />
+            <img src="/images/filip-pt-landscape.webp" alt="Filip tränar en klient på Core Gym" loading="lazy" class="w-full h-full object-cover" />
           </div>
 
           <!-- Centered features -->
@@ -402,7 +403,7 @@ useThemeColor('#1a1a1a')
           </div>
 
           <div class="text-center">
-            <NuxtLink to="/pt" class="btn btn-dark btn-lg">
+            <NuxtLink to="/pt" class="btn btn-primary btn-lg">
               Utforska PT
             </NuxtLink>
           </div>
@@ -420,10 +421,10 @@ useThemeColor('#1a1a1a')
               <StickySectionChip label="Yoga" color="green" />
             </div>
             <h2 class="font-display font-bold text-4xl md:text-6xl text-[#1d1d1f] uppercase tracking-tight mb-5">
-              Hitta din inre balans
+              Andas ut vardagen
             </h2>
             <p class="text-xl md:text-2xl text-[#6e6e73] leading-relaxed max-w-2xl mx-auto">
-              Andas ut vardagen. Våra yogaklasser passar alla nivåer — från nybörjare till erfarna. Bygg styrka, förbättra rörlighet och hitta lugnet.
+              Hitta balans mellan kropp och sinne. Våra yogapass passar alla nivåer — från nybörjare till erfarna.
             </p>
           </div>
 
@@ -432,6 +433,7 @@ useThemeColor('#1a1a1a')
             <img
               src="/images/yoga-class.webp"
               alt="Yoga på Core Gym"
+              loading="lazy"
               class="w-full h-full object-cover"
             />
           </div>
@@ -442,7 +444,7 @@ useThemeColor('#1a1a1a')
               <span class="px-4 py-2 rounded-full border border-[#1d1d1f]/15 text-[#1d1d1f] font-medium">Vegastaden</span>
               <span class="px-4 py-2 rounded-full border border-[#1d1d1f]/15 text-[#1d1d1f] font-medium">Tungelsta</span>
             </div>
-            <NuxtLink to="/yoga" class="btn btn-dark btn-lg">
+            <NuxtLink to="/yoga" class="btn btn-primary btn-lg">
               Yoga
             </NuxtLink>
           </div>
@@ -470,8 +472,9 @@ useThemeColor('#1a1a1a')
           <!-- Image -->
           <div class="aspect-[16/9] rounded-3xl overflow-hidden mb-12">
             <img
-              src="/images/mamma-training.webp"
+              src="/images/mamma-traning.avif"
               alt="Mammaträning på Core Gym"
+              loading="lazy"
               class="w-full h-full object-cover"
             />
           </div>
@@ -482,7 +485,7 @@ useThemeColor('#1a1a1a')
               <span class="px-4 py-2 rounded-full border border-[#1d1d1f]/15 text-[#1d1d1f] font-medium">Vegastaden</span>
               <span class="px-4 py-2 rounded-full border border-[#1d1d1f]/15 text-[#1d1d1f] font-medium">Tungelsta</span>
             </div>
-            <NuxtLink to="/mammatraning" class="btn btn-dark btn-lg">
+            <NuxtLink to="/mammatraning" class="btn btn-primary btn-lg">
               Mammaträning
             </NuxtLink>
           </div>
@@ -496,9 +499,10 @@ useThemeColor('#1a1a1a')
         <div class="max-w-3xl mx-auto text-center">
           <div class="w-32 h-32 md:w-40 md:h-40 mx-auto rounded-full overflow-hidden grayscale mb-8">
             <img
-              src="/images/founder-per.webp"
-              alt="Per Karlsson"
-              class="w-full h-full object-cover scale-110"
+              src="/images/per-portrait.avif"
+              alt="Per Karlsson, grundare av Core Gym Club"
+              loading="lazy"
+              class="w-full h-full object-cover"
             />
           </div>
           <blockquote class="font-display font-bold text-3xl md:text-4xl mb-6 text-on-surface leading-tight">
@@ -524,6 +528,7 @@ useThemeColor('#1a1a1a')
             <img
               src="/images/cta-bg.webp"
               alt=""
+              loading="lazy"
               class="absolute inset-0 w-full h-full object-cover grayscale"
             />
             <!-- Red overlay for duotone effect -->
@@ -569,6 +574,14 @@ useThemeColor('#1a1a1a')
     --item-size: 200px;
     --item-gap: -50px;
     perspective: 1200px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .group-carousel-container {
+    --item-size: 240px;
+    --item-gap: -60px;
+    perspective: 1400px;
   }
 }
 

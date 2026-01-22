@@ -14,7 +14,7 @@ const SITE_ID = 1
 // Gym carousel slides
 const gymSlides = [
   {
-    src: '/images/vega-squat-rack.webp',
+    src: '/images/vega-squat-rack.avif',
     alt: 'Friviktsyta på Vegastaden',
     caption: 'Plats att ta i ordentligt'
   },
@@ -130,148 +130,189 @@ onMounted(async () => {
       </div>
     </section>
 
-    <!-- ============ INFO SHEET ============ -->
-    <section class="pt-12 md:pt-16 bg-surface-dim">
-      <div class="container max-w-2xl">
-        <div class="bg-surface rounded-t-[2rem] md:rounded-t-[2.5rem] px-6 md:px-10 shadow-sm border border-outline/10 border-b-0 divide-y divide-outline/10">
+    <!-- ============ INFO + PULSEN ============ -->
+    <section class="py-12 md:py-16 bg-surface-dim">
+      <div class="container max-w-5xl">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 items-start">
 
-          <!-- Bemannade tider -->
-          <div class="py-6">
-            <button
-              @click="toggleCard('staffing')"
-              class="w-full flex items-center justify-between text-left group"
-            >
-              <span class="font-display font-bold text-lg md:text-xl text-on-surface uppercase tracking-tight">Bemannade tider</span>
-              <span
-                class="w-11 h-11 rounded-full bg-surface-container flex items-center justify-center transition-all duration-300 group-hover:bg-surface-container-high"
-                :class="activeCard === 'staffing' ? 'rotate-45 !bg-on-surface' : ''"
+          <!-- Accordion-kort (vänster) -->
+          <div class="bg-surface rounded-[2rem] md:rounded-[2.5rem] px-6 md:px-10 shadow-sm border border-outline/10 divide-y divide-outline/10">
+
+            <!-- Bemannade tider -->
+            <div class="py-6">
+              <button
+                @click="toggleCard('staffing')"
+                class="w-full flex items-center justify-between text-left group"
               >
-                <svg
-                  class="w-5 h-5 transition-colors duration-300"
-                  :class="activeCard === 'staffing' ? 'text-white' : 'text-on-surface-dim'"
-                  fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"
+                <span class="font-display font-bold text-lg md:text-xl text-on-surface uppercase tracking-tight">Bemannade tider</span>
+                <span
+                  class="w-11 h-11 rounded-full bg-surface-container flex items-center justify-center transition-all duration-300 group-hover:bg-surface-container-high"
+                  :class="activeCard === 'staffing' ? 'rotate-45 !bg-on-surface' : ''"
                 >
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m6-6H6" />
-                </svg>
-              </span>
-            </button>
-
-            <div
-              class="grid transition-[grid-template-rows] duration-300 ease-out"
-              :class="activeCard === 'staffing' ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'"
-            >
-              <div class="overflow-hidden">
-                <div class="pt-6 space-y-3">
-                  <div
-                    v-for="day in weeklySchedule"
-                    :key="day.dayId"
-                    class="flex items-center justify-between"
-                    :class="day.isToday ? 'text-on-surface' : 'text-on-surface-dim'"
+                  <svg
+                    class="w-5 h-5 transition-colors duration-300"
+                    :class="activeCard === 'staffing' ? 'text-white' : 'text-on-surface-dim'"
+                    fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"
                   >
-                    <span class="capitalize">
-                      {{ day.dayName }}
-                      <span v-if="day.isToday" class="text-xs ml-2 px-2 py-0.5 rounded-full bg-on-surface text-white font-bold uppercase tracking-wide">Idag</span>
-                    </span>
-                    <span class="tabular-nums font-medium">{{ day.staffed ? day.displayText : '–' }}</span>
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m6-6H6" />
+                  </svg>
+                </span>
+              </button>
+
+              <div
+                class="grid transition-[grid-template-rows] duration-300 ease-out"
+                :class="activeCard === 'staffing' ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'"
+              >
+                <div class="overflow-hidden">
+                  <div class="pt-6 space-y-3">
+                    <div
+                      v-for="day in weeklySchedule"
+                      :key="day.dayId"
+                      class="flex items-center justify-between"
+                      :class="day.isToday ? 'text-on-surface' : 'text-on-surface-dim'"
+                    >
+                      <span class="capitalize">
+                        {{ day.dayName }}
+                        <span v-if="day.isToday" class="text-xs ml-2 px-2 py-0.5 rounded-full bg-on-surface text-white font-bold uppercase tracking-wide">Idag</span>
+                      </span>
+                      <span class="tabular-nums font-medium">{{ day.staffed ? day.displayText : '–' }}</span>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          <!-- Provträna -->
-          <div class="py-6">
-            <button
-              @click="toggleCard('trial')"
-              class="w-full flex items-center justify-between text-left group"
-            >
-              <span class="font-display font-bold text-lg md:text-xl text-on-surface uppercase tracking-tight">Provträna</span>
-              <span
-                class="w-11 h-11 rounded-full bg-surface-container flex items-center justify-center transition-all duration-300 group-hover:bg-surface-container-high"
-                :class="activeCard === 'trial' ? 'rotate-45 !bg-on-surface' : ''"
+            <!-- Provträna -->
+            <div class="py-6">
+              <button
+                @click="toggleCard('trial')"
+                class="w-full flex items-center justify-between text-left group"
               >
-                <svg
-                  class="w-5 h-5 transition-colors duration-300"
-                  :class="activeCard === 'trial' ? 'text-white' : 'text-on-surface-dim'"
-                  fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"
+                <span class="font-display font-bold text-lg md:text-xl text-on-surface uppercase tracking-tight">Provträna</span>
+                <span
+                  class="w-11 h-11 rounded-full bg-surface-container flex items-center justify-center transition-all duration-300 group-hover:bg-surface-container-high"
+                  :class="activeCard === 'trial' ? 'rotate-45 !bg-on-surface' : ''"
                 >
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m6-6H6" />
-                </svg>
-              </span>
-            </button>
+                  <svg
+                    class="w-5 h-5 transition-colors duration-300"
+                    :class="activeCard === 'trial' ? 'text-white' : 'text-on-surface-dim'"
+                    fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"
+                  >
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m6-6H6" />
+                  </svg>
+                </span>
+              </button>
 
-            <div
-              class="grid transition-[grid-template-rows] duration-300 ease-out"
-              :class="activeCard === 'trial' ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'"
-            >
-              <div class="overflow-hidden">
-                <div class="pt-6 space-y-5">
-                  <div>
-                    <p class="font-medium text-on-surface mb-1">Funderar du på att bli medlem?</p>
-                    <p class="text-on-surface-dim">Kom förbi under bemannade tider så visar vi runt och du får testa gymmet kostnadsfritt.</p>
-                  </div>
+              <div
+                class="grid transition-[grid-template-rows] duration-300 ease-out"
+                :class="activeCard === 'trial' ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'"
+              >
+                <div class="overflow-hidden">
+                  <div class="pt-6 space-y-5">
+                    <div>
+                      <p class="font-medium text-on-surface mb-1">Funderar du på att bli medlem?</p>
+                      <p class="text-on-surface-dim">Sväng förbi under bemannade tider – vi visar runt och du får testa gratis.</p>
+                    </div>
 
-                  <div>
-                    <p class="font-medium text-on-surface mb-1">Vill du testa gruppträning?</p>
-                    <p class="text-on-surface-dim">
-                      Du är välkommen att hoppa in på ett pass i mån av plats.
-                      <NuxtLink to="/schema" class="underline">Se schemat</NuxtLink>
+                    <div>
+                      <p class="font-medium text-on-surface mb-1">Vill du testa gruppträning?</p>
+                      <p class="text-on-surface-dim">
+                        Du är välkommen att hoppa in på ett pass i mån av plats.
+                        <NuxtLink to="/schema" class="underline">Se schemat</NuxtLink>
+                      </p>
+                    </div>
+
+                    <div>
+                      <p class="font-medium text-on-surface mb-1">Engångsbesök</p>
+                      <p class="text-on-surface-dim">Träna en gång för 150 kr. Gäller under bemannade tider.</p>
+                    </div>
+
+                    <p class="text-on-surface-dim text-sm">
+                      Vegastaden har 18-årsgräns.
                     </p>
                   </div>
-
-                  <div>
-                    <p class="font-medium text-on-surface mb-1">Engångsbesök</p>
-                    <p class="text-on-surface-dim">Träna en gång för 150 kr. Gäller under bemannade tider.</p>
-                  </div>
-
-                  <p class="text-on-surface-dim text-sm">
-                    Vegastaden har 18-årsgräns.
-                  </p>
                 </div>
               </div>
             </div>
-          </div>
 
-          <!-- Kontakt -->
-          <div class="py-6">
-            <button
-              @click="toggleCard('contact')"
-              class="w-full flex items-center justify-between text-left group"
-            >
-              <span class="font-display font-bold text-lg md:text-xl text-on-surface uppercase tracking-tight">Kontakt</span>
-              <span
-                class="w-11 h-11 rounded-full bg-surface-container flex items-center justify-center transition-all duration-300 group-hover:bg-surface-container-high"
-                :class="activeCard === 'contact' ? 'rotate-45 !bg-on-surface' : ''"
+            <!-- Kontakt -->
+            <div class="py-6">
+              <button
+                @click="toggleCard('contact')"
+                class="w-full flex items-center justify-between text-left group"
               >
-                <svg
-                  class="w-5 h-5 transition-colors duration-300"
-                  :class="activeCard === 'contact' ? 'text-white' : 'text-on-surface-dim'"
-                  fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"
+                <span class="font-display font-bold text-lg md:text-xl text-on-surface uppercase tracking-tight">Kontakt</span>
+                <span
+                  class="w-11 h-11 rounded-full bg-surface-container flex items-center justify-center transition-all duration-300 group-hover:bg-surface-container-high"
+                  :class="activeCard === 'contact' ? 'rotate-45 !bg-on-surface' : ''"
                 >
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m6-6H6" />
-                </svg>
-              </span>
-            </button>
+                  <svg
+                    class="w-5 h-5 transition-colors duration-300"
+                    :class="activeCard === 'contact' ? 'text-white' : 'text-on-surface-dim'"
+                    fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"
+                  >
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m6-6H6" />
+                  </svg>
+                </span>
+              </button>
 
-            <div
-              class="grid transition-[grid-template-rows] duration-300 ease-out"
-              :class="activeCard === 'contact' ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'"
-            >
-              <div class="overflow-hidden">
-                <div class="pt-6 space-y-3">
-                  <a href="tel:0850924549" class="flex items-center justify-between py-2 hover:text-on-surface transition-colors text-on-surface-dim">
-                    <span class="text-on-surface font-medium">Telefon</span>
-                    <span>08-509 245 49</span>
-                  </a>
-                  <a href="mailto:info@coregym.club" class="flex items-center justify-between py-2 hover:text-on-surface transition-colors text-on-surface-dim">
-                    <span class="text-on-surface font-medium">E-post</span>
-                    <span>info@coregym.club</span>
-                  </a>
-                  <div class="flex items-center justify-between py-2 text-on-surface-dim">
-                    <span class="text-on-surface font-medium">Adress</span>
-                    <span>Vega Allé 2, 136 57 Vega</span>
+              <div
+                class="grid transition-[grid-template-rows] duration-300 ease-out"
+                :class="activeCard === 'contact' ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'"
+              >
+                <div class="overflow-hidden">
+                  <div class="pt-6 space-y-3">
+                    <a href="tel:0850924549" class="flex items-center justify-between py-2 hover:text-on-surface transition-colors text-on-surface-dim">
+                      <span class="text-on-surface font-medium">Telefon</span>
+                      <span>08-509 245 49</span>
+                    </a>
+                    <a href="mailto:info@coregym.club" class="flex items-center justify-between py-2 hover:text-on-surface transition-colors text-on-surface-dim">
+                      <span class="text-on-surface font-medium">E-post</span>
+                      <span>info@coregym.club</span>
+                    </a>
+                    <div class="flex items-center justify-between py-2 text-on-surface-dim">
+                      <span class="text-on-surface font-medium">Adress</span>
+                      <span>Vega Allé 2, 136 57 Vega</span>
+                    </div>
                   </div>
                 </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Pulsen-kort (höger) -->
+          <div class="bg-surface rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-8 shadow-sm border border-outline/10 border-l-4 border-l-brand relative overflow-hidden">
+            <!-- Live-indikator -->
+            <span class="absolute top-5 right-5 flex h-3 w-3">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+            </span>
+
+            <!-- Grid background pattern -->
+            <div class="absolute inset-0 opacity-[0.03] pointer-events-none"
+                 style="background-image: linear-gradient(to right, currentColor 1px, transparent 1px), linear-gradient(to bottom, currentColor 1px, transparent 1px); background-size: 24px 24px;" />
+
+            <div class="relative z-10">
+              <!-- Header -->
+              <div class="flex items-center gap-3 mb-6">
+                <img src="/images/icons/pulsen.png" alt="Pulsen-ikon" loading="lazy" class="w-6 h-6" />
+                <h3 class="font-display font-bold text-on-surface text-lg uppercase tracking-tight">Pulsen</h3>
+              </div>
+
+              <!-- Chart -->
+              <PopularTimesChart />
+
+              <!-- Footer hint -->
+              <div class="mt-6 flex items-center justify-center gap-4 text-xs text-on-surface-dim">
+                <span class="flex items-center gap-1.5">
+                  <span class="w-2 h-2 rounded-full bg-on-surface/20" />
+                  Vanligt
+                </span>
+                <span class="flex items-center gap-1.5">
+                  <span class="w-2 h-2 rounded-full bg-on-surface" />
+                  Nu
+                </span>
               </div>
             </div>
           </div>
@@ -279,9 +320,6 @@ onMounted(async () => {
         </div>
       </div>
     </section>
-
-    <!-- Popular Times -->
-    <PopularTimes />
 
     <!-- Schedule -->
     <UpcomingClasses :site-id="SITE_ID" site-name="Vegastaden" />
@@ -331,6 +369,7 @@ onMounted(async () => {
             <img
               src="/images/vega-roof.webp"
               alt="Takterrassen på Core Gym Vegastaden"
+              loading="lazy"
               class="w-full h-full object-cover"
             />
           </div>
@@ -371,8 +410,9 @@ onMounted(async () => {
           <!-- Image -->
           <div class="aspect-[16/9] rounded-3xl overflow-hidden mb-12">
             <img
-              src="/images/yoga-class.webp"
+              src="/images/yoga-angela-movement.avif"
               alt="Yogasal på Core Gym Vegastaden"
+              loading="lazy"
               class="w-full h-full object-cover"
             />
           </div>
@@ -414,6 +454,7 @@ onMounted(async () => {
             <img
               src="/images/mamma-training.webp"
               alt="Mammaträning på Core Gym Vegastaden"
+              loading="lazy"
               class="w-full h-full object-cover"
             />
           </div>
@@ -450,6 +491,7 @@ onMounted(async () => {
             <img
               src="/images/vega-squat-rack.webp"
               alt="Träning på Core Gym Vegastaden"
+              loading="lazy"
               class="w-full h-full object-cover"
             />
           </div>
@@ -525,10 +567,10 @@ onMounted(async () => {
           </div>
 
           <!-- Map -->
-          <div class="aspect-[16/9] rounded-3xl overflow-hidden mb-12">
+          <div class="aspect-square md:aspect-[16/9] rounded-3xl overflow-hidden mb-12">
             <ClientOnly>
               <AppleMap
-                :single-gym="{ name: 'Vegastaden', address: 'Vega Allé 2, Vega', lat: 59.1847, lng: 18.1089, href: '/vegastaden' }"
+                :single-gym="{ name: 'Vegastaden', address: 'Vega allé 2, 136 47 Haninge', lat: 59.1864555, lng: 18.1446918, href: '/vegastaden' }"
               />
             </ClientOnly>
           </div>

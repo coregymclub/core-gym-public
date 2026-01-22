@@ -49,6 +49,7 @@ onMounted(() => {
             <img
               :src="slide.src"
               :alt="slide.alt"
+              loading="lazy"
               class="w-full h-full object-cover image-treatment"
             />
             <!-- Caption overlay -->

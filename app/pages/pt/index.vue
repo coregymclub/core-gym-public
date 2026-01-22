@@ -41,8 +41,8 @@ const methodologySteps = [
     step: '04',
     title: 'Hållbarhet',
     description: 'Målet är inte bara snabba resultat, utan att ge dig verktygen för att hålla i träningen livet ut.',
-    image: '/images/michan-portrait.webp',
-    trainer: 'Michan'
+    image: '/images/pt/denise-portrait.avif',
+    trainer: 'Michaela'
   }
 ]
 
@@ -142,7 +142,7 @@ function selectRandomTrainer() {
 
       <!-- Background Image - Desktop -->
       <div class="absolute inset-0 z-0 hidden md:block">
-         <img src="/images/pt/denise-hero.avif" alt="Personlig träning på Core Gym" class="w-full h-full object-cover object-center grayscale" />
+         <img src="/images/pt/denise-pt-hero.avif?v=1" alt="Personlig träning på Core Gym" class="w-full h-full object-cover object-center grayscale" />
          <div class="absolute inset-0 bg-gradient-to-t from-on-surface via-on-surface/40 to-on-surface/20" />
       </div>
 
@@ -169,15 +169,15 @@ function selectRandomTrainer() {
         </div>
 
         <div class="grid md:grid-cols-3 gap-6">
-          <div class="p-6 border-l-2 border-brand">
+          <div class="p-8 rounded-2xl bg-surface-dim">
             <h3 class="font-display font-bold text-lg uppercase tracking-tight mb-2">Skräddarsytt program</h3>
             <p class="text-on-surface-dim leading-relaxed">Din PT analyserar din kropp, dina mål och din vardag för att bygga ett program som faktiskt funkar för dig.</p>
           </div>
-          <div class="p-6 border-l-2 border-brand">
+          <div class="p-8 rounded-2xl bg-surface-dim">
             <h3 class="font-display font-bold text-lg uppercase tracking-tight mb-2">Teknik & säkerhet</h3>
             <p class="text-on-surface-dim leading-relaxed">Med en PT vid din sida lär du dig rätt teknik från start. Du kan pusha hårdare när någon säkrar.</p>
           </div>
-          <div class="p-6 border-l-2 border-brand">
+          <div class="p-8 rounded-2xl bg-surface-dim">
             <h3 class="font-display font-bold text-lg uppercase tracking-tight mb-2">Ansvar & motivation</h3>
             <p class="text-on-surface-dim leading-relaxed">En bokad tid är svårare att skippa. Din PT håller dig ansvarig och peppar dig framåt.</p>
           </div>
@@ -191,25 +191,26 @@ function selectRandomTrainer() {
         <h2 class="text-section mb-16">Så funkar det</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <div v-for="(step, index) in methodologySteps" :key="step.step" class="group relative aspect-square md:aspect-[4/5] rounded-[2rem] md:rounded-[2.5rem] overflow-hidden shadow-lg transition-transform duration-500 hover:-translate-y-2">
-            <!-- Background Image - Grayscale -->
+            <!-- Background Image -->
             <img
               :src="step.image"
               :alt="step.trainer"
-              class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 grayscale"
+              loading="lazy"
+              class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
             />
-            
-            <!-- Dark Overlay -->
-            <div class="absolute inset-0 bg-black/50 group-hover:bg-black/60 transition-colors duration-500"></div>
 
-            <!-- Step Number - Liquid Glass Circle -->
-            <div class="absolute top-5 right-5 w-14 h-14 rounded-full backdrop-blur-md bg-white/20 border border-white/30 shadow-lg flex items-center justify-center select-none pointer-events-none">
-              <span class="font-display font-black text-2xl text-brand">{{ step.step }}</span>
-            </div>
+            <!-- White Overlay -->
+            <div class="absolute inset-0 bg-white/75 group-hover:bg-white/70 transition-colors duration-500"></div>
+
+            <!-- Step Number - Large with opacity -->
+            <span class="absolute top-4 right-5 font-display font-black text-7xl md:text-8xl text-black/10 leading-none select-none pointer-events-none">
+              {{ step.step }}
+            </span>
 
             <!-- Content -->
-            <div class="absolute inset-0 p-6 md:p-8 flex flex-col justify-center">
-              <h3 class="font-display font-bold text-2xl md:text-3xl text-white mb-3 uppercase tracking-tight">{{ step.title }}</h3>
-              <p class="text-white/80 text-sm md:text-base leading-relaxed font-medium">
+            <div class="absolute inset-0 p-6 md:p-8 flex flex-col justify-end">
+              <h3 class="font-display font-bold text-2xl md:text-3xl text-on-surface mb-3 uppercase tracking-tight">{{ step.title }}</h3>
+              <p class="text-on-surface-dim text-sm md:text-base leading-relaxed font-medium">
                 {{ step.description }}
               </p>
             </div>
@@ -237,6 +238,7 @@ function selectRandomTrainer() {
                 v-if="trainer.imageUrl"
                 :src="trainer.imageUrl"
                 :alt="trainer.name"
+                loading="lazy"
                 class="w-full h-full object-cover"
               />
               <div v-else class="w-full h-full flex items-center justify-center text-on-surface-dim bg-surface">
@@ -262,7 +264,7 @@ function selectRandomTrainer() {
         <!-- Random PT picker -->
         <div class="mt-16 text-center">
           <div class="inline-block bg-surface-dim rounded-[2rem] p-8 md:p-10 max-w-md">
-            <img src="/images/pt/pt-slumpa.png" alt="" class="w-24 h-24 mx-auto mb-4 object-contain" />
+            <img src="/images/pt/pt-slumpa.png" alt="Slumpa PT" loading="lazy" class="w-24 h-24 mx-auto mb-4 object-contain" />
             <h3 class="font-display font-bold text-xl md:text-2xl uppercase tracking-tight mb-3">Svårt att välja?</h3>
             <p class="text-on-surface-dim mb-6 leading-relaxed">
               Alla våra PT:s är grymma. Låt ödet avgöra vem som blir din nya coach!

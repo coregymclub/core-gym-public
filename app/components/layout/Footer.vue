@@ -26,7 +26,7 @@ const exploreLinks = [
 
         <div class="container relative z-10">
           <!-- Vi ses i gymmet - Big Statement -->
-          <p class="font-display font-bold text-6xl md:text-8xl lg:text-[10rem] text-white/90 uppercase tracking-tighter text-center mb-20 md:mb-24 leading-[0.85]">
+          <p class="font-display font-bold text-5xl md:text-7xl lg:text-8xl text-white/90 uppercase tracking-tight text-center mb-20 md:mb-24 leading-[0.9]">
             Vi ses i<br>gymmet.
           </p>
 
@@ -40,7 +40,7 @@ const exploreLinks = [
             </NuxtLink>
             <NuxtLink
               to="/schema"
-              class="btn bg-white/10 hover:bg-white/20 text-white border-none px-8 py-4 h-auto text-lg font-bold rounded-full w-full sm:w-auto"
+              class="btn bg-white hover:bg-white/90 text-[#2a2a2c] border-none px-8 py-4 h-auto text-lg font-bold rounded-full w-full sm:w-auto"
             >
               Se schema
             </NuxtLink>
@@ -87,7 +87,7 @@ const exploreLinks = [
 
           <!-- Bottom Line -->
           <div class="mt-10 pt-6 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-white/40">
-            <p>&copy; {{ new Date().getFullYear() }} Core Gym Club AB</p>
+            <p>&copy; 2026 Core Gym Club i Haninge AB</p>
             <div class="flex gap-6">
               <NuxtLink to="/integritetspolicy" class="hover:text-white transition-colors">Integritetspolicy</NuxtLink>
               <NuxtLink to="/villkor" class="hover:text-white transition-colors">Köpvillkor</NuxtLink>

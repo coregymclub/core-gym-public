@@ -110,18 +110,28 @@ function getImageUrl(url: string | null): string | null {
   return url.replace('coregymclub.zoezi.se', 'z.coregym.club')
 }
 
-// Extract location from title or content
-function getLocationTag(item: NewsItem): string | null {
+// Extract location/category tags from news item
+function getNewsTags(item: NewsItem): string[] {
+  const tags: string[] = []
+  const categories = item.categories || []
   const title = item.title.toLowerCase()
   const content = (item.content || '').toLowerCase()
 
-  if (title.includes('västerhaninge') || content.includes('västerhaninge')) return 'Västerhaninge'
-  if (title.includes('vasterhaninge') || content.includes('vasterhaninge')) return 'Västerhaninge'
-  if (title.includes('tungelsta') || content.includes('tungelsta')) return 'Tungelsta'
-  if (title.includes('vegastaden') || content.includes('vegastaden')) return 'Vegastaden'
-  if (title.includes('vega') || content.includes('i vega')) return 'Vegastaden'
+  // Check categories first
+  if (categories.includes('vegastaden')) tags.push('Vegastaden')
+  if (categories.includes('tungelsta')) tags.push('Tungelsta')
+  if (categories.includes('vasterhaninge')) tags.push('Västerhaninge')
 
-  return null
+  // Fallback to title/content parsing if no location category
+  if (tags.length === 0) {
+    if (title.includes('västerhaninge') || content.includes('västerhaninge')) tags.push('Västerhaninge')
+    else if (title.includes('vasterhaninge') || content.includes('vasterhaninge')) tags.push('Västerhaninge')
+    else if (title.includes('tungelsta') || content.includes('tungelsta')) tags.push('Tungelsta')
+    else if (title.includes('vegastaden') || content.includes('vegastaden')) tags.push('Vegastaden')
+    else if (title.includes('vega') || content.includes('i vega')) tags.push('Vegastaden')
+  }
+
+  return tags
 }
 
 // Hide "Zoezi Import" author
@@ -131,7 +141,34 @@ function getAuthor(item: NewsItem): string | null {
   return item.author
 }
 
+// Check if news item should link to a specific page
+function getNewsLink(item: NewsItem): string | null {
+  const categories = item.categories || []
+  const title = item.title.toLowerCase()
+
+  // Check for barndans/zeydance
+  if (categories.includes('barndans') || categories.includes('zeydance') ||
+      title.includes('barndans') || title.includes('zey dance') || title.includes('zeydance')) {
+    return '/barndans'
+  }
+
+  // Check for träningsresan
+  if (categories.includes('traningsresan') || categories.includes('träningsresan') ||
+      title.includes('träningsresa') || title.includes('traningsresa')) {
+    return '/traningsresan'
+  }
+
+  return null
+}
+
 function openNews(item: NewsItem) {
+  // Check if this news should navigate to a page instead
+  const link = getNewsLink(item)
+  if (link) {
+    navigateTo(link)
+    return
+  }
+
   selectedNews.value = item
   showModal.value = true
   // Prevent body scroll
@@ -177,12 +214,13 @@ onMounted(() => {
             @click="openNews(item)"
           >
             <!-- Card with image background + glass overlay -->
-            <div class="relative aspect-[4/3] rounded-2xl overflow-hidden">
+            <div class="relative aspect-[4/5] md:aspect-[4/3] rounded-2xl overflow-hidden">
               <!-- Background image -->
               <img
                 v-if="item.imageUrl"
                 :src="getImageUrl(item.imageUrl)!"
                 :alt="item.title"
+                loading="lazy"
                 class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
               />
               <div v-else class="absolute inset-0 bg-gradient-to-br from-[#1d1d1f] to-[#3a3a3c]" />
@@ -192,6 +230,17 @@ onMounted(() => {
 
               <!-- Content -->
               <div class="absolute inset-0 p-5 md:p-6 flex flex-col justify-end">
+                <!-- Tags -->
+                <div v-if="getNewsTags(item).length > 0" class="flex flex-wrap gap-2 mb-3">
+                  <span
+                    v-for="tag in getNewsTags(item)"
+                    :key="tag"
+                    class="px-2.5 py-1 bg-white/20 backdrop-blur-sm rounded-full text-xs font-medium text-white border border-white/20"
+                  >
+                    {{ tag }}
+                  </span>
+                </div>
+
                 <!-- Date -->
                 <span class="text-sm text-white/70 mb-2">{{ formatDate(item.published_at) }}</span>
 
@@ -201,9 +250,17 @@ onMounted(() => {
                 </h3>
 
                 <!-- Summary preview -->
-                <p v-if="item.summary" class="text-sm text-white/60 mt-2 line-clamp-2 hidden md:block">
+                <p v-if="item.summary" class="text-sm text-white/60 mt-2 line-clamp-2">
                   {{ item.summary }}
                 </p>
+
+                <!-- Link indicator -->
+                <div class="flex items-center gap-2 mt-3 text-white/80 group-hover:text-white transition-colors">
+                  <span class="text-sm font-medium">Läs mer</span>
+                  <svg class="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                  </svg>
+                </div>
               </div>
             </div>
           </article>
@@ -248,6 +305,7 @@ onMounted(() => {
               <img
                 :src="getImageUrl(selectedNews.imageUrl)!"
                 :alt="selectedNews.title"
+                loading="lazy"
                 class="w-full h-full object-cover"
               />
               <div class="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-transparent" />
