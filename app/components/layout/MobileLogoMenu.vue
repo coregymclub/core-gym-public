@@ -667,7 +667,7 @@ onMounted(() => {
   pointer-events: none;
 }
 
-/* FAB Glass Background - Clean glass effect (Safari-friendly) */
+/* FAB Glass Background - Premium liquid glass effect */
 .fab-glass {
   position: fixed;
   bottom: 20px;
@@ -678,21 +678,49 @@ onMounted(() => {
   height: 68px;
   cursor: pointer;
   overflow: hidden;
-  /* Simple frosted glass */
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(255, 255, 255, 0.8);
+  /* Liquid glass gradient */
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.4) 0%,
+    rgba(255, 255, 255, 0.1) 50%,
+    rgba(255, 255, 255, 0.25) 100%
+  );
+  backdrop-filter: blur(40px) saturate(200%) brightness(1.1);
+  -webkit-backdrop-filter: blur(40px) saturate(200%) brightness(1.1);
+  border: 1px solid rgba(255, 255, 255, 0.35);
   box-shadow:
-    0 8px 32px rgba(0, 0, 0, 0.12),
-    0 2px 8px rgba(0, 0, 0, 0.08);
+    0 8px 32px rgba(0, 0, 0, 0.1),
+    0 2px 8px rgba(0, 0, 0, 0.05),
+    inset 0 1px 1px rgba(255, 255, 255, 0.6),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.05);
   will-change: transform, opacity;
   transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-/* Specular highlight - simplified */
+/* Specular highlight overlay */
 .btn-specular {
-  display: none;
+  position: absolute;
+  top: 0;
+  left: 10%;
+  right: 10%;
+  height: 50%;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.4) 0%,
+    rgba(255, 255, 255, 0.1) 50%,
+    transparent 100%
+  );
+  border-radius: 9999px 9999px 50% 50%;
+  pointer-events: none;
+}
+
+.btn-specular.specular-dark {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.15) 0%,
+    rgba(255, 255, 255, 0.03) 50%,
+    transparent 100%
+  );
 }
 
 .fab-glass.is-hidden {
@@ -714,36 +742,82 @@ onMounted(() => {
 
 /* On dark backgrounds */
 .fab-glass.on-dark {
-  background: rgba(40, 40, 40, 0.7);
-  border-color: rgba(255, 255, 255, 0.15);
+  background: linear-gradient(
+    135deg,
+    rgba(60, 60, 60, 0.5) 0%,
+    rgba(30, 30, 30, 0.3) 50%,
+    rgba(50, 50, 50, 0.4) 100%
+  );
+  border-color: rgba(255, 255, 255, 0.1);
   box-shadow:
     0 8px 32px rgba(0, 0, 0, 0.3),
-    0 2px 8px rgba(0, 0, 0, 0.2);
+    0 2px 8px rgba(0, 0, 0, 0.2),
+    inset 0 1px 1px rgba(255, 255, 255, 0.1),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.2);
 }
 
-/* Scrolling Down - shrink slightly */
+/* Scrolling Down - shrink and soften */
 .fab-glass.is-scrolling-down {
   transform: translateX(-50%) scale(0.85);
-  opacity: 0.5;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.2) 0%,
+    rgba(255, 255, 255, 0.05) 50%,
+    rgba(255, 255, 255, 0.15) 100%
+  );
+  border-color: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06), inset 0 1px 1px rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(24px) saturate(150%) brightness(1.05);
+  -webkit-backdrop-filter: blur(24px) saturate(150%) brightness(1.05);
+}
+
+.fab-glass.is-scrolling-down.on-dark {
+  background: linear-gradient(
+    135deg,
+    rgba(40, 40, 40, 0.3) 0%,
+    rgba(20, 20, 20, 0.15) 50%,
+    rgba(35, 35, 35, 0.25) 100%
+  );
+  border-color: rgba(255, 255, 255, 0.05);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15), inset 0 1px 1px rgba(255, 255, 255, 0.05);
 }
 
 /* Scrolling Up - normal */
 .fab-glass.is-scrolling-up {
   transform: translateX(-50%) scale(1);
+}
+
+/* Fingerprint overlay */
+.fingerprint-container {
+  border-radius: 9999px;
+  transition: opacity 0.5s ease;
+}
+
+.fingerprint-container.fingerprint-hidden {
+  opacity: 0;
+}
+
+.fingerprint-container.fingerprint-active {
   opacity: 1;
 }
 
-/* Fingerprint hidden by default */
-.fingerprint-container {
-  display: none;
+.fingerprint-img {
+  width: 95%;
+  height: 95%;
+  object-fit: contain;
+  opacity: 0.25;
+  /* Red color filter */
+  filter: invert(27%) sepia(89%) saturate(1789%) hue-rotate(341deg) brightness(87%) contrast(97%);
+  transform: scaleX(1.1);
+  animation: fingerprint-pulse 2s ease-in-out infinite;
 }
 
 @keyframes fingerprint-pulse {
   0%, 100% {
-    opacity: 0.18;
+    opacity: 0.2;
   }
   50% {
-    opacity: 0.28;
+    opacity: 0.35;
   }
 }
 
