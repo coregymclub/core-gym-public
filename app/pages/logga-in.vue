@@ -45,7 +45,7 @@ useHead({
           Tillbaka
         </NuxtLink>
       </div>
-      <img src="/images/logo.svg" alt="Core Gym Club" class="h-12 opacity-50" />
+      <img src="/images/logo.svg" alt="Core Gym Club" class="h-16 opacity-50" />
     </div>
 
   </div>
