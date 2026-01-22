@@ -674,8 +674,8 @@ onMounted(() => {
   left: 50%;
   z-index: 51;
   border-radius: 9999px;
-  width: 76px;
-  height: 68px;
+  width: 88px;
+  height: 76px;
   cursor: pointer;
   overflow: hidden;
   /* Liquid glass gradient */
@@ -825,11 +825,11 @@ onMounted(() => {
 .floating-logo {
   position: fixed;
   /* Center in FAB: FAB is 76x68 at bottom: 20px */
-  bottom: 38px;
+  bottom: 32px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 60;
-  height: 32px;
+  height: 44px;
   padding: 0;
   background: none;
   border: none;
