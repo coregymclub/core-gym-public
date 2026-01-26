@@ -9,7 +9,7 @@ useHead({
 const route = useRoute()
 const router = useRouter()
 
-const CHECKOUT_URL = 'https://checkout.coregym.club/homepage/56'
+const CHECKOUT_URL = 'https://z.coregym.club/homepage/56'
 
 const clubs = [
   { id: 'vegastaden', name: 'Vegastaden', siteId: 3 },
@@ -388,11 +388,12 @@ function toggleFaq(index: number) {
     <section class="lg:hidden aspect-[4/5] flex flex-col justify-end items-center px-6 pb-24 relative overflow-hidden bg-surface-bright">
       <div class="absolute inset-0 z-0">
         <img
-          src="/images/pt/denise-hero-sign-up.avif"
+          src="/images/joel-hero-signup-mobile.avif"
           alt="Medlemskap"
           class="w-full h-full object-cover"
         />
         <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+        <div class="absolute inset-0 bg-gradient-to-b from-black/30 to-transparent" />
       </div>
       <div class="container text-center relative z-10">
         <p class="text-2xl text-white font-medium max-w-2xl mx-auto animate-slide-up leading-relaxed">

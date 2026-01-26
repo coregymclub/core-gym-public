@@ -18,8 +18,8 @@ const flowState = ref<any>(null)
 // Helper to add session token to checkout URL
 const addSessionToUrl = (url: string): string => {
   if (!sessionToken.value) return url
-  // Add session to checkout URLs (both old zoezi.se and new checkout.coregym.club)
-  if (!url.includes('zoezi.se') && !url.includes('checkout.coregym.club')) return url
+  // Add session to checkout URLs (both old zoezi.se and new z.coregym.club)
+  if (!url.includes('zoezi.se') && !url.includes('z.coregym.club')) return url
   const separator = url.includes('?') ? '&' : '?'
   return `${url}${separator}zs=${sessionToken.value}`
 }
@@ -196,6 +196,20 @@ const submitStudentVerification = async () => {
     })
 
     if (!response.ok) throw new Error('Kunde inte skicka.')
+
+    // Posta till teamchatten
+    try {
+      await fetch('https://teamchat.coregym.club/api/terminal/post', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          room: 'notis',
+          message: `📋 ${typeLabel}: ${user.value?.firstname} ${user.value?.lastname}\nMedlemskap: ${flowState.value?.product}`
+        })
+      })
+    } catch (chatErr) {
+      console.error('Kunde inte posta till teamchat:', chatErr)
+    }
 
     status.value = 'success'
     await new Promise(resolve => setTimeout(resolve, 500))
